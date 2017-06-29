@@ -1,0 +1,22 @@
+{
+  "plist":
+      {
+        "dict":
+            {
+              "key":"Category","dict":
+                                  {
+                                    "key":"Books","array":
+                                                      {
+                                                          "dict":[
+                                                          {"key":["min","max","toppercentage"],"integer":["",200000,1]},
+                                                          {"key":["min","max","toppercentage"],"integer":[200001,600000,2]},
+                                                          {"key":["min","max","toppercentage"],"integer":[600001,1000000,3]},
+                                                          {"key":["min","max","toppercentage"],"integer":[1000001,2000000,4]}
+                                                        ]
+                                                      }
+                                  }
+            }
+      }
+}
+
+

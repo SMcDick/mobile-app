@@ -1,0 +1,57 @@
+PODS:
+  - Anyline (3.12.0)
+  - AnylineReact (3.12.0):
+    - Anyline
+    - React
+  - React (0.41.2):
+    - React/Core (= 0.41.2)
+  - React/Core (0.41.2):
+    - React/cxxreact
+    - React/yoga
+  - React/cxxreact (0.41.2):
+    - React/jschelpers
+  - React/jschelpers (0.41.2)
+  - React/RCTActionSheet (0.41.2):
+    - React/Core
+  - React/RCTGeolocation (0.41.2):
+    - React/Core
+  - React/RCTImage (0.41.2):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTNetwork (0.41.2):
+    - React/Core
+  - React/RCTSettings (0.41.2):
+    - React/Core
+  - React/RCTText (0.41.2):
+    - React/Core
+  - React/RCTVibration (0.41.2):
+    - React/Core
+  - React/RCTWebSocket (0.41.2):
+    - React/Core
+  - React/yoga (0.41.2)
+
+DEPENDENCIES:
+  - AnylineReact (from `../node_modules/anyline-ocr-react-native-module/ios`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
+  - React/RCTGeolocation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTVibration (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+
+EXTERNAL SOURCES:
+  AnylineReact:
+    :path: ../node_modules/anyline-ocr-react-native-module/ios
+  React:
+    :path: ../node_modules/react-native
+
+SPEC CHECKSUMS:
+  Anyline: b8a1d0ab50fb4f0dbfacb746e9c284abde405f5a
+  AnylineReact: cb45980cca09a3569c7b96a043c50ed34c6c4e8d
+  React: 2b10c07d947dea71c144a33764e9162ed81e3825
+
+PODFILE CHECKSUM: 8f7b099272ac12bc14ae37ca73a95ade26fea638
+
+COCOAPODS: 1.2.0

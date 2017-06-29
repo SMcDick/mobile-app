@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4e03a30c-a3e3-4f5f-904f-423d2f051e62++6632",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "4e03a30c-a3e3-4f5f-904f-423d2f051e62++6632" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4e03a30c-a3e3-4f5f-904f-423d2f051e62++6632" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "072C82DD-BB27-480B-956D-ECCDA68A5BCF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4e03a30c-a3e3-4f5f-904f-423d2f051e62++6632" : "BarCodeScanner\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "BarCodeScanner",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ios\/BarCodeScanner.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/192.168.3.3\/svn\/FBAScanner",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4e03a30c-a3e3-4f5f-904f-423d2f051e62++6632"
+    }
+  ]
+}

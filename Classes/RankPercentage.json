@@ -1,0 +1,11 @@
+{
+"Category":{
+          "Books":[
+                    {"min":0,"max":627953,"toppercentage":1},
+                    {"min":627954,"max":3139766,"toppercentage":5},
+                    {"min":3139767,"max":6279531,"toppercentage":10},
+                    {"min":6279532,"max":15698828,"toppercentage":25},
+                    {"min":15698829,"max":31397656,"toppercentage":50}
+                  ]
+           }
+}
