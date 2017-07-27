@@ -6,7 +6,7 @@
  */
 
 
-import {Dimensions , Platform} from 'react-native';
+import { Dimensions , Platform } from 'react-native';
  export default class Constants{
     static kTrue  ="true"
     static kFalse = "false"
@@ -128,6 +128,13 @@ import {Dimensions , Platform} from 'react-native';
     static kAssociateTag = 'textdominatio-20'
     static kAWSSecretKey = "CWwRAdR0DMjhc053KTT5gWNv1cYMzSZmySs9zyiT"
     static kAWSAccessKeyId = "AKIAILZSQFO5UTM4CCUQ"
+
+     //original MWS details
+     static AWSAccessKeyId = 'AKIAJWG5UCTUZM73TETA'
+     static SellerId = "A2G12KZ1E4PCLA"
+     static MarketplaceId = "ATVPDKIKX0DER"
+
+
 
     //Testing details
     //static kAWSSecretKey = "+nBXCi+WoLXZbyUqbaCA6y9xdbnH0xaDXvfFTQKn";

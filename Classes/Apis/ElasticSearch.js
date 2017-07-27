@@ -29,7 +29,7 @@ let availableSpace;
 
 
 export default class ElasticSearch{
-    static downloadPath;
+    static downLoadPath;
     static downloadJobId = -1
     static scrollnumber = 0;
     static downLoadState = null
@@ -76,7 +76,7 @@ export default class ElasticSearch{
     }
 
     static getProductAPIForES(productCode){
-       let url = 'https://f505e785.qb0x.com:31607/_search/?q='+productCode+'&pretty'
+       let url = 'https://f505e785.qb0x.com:31644/_search/?q='+productCode+'&pretty'
        //https://f505e785.qb0x.com:31607/_search/?q='+productCode+'&pretty'
        //'https://f505e785.qb0x.com:31607/items/Item/'+productCode+'?pretty'
         return url
@@ -88,7 +88,7 @@ export default class ElasticSearch{
 
      static getESDataSize(option){
         let parsedResponse = null
-        let url = 'https://f505e785.qb0x.com:31607/_cat/indices/items/?pretty=1&format=json'
+        let url = 'https://f505e785.qb0x.com:31644/_cat/indices/items/?pretty=1&format=json'
         var headers = new Headers();
         headers.append("Authorization", "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673"));
         if(option===1)
@@ -114,20 +114,22 @@ export default class ElasticSearch{
                     }
                     //ElasticSearch.resumeDownloadBeganCallBack(response)
                 })//.then(()=>RNFS.getFSInfo(RNFS.DocumentDirectoryPath)).then((info)=>{
-                .then(()=>RNFS.getFSInfo()).then((info)=>{
-                    availableSpace=info.freeSpace
-                    if(availableSpace>contentLength){
+                .then(()=>{
+                //RNFS.getFSInfo()).then((info)=>{
+                    //availableSpace=info.freeSpace
+                    //if(availableSpace>contentLength){
                         ElasticSearch.startDownload()
-                    }
-                    else {
-                        ElasticSearchResponse.getInstance().SpaceConstraintChangeState(1 , contentLength );
+                    //}
+                    //else {
+                       // ElasticSearchResponse.getInstance().SpaceConstraintChangeState(1 , contentLength );
                         //ElasticSearchResponse.getInstance().SpaceConstraintChangeState(1 , contentLength - availableSpace);    //Pallindromic Name(SCCS) :)
                         //alert("storage space not available,free upto" + availableSpace + "MB space.")
-                    }
+                   // }
                 })
         }else{
+            console.log("***DEBUG***RESUME")
             fetch(url , {
-                headers: headers
+                headers: headers,
             })
                 .then((response) => {
                     response = response['_bodyInit']
@@ -135,40 +137,49 @@ export default class ElasticSearch{
                     if(JSON.stringify(response['status']) ==='404'){
                         alert('Error')
                     }else{
-
+                        console.log("***DEBUG***RESUME" + JSON.stringify(response))
                         let jsonResult = response[0];
                         let storeSize = jsonResult['store.size']
                         //  alert(JSON.stringify(response))
                         // storeSize = response['store.size']
-                        storeSize = storeSize.replace(/[^0-9\.]+/g, "");
+                        storeSize = storeSize.replace(/[^0-9\.]+/g, "")
+                        console.log("***DEBUG***RESUME" + storeSize);
                         //return storeSize
                         contentLength = storeSize * 1024 * 1024 * 1024;  // Convert gb to bytes
+                        console.log("***DEBUG***RESUME" + contentLength)
                         //alert("content length == " + contentLength)
                         //this.startDownload()
                     }
                     //ElasticSearch.resumeDownloadBeganCallBack(response)
-                }).then(()=>RNFS.getFSInfo(RNFS.DocumentDirectoryPath)).then((info)=>{
-                    availableSpace=info.freeSpace;
-                    path=RNFS.DocumentDirectoryPath + '/test.json'
-                    RNFS.stat(path).then((object)=>{
-                        let existingFileSize=parseInt(object.size);
-                        if(availableSpace > (contentLength-existingFileSize)){
+                }).then(()=>{
+                    //RNFS.getFSInfo(RNFS.DocumentDirectoryPath)).then((info)=>{
+                    //console.log("***DEBUG***INFO" + JSON.stringify(info))
+                    //availableSpace=info.freeSpace;
+                    //path=RNFS.DocumentDirectoryPath + '/test.json'
+                    //console.log("***DEBUG***PATH" + JSON.stringify(path))
+                    //RNFS.stat(path).then((object)=>{
+                        //console.log("***DEBUG***STATOBJEVY" + JSON.stringify(object))
+                        //let existingFileSize=parseInt(object.size);
+                        //if(availableSpace > (contentLength-existingFileSize)){  //!!!!!***CHeck maybe wrong way to calculate
+                           // console.log("***DEBUG***AVAILABKLESPACE" + availableSpace)
+                           // console.log("***DEBUG***NEEDEDSPACE" + (contentLength-existingFileSize))
                             //alert("avialable space in bytes:" + availableSpace)
                             ElasticSearch.resumeDownload()
-                        }
-                        else {
-                            ElasticSearchResponse.getInstance().SpaceConstraintChangeState(2 , contentLength );
+                        //}
+                        //else {
+                            //console.log("***DEBUG***INFO" + JSON.stringify(info))
+                            //ElasticSearchResponse.getInstance().SpaceConstraintChangeState(2 , contentLength );
                             //alert("storage space not available,free upto" + ((contentLength - availableSpace)/1000000) + "MB space.")
                             //ElasticSearchResponse.getInstance().SpaceConstraintChangeState(2 , contentLength - existingFileSize - availableSpace);    //Pallindromic Name(SCCS) :)
-                        }
-                    })
+                        //}
+                    //})
                 })
         }
             //return contentLength;
     }
 
     static updateDatabase(time){
-        let url = 'https://f505e785.qb0x.com:31607/items/Item/_search/?pretty=1&format=json&q=refreshed_at:["' + time.substring(0,11) + time.substring(12) + '"' + '+TO+' + '"now"]';
+        let url = 'https://f505e785.qb0x.com:31644/items/Item/_search/?pretty=1&format=json&q=refreshed_at:["' + time.substring(0,11) + time.substring(12) + '"' + '+TO+' + '"now"]';
         //let url = 'https://f505e785.qb0x.com:31607/items/Item/_search/?q=refreshed_at:["2015-4-25T16:53:52.000"+TO+"now"]'
         var headers = new Headers();
         headers.append("Authorization", "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673"));
@@ -192,16 +203,22 @@ export default class ElasticSearch{
             'Content-Type' :"application/json",
             'Authorization' : "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673")
         }
-        let downloadUrl = 'https://f505e785.qb0x.com:31607/items/_search?size=50&scroll='+ElasticSearch.livingTimescrollId
+        let downloadUrl = 'https://f505e785.qb0x.com:31644/items/_search?q=_exists_:refreshed_at&size=50&scroll='+ElasticSearch.livingTimescrollId
         ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/test.json';
        // ElasticSearch.downLoadPath = '/data/user/com.barcodescanner/files' + '/test.json'
        // alert('downloadPath:'+ElasticSearch.downloadPath)
-        //console.log('Download path= ' + ElasticSearch.downLoadPath);
+        console.log('Download path=' + ElasticSearch.downLoadPath);
 
-        RNFS.downloadFile({fromUrl:downloadUrl, toFile:ElasticSearch.downLoadPath ,headers:headers, begin : ElasticSearch.downloadBeganCallBack, progress : ElasticSearch.downloadProgressCallBack}).promise.then(res => {
+        RNFS.downloadFile({fromUrl:downloadUrl,
+             toFile:ElasticSearch.downLoadPath ,
+             headers:headers, 
+             begin : ElasticSearch.downloadBeganCallBack, 
+             progress : ElasticSearch.downloadProgressCallBack
+            }).promise.then(res => {
             DataBase.getInstance().deleteAllDataFromProductDataTableIfExist()
            RNFS.readFile(ElasticSearch.downLoadPath).then((data)=>{
                 ElasticSearchResponse.getInstance().dataPacketDownloaded(data)
+                //ElasticSearch.cancelDownload()
             })
 
         }).catch((error)=>{
@@ -214,7 +231,7 @@ export default class ElasticSearch{
         //prevTime=Date.now();
         //console.log("*****scrollNumber:*****"+ ElasticSearch.scrollnumber)
         console.log('Scroll id ' +LocalStorageSettingsApi.scrollId )
-        let downloadUrl = "https://f505e785.qb0x.com:31607/_search/scroll?scroll=24h&scroll_id="+LocalStorageSettingsApi.scrollId
+        let downloadUrl = "https://f505e785.qb0x.com:31644/_search/scroll?q=_exists_:refreshed_at&scroll=24h&scroll_id="+LocalStorageSettingsApi.scrollId
         ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/test.json';
 
         let headers = {
@@ -222,7 +239,12 @@ export default class ElasticSearch{
             'Authorization' : "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673")
         }
 
-        RNFS.downloadFile({fromUrl:downloadUrl, toFile:ElasticSearch.downLoadPath ,headers:headers, begin : ElasticSearch.downloadScrollBeganCallBack, progress : ElasticSearch.downloadProgressCallBack}).promise.then(res => {
+        RNFS.downloadFile({fromUrl:downloadUrl, 
+            toFile:ElasticSearch.downLoadPath ,
+            headers:headers, 
+            begin : ElasticSearch.downloadScrollBeganCallBack, 
+            progress : ElasticSearch.downloadProgressCallBack
+        }).promise.then(res => {
             RNFS.readFile(ElasticSearch.downLoadPath).then((data)=>{
                 ElasticSearch.scrollnumber++;
                 ElasticSearchResponse.getInstance().dataPacketDownloaded(data)
@@ -236,6 +258,7 @@ export default class ElasticSearch{
     }
 
     static resumeDownload() {
+        console.log("***DEBUG***RESUMEDOWNLOAD")
         //prevTime = Date.now();
         let totalProductInDataBase = DataBase.getInstance().totalProductsInDataBase
         ElasticSearch.downLoadState = Constants.DownloadState.kStarted
@@ -244,31 +267,31 @@ export default class ElasticSearch{
             'Content-Type' :"application/json",
             'Authorization' : "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673")
         }
-         let downloadUrl = "https://f505e785.qb0x.com:31607/_search/scroll?scroll=24h&scroll_id="+LocalStorageSettingsApi.scrollId
+         let downloadUrl = "https://f505e785.qb0x.com:31644/_search/scroll?q=_exists_:refreshed_at&scroll=24h&scroll_id="+LocalStorageSettingsApi.scrollId
          //let totalProductInDataBase = DataBase.getInstance().totalProductsInDataBase
          //   let downloadUrl = "https://de44fb0e33db9a27585f:1bbefa1673@f505e785.qb0x.com:31607/items/_search?size=1000&scroll=1m&pretty=1&from=" +totalProductInDataBase;
 
             //console.log('Resume Url == '+downloadUrl )
             ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/test.json';
-            //console.log('Download path= ' + ElasticSearch.downLoadPath);
+            console.log("***DEBUG***DOWNLAODPATH" + ElasticSearch.downLoadPath)
+
 
             RNFS.downloadFile({
                 fromUrl: downloadUrl,
                 toFile: ElasticSearch.downLoadPath,
                 headers:headers,
                 begin: ElasticSearch.resumeDownloadBeganCallBack,
-                progress: ElasticSearch.downloadProgressCallBack
+                progress : ElasticSearch.downloadProgressCallBack
             }).promise.then(res => {
                 RNFS.readFile(ElasticSearch.downLoadPath).then((data)=> {
                     ElasticSearchResponse.getInstance().dataPacketDownloaded(data)
-
+                    //alert("Resume1")
+                    //ElasticSearch.cancelDownload()
                 })
-
             }).catch((error)=> {
                 alert(error)
                 ElasticSearch.downloadFailed()
             });
-
     }
 
 
@@ -290,6 +313,7 @@ export default class ElasticSearch{
     }
 
     static downloadScrollBeganCallBack = (response)=> {
+        console.log("***DEBUG***DownLOaDScrOLl***")
         //ElasticSearchResponse.getInstance().ActivityIndicatorCallback();
         if(ElasticSearch.downLoadState == Constants.DownloadState.kStopped)
         return;
@@ -304,6 +328,7 @@ export default class ElasticSearch{
     }
 
     static resumeDownloadBeganCallBack = (response)=> {
+        console.log('***DEBUG***RESUMEDOWNLOADBEGANCALLBACK')
         //totalESsize = ElasticSearch.getESDataSize();
         //alert("content length in resumeDownloadBeganCallBack == " + contentLength)
         //alert(JSON.stringify(response))
@@ -320,7 +345,7 @@ export default class ElasticSearch{
     }
 
     static downloadProgressCallBack = (response)=>{
-
+        console.log('***DEBUG***DOWNLOADPROGRESSCALLBACK')
         let currentTime=Date.now();
         let jobID = response['jobId'];
 
@@ -333,7 +358,6 @@ export default class ElasticSearch{
         LocalStorageSettingsApi.setPrevBytesWritten(JSON.stringify(totalBytesWritten))
         prevTime=currentTime;
         ElasticSearchResponse.getInstance().downloadProgressCallBack(speed,contentLength,totalBytesWritten);
-
     }
 
    static downloadingProgress(){
@@ -347,7 +371,7 @@ export default class ElasticSearch{
 
     static clearCurrentScrollId(scrollid){
         let parsedResponse = null
-        let url = "https://f505e785.qb0x.com:31607/_search/scroll/"+scrollid+"?pretty"
+        let url = "https://f505e785.qb0x.com:31644/_search/scroll/"+scrollid+"?pretty"
         var headers = new Headers();
         headers.append("Authorization", "Basic " + base64.encode("de44fb0e33db9a27585f:1bbefa1673"));
         fetch(url , {

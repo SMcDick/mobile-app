@@ -42,6 +42,7 @@ const base64 = require('base-64');
 import DatabaseLocalResponse from './Apis/DatabaseLocalResponse'
 import ElasticSearch from './Apis/ElasticSearch'
 import ElasticSearchResponse from './Apis/ElasticSearchResponse'
+import DatabaseLocalApi from './Apis/DatabaseLocalApi'
 
 let x= 0;
 
@@ -181,7 +182,7 @@ export default class Download extends Component{
                                         }else{
                                             //console.log("else condition of Resume")
                                             //alert('still writing...')
-                                               ElasticSearch.downLoadState = Constants.DownloadState.kRunning
+                                            ElasticSearch.downLoadState = Constants.DownloadState.kRunning
                                         }
                                         this.setState({downloadButtonText:'Pause'})
                                     }else if(this.state.downloadButtonText === 'Start'){
@@ -290,16 +291,28 @@ startDownloadPDF(){
      }
 
     downLoadBegan(){
+        //console.log("***DEBUG***DOWNLOADFILEBEGAN")
       this.setState({downloadButtonText : 'Pause'})
       //this.setState({showModal:false})
     }
 
     downloadFailed(downlaodingFailError) {
+        console.log('*****@*$*#*#*#*&*(@#E)(*&**#@W)DOWNLOADING Failed')
         if(Constants.DownlaodingFailError.kByScrollID === downlaodingFailError){
             this.setState({downloadButtonText: 'Start'})
             LocalStorageSettingsApi.setPrevBytesWritten(JSON.stringify(0))
+            return
         }
         this.setState({downloadButtonText: 'Resume'})
+        Alert.alert('Database Download',
+            'Couldn\'t download the database',
+            [
+                {
+                    text:'OK',
+                    //onPress:()=>this.setState({showModal:false})
+                }
+            ]
+        )
     }
 
 
@@ -313,10 +326,11 @@ startDownloadPDF(){
 
 
     refreshProgress(speed,totalESsize,totalBytesWritten){
-        if(this.state.showModal==true){
-            this.setState({showModal:false})
-        }
-        
+        // if(this.state.showModal==true){
+        //     this.setState({showModal:false})
+        // }
+        console.log("@@@@@123speed:"+speed+" totalESsize:"+totalESsize+" totalBytesWritten:"+totalBytesWritten)
+        this.setState({showModal:false})
         let remainingData = parseFloat(totalESsize) - parseFloat(LocalStorageSettingsApi.totalWrittenBytes);
         remainingData = remainingData/1024 // in KB
         let remainingTime = remainingData / (speed);

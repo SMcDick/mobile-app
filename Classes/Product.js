@@ -7,9 +7,6 @@
  * @flow
  */
 import React, { Component } from 'react';
-import RNFS from 'react-native-fs'
-import fastXmlParser from 'fast-xml-parser'
-
 var RankPercentageData = require('./RankPercentage.json');
 
 
@@ -39,7 +36,8 @@ export default class Product{
         this.AllOffersUrl = null;
         this.fbaAvg=null;
         this.nonFbaUsedAvg=null;
-        this.nonFbaNewAvg=null
+        this.nonFbaNewAvg=null;
+        this.productCondition=null
 
     }
     upadateProductDataOnResponse(response){
@@ -65,8 +63,8 @@ export default class Product{
         this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
         this.lowestNewPrice=itemArray["OfferSummary"]["TotalNew"]?itemArray["OfferSummary"]["TotalNew"]["LowestNewPrice"]["FormattedPrice"]: null
         this.lowestUsedPrice=itemArray["OfferSummary"]["TotalUsed"]?itemArray["OfferSummary"]["TotalNew"]["LowestUsedPrice"]["FormattedPrice"]: null
-        this.nonFBAUsedOffersArray =[...this.nonFBAUsedOffersArray, this.lowestUsedPrice]
-        this.nonFBANewOffersArray =[...this.nonFBANewOffersArray, this.lowestNewPrice]
+        //this.nonFBAUsedOffersArray =[...this.nonFBAUsedOffersArray, this.lowestUsedPrice]
+        //this.nonFBANewOffersArray =[...this.nonFBANewOffersArray, this.lowestNewPrice]
 
     }
 
@@ -109,16 +107,24 @@ export default class Product{
     }
 
     calculateNetProfit(value){
+       console.log("<<value is>> " + value)
         if(value==null) {
+            if(this.nonFBAUsedOffersArray[0] != null) {
+                console.log("nonFBAUsedOffersArray-calculateNetProfit" + this.nonFBAUsedOffersArray[0].Price)
+                var selectedFormattedValue = parseFloat(this.nonFBAUsedOffersArray[0].Price)
 
-            var selectedFormattedValue= parseFloat(this.nonFBAUsedOffersArray[0].substring(1))
+                return "$" + Math.round(( selectedFormattedValue - (( 0.15 * selectedFormattedValue) + 1.80) - 3 - 0.19) * 100) / 100
 
-            return "$" +Math.round(( selectedFormattedValue - (( 0.15 * selectedFormattedValue) + 1.80) - 3 - 0.19)*100)/100
+                //return Math.round(( 0- costPrice - ( 0.15 * 25 ) - 1.80 - 4 )*10) / 10
+                // 25(cost to customer/selling price) , amazonPrice(buying price for seller) , selling on amazon fees{ 0.15*25(Referrral fee 15% of selling price , variable closing fee(fixed for media products , 1.80) } , amazon fullfilmet fees{ 3},shipping to amazon(1,can vary)
+            }
+       if(this.nonFBAUsedOffersArray[0] == null){
+           return " "
+       }
+       }
+            else{
 
-            //return Math.round(( 0- costPrice - ( 0.15 * 25 ) - 1.80 - 4 )*10) / 10
-             // 25(cost to customer/selling price) , amazonPrice(buying price for seller) , selling on amazon fees{ 0.15*25(Referrral fee 15% of selling price , variable closing fee(fixed for media products , 1.80) } , amazon fullfilmet fees{ 3},shipping to amazon(1,can vary)
-        } else{
-            var formattedValue=parseFloat((value).substring(1))
+            var formattedValue=parseFloat(value)
 
             return Math.round(( formattedValue  - (( 0.15 * formattedValue) + 1.80) - 3 - 0.19)*100)/100
 

@@ -24,6 +24,7 @@ export default class LocalStorageSettingsResponse {
     }
 
     async localStorageSettingsResponseSuccessCallback(response,key){
+       //alert("*******localStorageSettingsResponseSuccessCallback")
         for(i = 0 ; i < this.receivers.length ; i++){
             this.receivers[i].localStorageSettingsResponseSuccessCallback(response,key)
         }

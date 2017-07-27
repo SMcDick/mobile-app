@@ -36,7 +36,6 @@ export default class DatabaseLocalApi{
         this.lastProductIDFromDataBase = null
         this.totalProductsInDataBase = null
         this.isPacketWritingInProcess = false
-
     }
 
     openDatabase(){
@@ -47,11 +46,14 @@ export default class DatabaseLocalApi{
             // SQLite.openDatabase({name: 'my.db', location: 'Document'}, successcb, errorcb);
             SQLite.openDatabase({name:database_name,location: 'default'}).then((DB) => {
                 db = DB;
+
                 this.getCountOfTotalproductsInDataBase()
             }).catch((error) => {
                 console.log(error);
+
             });
         }).catch(error => {
+           // alert("error again" +JSON.stringify(error))
             //console.log('data base error ' + error)
         });
     }
@@ -126,6 +128,12 @@ export default class DatabaseLocalApi{
             try {
                 let count =  JSON.stringify( result.rows.item(0)['COUNT(_id)'])
                 this.totalProductsInDataBase = count
+                //console.log("total downloaded count === " + count);
+                // if(count == 30000){
+                //    ElasticSearch.cancelDownload();
+                //    console.log("     " + count + "stop download");
+                //    return
+                // }
                 ElasticSearch.downloadingProgress() // Gurdial
             }catch(error){
                 alert('error' + error)
@@ -352,7 +360,7 @@ export default class DatabaseLocalApi{
                 //alert('try block')
                 //console.log("RESULTS:" + JSON.stringify(results.rows.item(0)))
                 var len = results.rows.length;
-                //console.log("*******len" + len)
+                console.log("*******len" + len)
                 if(len != 0) {
                     DatabaseLocalResponse.getInstance().databaseProductFetchedSuccessCallBack(results.rows.item(0))
                 }

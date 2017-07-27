@@ -60,11 +60,9 @@ export default class Payments extends Component{
                 Alert.alert(
                         'Success',
                         'You have successfully purchased the subscription!',
-                    [
-                        {
-                            text:'OK'
-                        }
-                    ]
+                        [
+                            {text:'OK'}
+                        ]
                 )
                 Constants.isSubscriptionTaken==true
             })

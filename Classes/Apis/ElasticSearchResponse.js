@@ -48,6 +48,7 @@ export default class ElasticSearchResponse {
 
     //Download CallBacks
     downLoadBegan(){
+        console.log("***DEBUG***DOWNLOADBEGAN")
         for(i = 0 ; i < this.receivers.length ; i++){
             try{
                 this.receivers[i].downLoadBegan()

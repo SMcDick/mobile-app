@@ -49,9 +49,14 @@ export default class Anyline extends Component {
         const data = JSON.parse(dataString);
         if (this.scanType === Constants.kScanType.kOcr) {
             //console.log('Scan successfull ' + dataString)
-            let isbnNumber = data['text']
-            let number = isbnNumber.replace('ISBN', '')
-            number = number.replace(/[^0-9\.]+/g, "");
+            if(data['text']) {
+                let isbnNumber = data['text']
+                let number = isbnNumber.replace('ISBN', '')
+                number = number.replace(/[^0-9\.]+/g, "");
+            }
+            else{
+                let number=number.replace(/[^0-9\.]+/g, "")
+            }
             console.log("*****************NUMBer" + number)
             for (i = 0; i < this.receivers.length; i++) {
                 this.receivers[i].barCodeRecievedCallBack(number)

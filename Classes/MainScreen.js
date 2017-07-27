@@ -25,11 +25,12 @@ import {
 } from 'react-native';
 
 import AWSApi from './Apis/AWSApi'
+import MWSApi from './Apis/MWSApi'
 import DatabaseSeverApi from './Apis/DatabaseServerApi'
 import AWSResponse from './Apis/AWSResponse'
+import MWSResponse from './Apis/MWSResponse'
 import DatabaseServerResponse from  './Apis/DatabaseServerResponse'
 import Constants from './Constants'
-import fastXmlParser from 'fast-xml-parser'
 import Product from './Product'
 import LocalStorageSettingsApi from './LocalStorageSettingsApi'
 import DatabaseLocalApi from './Apis/DatabaseLocalApi'
@@ -50,7 +51,7 @@ import NetworkConnectivity from './NetworkConnectivity'
 //import Anyline from 'anyline-ocr-react-native-module';
 //import config from '../config';
 let asinMissing = false
-let productObject= new Product();
+let productObject= null;
 let kTextNotFound = "Not Found";
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
@@ -67,6 +68,7 @@ export default class MainScreen extends Component{
         ElasticSearchResponse.getInstance().setReceiver(this);
         AWSResponse.getInstance().setReceiver(this);
         AnylineScanner.getInstance().setReceiver(this)
+        MWSResponse.getInstance().setReceiver(this);
        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
 
         console.disableYellowBox = true;
@@ -119,6 +121,7 @@ export default class MainScreen extends Component{
         selectedOffer:"used",
         webViewModal:false,
         esResult:false,
+            productCondition:null
       };
 
 
@@ -222,7 +225,8 @@ export default class MainScreen extends Component{
             NewUrl:null,
             UsedUrl:null,
             FBAUrl:null,
-            AllOffersUrl:null
+            AllOffersUrl:null,
+            productCondition:null
         })
     }
 
@@ -332,7 +336,7 @@ export default class MainScreen extends Component{
  changeAmazonPriceToOffersPrice(value, index, name){
 
         let val =  productObject.calculateNetProfit(value)
-     if(this.state.productAmazonRank == "-" || this.state.productAmazonRank== null){
+     if(this.state.productAmazonRank == "-" || this.state.productAmazonRank== null ||LocalStorageSettingsApi.netProfit=="No Rank"){
          this.setState({productNetProfit:"$" +val, selectedIndexOfOffer:index, selectedOffer:name}, ()=>{
              this.setState({headingText: ((parseInt(val)>parseInt(LocalStorageSettingsApi.netProfit)))
                  ? 'Buy' :'Reject'},()=>
@@ -428,6 +432,7 @@ export default class MainScreen extends Component{
                 style={{flex:1,backgroundColor:"lightgray"}}
                 onPress={() => {
                                 this.refs.bluetoothMode.clear()
+
                                 this.setState({bluetoothMode:!this.state.bluetoothMode},() => {this.state.bluetoothMode?this.refs.bluetoothMode.focus():this.refs.bluetoothMode.blur()})
                             }
                         }
@@ -472,6 +477,7 @@ export default class MainScreen extends Component{
                       <Text style={[styles.productSearchIndicators,styles.fontColors]}> FBA </Text>
                     </View>
                 </View>
+
             </View>
             <View style={styles.styleForProfitRow}>
                 <View style={{flex:2,padding:5}}>
@@ -525,7 +531,8 @@ export default class MainScreen extends Component{
             </View>
     </TouchableOpacity>);
     let averagePriceComponent = (<View style={styles.averagePriceRowMainView}>
-      <View style={styles.averagePriceRow}><Text style={styles.averagePriceRowContent}> {this.state.fbaAvg} <Text style={[styles.averagePriceRowContent,{fontSize:Utility.getFontSize()*0.3}]}>(AVG)</Text></Text></View>
+        {/*fba avaerage price and label removed*/}
+      <View style={styles.averagePriceRow}><Text style={styles.averagePriceRowContent}>  <Text style={[styles.averagePriceRowContent,{fontSize:Utility.getFontSize()*0.3}]}></Text></Text></View>
       <View style={styles.averagePriceRow}><Text style={styles.averagePriceRowContent}>{this.state.nonFbaUsedAvg} <Text style={[styles.averagePriceRowContent,{fontSize:Utility.getFontSize()*0.3}]}>(AVG)</Text></Text></View>
       <View style={styles.averagePriceRow}><Text style={styles.averagePriceRowContent}>{this.state.nonFbaNewAvg} <Text style={[styles.averagePriceRowContent,{fontSize:Utility.getFontSize()*0.3}]}>(AVG)</Text></Text></View>
     </View>);
@@ -540,8 +547,33 @@ export default class MainScreen extends Component{
 
 
     </View>);
-    let scrollViewData = (  <View style= {{flex:1,flexDirection:'row'}}>
-        <View style= {{flex:1}}>
+    let scrollViewData = (
+        <View style= {{flex:1,flexDirection:'row'}}>
+            <View style= {{flex:1}}>
+                {this.state.fbaOffersArray.map((value,index)=>{
+                       //for showing only five offers
+                     if(index<5)
+                     {
+                    return  (
+                        <View style={styles.scrollingTableRow} key={index}>
+                            <TouchableOpacity
+                                style={{height:60}}
+                                //onPress={this.expandCollapseWebView.bind(this,false,Constants.kOffersType.kFBAOffers, false)}
+                                onPress={this.changeAmazonPriceToOffersPrice.bind(this,value.Price, index, "fba")}
+                                activeOpacity={0.85}
+                            >
+                                <Text style={[styles.scrollingTableContent, {color:(this.state.selectedIndexOfOffer==index && this.state.selectedOffer=="fba")?'rgb(0,163,238)':'black'}]}>
+                                    {/*this.state.displayProductCondition?<Text style={[styles.productConditionQuantity]}>(G) </Text>:null*/}
+                                    {'$' +value.Price}
+                                    {this.state.displayProductCondition?<Text style={styles.productConditionQuantity}> {(value.Condition)}</Text>:null}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                     }
+                })}
+            </View>
+            {/*<View style= {{flex:1}}>
             {this.state.fbaOffersArray.map((value,index)=>{
                 return  (
                     <View style={styles.scrollingTableRow} key={index}>
@@ -551,36 +583,45 @@ export default class MainScreen extends Component{
                             activeOpacity={0.85}
                         >
                             <Text style={[styles.scrollingTableContent, {color:'rgb(0,224,137)'}, {textDecorationLine:'underline'}]}>
-                                {/*this.state.displayProductCondition?<Text style={[styles.productConditionQuantity]}>(G) </Text>:null*/}
+                                {/!*this.state.displayProductCondition?<Text style={[styles.productConditionQuantity]}>(G) </Text>:null*!/}
                                 {value}
-                                {/*this.state.displayProductQuantity?<Text style={styles.productConditionQuantity}> (3)</Text>:null*/}
+                                {/!*this.state.displayProductQuantity?<Text style={styles.productConditionQuantity}> (3)</Text>:null*!/}
                             </Text>
                         </TouchableOpacity>
                     </View>
                 )
             })}
-        </View>
+        </View>*/}
       <View style= {{flex:1}}>
         {this.state.nonFbaUsedArray.map((value,index)=>{
+            console.log("nonFbaUsedArray" +this.state.nonFbaUsedArray)
+             //for showing only five offers
+            if(index<5)
+            {
           return  (
               <View style={styles.scrollingTableRow} key={index}>
                   <TouchableOpacity
                       style={{height:60}}
-                      onPress={this.changeAmazonPriceToOffersPrice.bind(this,value, index, "used")}
+                      onPress={this.changeAmazonPriceToOffersPrice.bind(this,value.Price, index, "used")}
                       activeOpacity={0.85}
                   >
                 <Text style={[styles.scrollingTableContent, {color:(this.state.selectedIndexOfOffer==index && this.state.selectedOffer=="used")?'rgb(0,163,238)':'black'}]}>
                     {/*this.state.displayProductCondition?<Text style={[styles.productConditionQuantity]}>(G) </Text>:null*/}
-                   {value}
-                    {/*this.state.displayProductQuantity?<Text style={styles.productConditionQuantity}> (3)</Text>:null*/}
+                   { '$' + value.Price}
+                    {this.state.displayProductCondition?<Text style={styles.productConditionQuantity}> {(value.Condition)}</Text>:null}
                 </Text>
                   </TouchableOpacity>
               </View>
           )
+          }
         })}
       </View>
       <View style= {{flex:1}}>
         {this.state.nonFbaNewArray.map((value,index)=>{
+            console.log("state array in mapping"+JSON.stringify(value))
+            //for showing only five offers
+               if(index<5)
+            {
           return  (
               <View style={styles.scrollingTableRow} key={index}>
                   <TouchableOpacity
@@ -590,12 +631,13 @@ export default class MainScreen extends Component{
                   >
                 <Text style={[styles.scrollingTableContent,{color:(this.state.selectedIndexOfOffer==index && this.state.selectedOffer=="new")?'rgb(0,163,238)':'black'}]}>
                     {/*this.state.displayProductCondition?<Text style={[styles.productConditionQuantity]}>(A) </Text>:null*/}
-                    {value}
-                    {/*(this.state.displayProductQuantity?<Text style={styles.productConditionQuantity}> (5)</Text>:null*/}
+                    {`$` + value}
+                    {/*this.state.displayProductQuantity?<Text style={styles.productConditionQuantity}></Text>:null*/}
                 </Text>
                   </TouchableOpacity>
               </View>
           )
+            }
         })}
       </View>
          {/*<View style= {{flex:1}}>
@@ -614,9 +656,10 @@ export default class MainScreen extends Component{
             <WebView
                 automaticallyAdjustContentInsets={false}
                 source={this.state.productOffersPageURL}
-                scalesPageToFit = {false}
+                scalesPageToFit={true}
                 onLoad={()=>this.setState({webViewModal:false})}
                 domStorageEnabled={true}
+
             />
 
             <View style={{flex:1, flexDirection:'row',height:40, width:70, marginTop:this.state.showFBAFullScreen? 44: 49 ,backgroundColor:'rgb(205,205,205)', marginLeft:Utility.getFontSize()==50?screenWidth-70:screenWidth-70, position:'absolute', borderRadius:10}}>
@@ -724,7 +767,6 @@ export default class MainScreen extends Component{
       }
 
     return(
-
             <View style={{flex:1}}>
                 {mainView}
                 {webViewComponent}
@@ -743,7 +785,7 @@ export default class MainScreen extends Component{
       AWSResponse.getInstance().removeReceiver(this);
   }
 
-  searchProduct(productCode) {
+   searchProduct(productCode) {
       //this.refs.bluetoothMode.focus()
       //this.setState({bluetoothMode:false});
       //console.log("**********searchFunction" + productCode)
@@ -753,6 +795,7 @@ export default class MainScreen extends Component{
       }*/
       //console.log("****123number of csnas" + LocalStorageSettingsApi.numberOfScansInTrial)
 
+       productObject= new Product();
 
       if (!productCode && !this.state.bluetoothMode) {
           alert('Please enter ISBN or UPC code')
@@ -787,38 +830,25 @@ export default class MainScreen extends Component{
           productCodeType = Constants.ProductCodeType.KTypeUPC
       }
 
-      //   if(LocalStorageSettingsApi.OperatingMode == JSON.stringify(Constants.SearchMode.kAWS)){
-    //       AWSApi.fetchProduct(productCode,productCodeType)
-    //   }
+
      if(LocalStorageSettingsApi.OperatingMode == JSON.stringify(Constants.SearchMode.kDataBase)) {
           DatabaseLocalApi.getInstance().searchProductById(productCode)
       }
       else if (LocalStorageSettingsApi.OperatingMode == JSON.stringify(Constants.SearchMode.kElasticSearch)) {
           //  ElasticSearch.fetchProduct(productCode)
          AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);
+
       }
-    //   else if(LocalStorageSettingsApi.OperatingMode == JSON.stringify(Constants.SearchMode.kDataBaseAndES)){
-    //       DatabaseLocalApi.getInstance().searchProductById(productCode)
-    //   }
+
       else{
           alert('Mode not available ' + LocalStorageSettingsApi.OperatingMode)
       }
 
   }
 
+
     //AWS Response delegate method
-    awsResponseSucessCallBack(response){
-        //alert("aws")
-        //console.log("************aws success")
-        //console.log("response::::"+JSON.stringify(response))
-        //responseFilter = response["ItemLookupResponse"]["Items"]["Request"]
-        //alert("aws success")
-        /*if( ( responseFilter.hasOwnProperty('Errors') ) )
-        {
-            alert("hello")
-            this.updateStateOnSuccess(productObject)
-            return
-        }*/
+    async awsResponseSucessCallBack(response){
 
         if( !( (response.hasOwnProperty('ItemLookupResponse')) && (response['ItemLookupResponse'].hasOwnProperty('Items')) && (response['ItemLookupResponse']['Items'].hasOwnProperty('Item')) ) ){
             this.calculateAverageRank(this.state.codeEnteredByUser)
@@ -894,11 +924,18 @@ export default class MainScreen extends Component{
                 console.log("prefixZeroString" +prefixZeroString)
                 asin=prefixZeroString+asin
             }
+
+            //await MWSApi.fetchProduct(asin, "New","GetLowestOfferListingsForASIN").then(()=> MWSApi.fetchProduct(asin, "Used", "GetLowestOfferListingsForASIN"))
+            //Removing await for time effiency -incresed by 5 sec :)
+
+             MWSApi.fetchProduct(asin, "New","GetLowestOfferListingsForASIN").then(()=> MWSApi.fetchProduct(asin, "Used", "GetLowestOfferListingsForASIN"))
+
+            await MWSApi.fetchProduct(asin, "New", "GetLowestPricedOffersForASIN")
+
             productObject.compareSalesRank = NewSalesRank;
 
             if(NewSalesRank != null ){
                 NewSalesRank = NewSalesRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
             }
 
 
@@ -910,17 +947,14 @@ export default class MainScreen extends Component{
             productObject.category = category;
             productObject.tradeIn = tradeInValue;
             productObject.title = title;
-            productObject.nonFBANewOffersArray=[LowestNewPrice];
-            productObject.nonFBAUsedOffersArray=[LowestUsedPrice];
             productObject.FBAUrl = FBAUrl;
             productObject.UsedUrl = UsedUrl;
             productObject.NewUrl = NewUrl;
             productObject.AllOffersUrl = AllOffersUrl
-            //productObject.productCode = productCode
 
         }else {
             let len=itemArray.length
-console.log("length" +len)
+            console.log("length" +len)
 
             let NewAmazonPrice = itemArray[len-1]["ItemAttributes"] ? itemArray[len-1]["ItemAttributes"]["ListPrice"] ? itemArray[len-1]["ItemAttributes"]["ListPrice"]["FormattedPrice"]: null: null
             let NewSalesRank = itemArray[len-1]["SalesRank"] ? itemArray[len-1]["SalesRank"] : null
@@ -930,7 +964,7 @@ console.log("length" +len)
             let title = itemArray[len-1]["ItemAttributes"]?itemArray[len-1]["ItemAttributes"]["Title"]:null
             let TotalNew=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["TotalNew"]:null:null
             let TotalUsed=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["TotalUsed"]:null:null
-            let LowestNewPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]["FormattedPrice"]:null:null:null
+           // let LowestNewPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]["FormattedPrice"]:null:null:null
             let LowestUsedPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]?itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]["FormattedPrice"]:null:null:null
             let AllOffersUrl = itemArray[len-1]["ItemLinks"]["ItemLink"][(itemArray[len-1]["ItemLinks"]["ItemLink"].length - 1)]["URL"]
             let FBAUrl = itemArray[len-1]["ItemLinks"]["ItemLink"][(itemArray[len-1]["ItemLinks"]["ItemLink"].length - 1)]["URL"] + "/ref=olp_f_primeEligible?ie=UTF8&f_primeEligible=true&force-full-site=1";
@@ -958,6 +992,15 @@ console.log("length" +len)
                 console.log("prefixZeroString" +prefixZeroString)
                 asin=prefixZeroString+asin
             }
+            console.log("asin**" +asin)
+
+
+            //await MWSApi.fetchProduct(asin, "New","GetLowestOfferListingsForASIN").then(()=> MWSApi.fetchProduct(asin, "Used", "GetLowestOfferListingsForASIN"))
+            //Removing await for time effiency -incresed by 5 sec :)
+
+             MWSApi.fetchProduct(asin, "New", "GetLowestOfferListingsForASIN").then(()=> MWSApi.fetchProduct(this.state.codeEnteredByUser, "Used", "GetLowestOfferListingsForASIN"))
+            await MWSApi.fetchProduct(asin, "New", "GetLowestPricedOffersForASIN")
+
             productObject.compareSalesRank = NewSalesRank;
 
             if(NewSalesRank != null ){
@@ -971,8 +1014,8 @@ console.log("length" +len)
             productObject.title = title;
             productObject.numberOfNewOffers=TotalNew;
             productObject.numberOfUsedOffers=TotalUsed;
-            productObject.nonFBANewOffersArray=[LowestNewPrice];
-            productObject.nonFBAUsedOffersArray=[LowestUsedPrice];
+            //productObject.nonFBANewOffersArray=[LowestNewPrice];
+            //productObject.nonFBAUsedOffersArray=[LowestUsedPrice];
             productObject.amazonPrice = NewAmazonPrice;
             productObject.FBAUrl = FBAUrl;
             productObject.UsedUrl = UsedUrl;
@@ -999,6 +1042,167 @@ console.log("length" +len)
 
     }
 
+    mwsResponseSucessCallBack(response, ItemCondition){
+        console.log("mwsResponseSucessCallBack" +JSON.stringify(response))
+        var PriceArray=[]
+        var FBAOffers=[]
+        var UsedPricedArray=[]
+        let FBAOffersPrice
+        //response.GetLowestOfferListingsForASINResponse.GetLowestOfferListingsForASINResult.Product.LowestOfferListings.LowestOfferListing.Price.ListingPrice.Amount))
+        let ListingArray=response["GetLowestOfferListingsForASINResponse"]["GetLowestOfferListingsForASINResult"]["Product"]
+        let ProductArray=ListingArray["LowestOfferListings"]
+
+        if(ProductArray != ""){
+            console.log("Product array is not null")
+
+            var OffersArray=ProductArray["LowestOfferListing"]
+
+            if(OffersArray.constructor.name == 'Array'){
+                console.log("array rsponse")
+
+                OffersArray.forEach(function (element) {
+
+                    if (element["Qualifiers"]["FulfillmentChannel"] == 'Amazon') {
+
+                        FBAOffersPrice= (element["Price"]["ListingPrice"]["Amount"])
+
+                        let Subcondition=null
+
+                        if(element["Qualifiers"]["ItemSubcondition"]=='Good'){
+                            Subcondition = '(G)'
+                        }
+
+                        if(element["Qualifiers"]["ItemSubcondition"]== 'VeryGood'){
+                            Subcondition = '(VG)'
+                        }
+                        if (element["Qualifiers"]["ItemSubcondition"]== 'Acceptable'){
+                            Subcondition = '(A)'
+                        }
+
+                        FBAOffers.push({Price :FBAOffersPrice, Condition: Subcondition})
+                        productObject.fbaOffersArray=FBAOffers
+
+
+                    }
+
+
+                        if (element["Qualifiers"]["ItemCondition"] == 'Used') {
+                            let Subcondition=null
+                            let ItemSubcondition= element["Qualifiers"]["ItemSubcondition"]
+                            let Itemprice=element["Price"]["ListingPrice"]["Amount"]
+
+                            if(ItemSubcondition == 'Good'){
+                                Subcondition = '(G)'
+                            }
+                            if(ItemSubcondition== 'VeryGood'){
+                                Subcondition = '(VG)'
+                            }
+                            if (ItemSubcondition== 'Acceptable'){
+                                Subcondition = '(A)'
+                            }
+                            UsedPricedArray.push({Price :Itemprice, Condition: Subcondition})
+
+                            UsedPricedArray.sort(function (a, b) {
+                                return a.Price- b.Price
+                            });
+                            productObject.nonFBAUsedOffersArray=UsedPricedArray
+                           // productObject.productCondition=UsedPricedArray.Condition
+                            console.log("**ItemSubcondition**" +Subcondition)
+                        }
+                        if (element["Qualifiers"]["ItemCondition"] == 'New') {
+                            PriceArray.push(element["Price"]["ListingPrice"]["Amount"])
+                            PriceArray.sort(function (a, b) {
+                                return a - b
+                            });
+                            productObject.nonFBANewOffersArray=PriceArray
+                        }
+
+
+                })
+            }
+
+            else {
+                console.log("object response")
+                if (OffersArray["Qualifiers"]["FulfillmentChannel"] == 'Amazon') {
+                    console.log("amazon product ")
+                    FBAOffersPrice=OffersArray["Price"]["ListingPrice"]["Amount"]
+                    let Subcondition=null
+
+                    if(element["Qualifiers"]["ItemSubcondition"]=='Good'){
+                        Subcondition = '(G)'
+                    }
+
+                    if(element["Qualifiers"]["ItemSubcondition"]== 'VeryGood'){
+                        Subcondition = '(VG)'
+                    }
+                    if (element["Qualifiers"]["ItemSubcondition"]== 'Acceptable'){
+                        Subcondition = '(A)'
+                    }
+
+                    FBAOffers.push({Price :FBAOffersPrice, Condition: Subcondition})
+                    productObject.fbaOffersArray=FBAOffers
+
+                }
+
+                    console.log("item is " +OffersArray["Price"]["ListingPrice"]["Amount"])
+                    if (OffersArray["Qualifiers"]["ItemCondition"] == 'Used') {
+                        let Subcondition=null
+                        let ItemSubcondition= OffersArray["Qualifiers"]["ItemSubcondition"]
+                        let Itemprice=OffersArray["Price"]["ListingPrice"]["Amount"]
+
+                        if(ItemSubcondition == 'Good'){
+                            Subcondition = '(G)'
+                        }
+                        if(ItemSubcondition== 'VeryGood'){
+                            Subcondition = '(VG)'
+                        }
+                        if (ItemSubcondition== 'Acceptable'){
+                            Subcondition = '(A)'
+                        }
+
+                        UsedPricedArray.push({Price :Itemprice, Condition: Subcondition})
+
+                        UsedPricedArray.sort(function (a, b) {
+                            return a.Price- b.Price
+                        });
+                        productObject.nonFBAUsedOffersArray=UsedPricedArray
+                    }
+
+                    if (OffersArray["Qualifiers"]["ItemCondition"] == 'New') {
+                        console.log("new offer ")
+                        PriceArray.push(OffersArray["Price"]["ListingPrice"]["Amount"])
+                        PriceArray.sort(function (a, b) {
+                            return a - b
+                        });
+                        productObject.nonFBANewOffersArray=PriceArray
+                    }
+
+            }
+
+        }
+    }
+
+
+    mwsOffersResponseSucessCallBack(response) {
+        console.log("______response" +JSON.stringify(response))
+        var TotalFBAOffers=0
+        let ListingArray=response["GetLowestPricedOffersForASINResponse"]["GetLowestPricedOffersForASINResult"]
+        if(true){
+
+                let OffersArray=ListingArray[0]["Summary"]
+
+                let NumberOfOffers=OffersArray[0]["NumberOfOffers"][0]["OfferCount"]
+
+                NumberOfOffers.forEach(function (element){
+                    if (element["$"]["fulfillmentChannel"] == 'Amazon') {
+                        console.log("**if")
+                        TotalFBAOffers= TotalFBAOffers + parseInt(element["_"])
+                        productObject.numberOfFBAOffers=TotalFBAOffers
+                    }
+                    })
+                }
+       }
+
     missingASIN(asin){
         console.log("*********xyzmissingASIN" + asin)
         fetch('http://34.210.169.97/prices/missing', {
@@ -1018,8 +1222,10 @@ console.log("length" +len)
          console.log("*********xyzavgRank1")
         fetch('http://35.167.19.151/history/average/?asins=' + isbn )
             .then((response) => {
+                console.log("*********xyz:" + JSON.stringify(response))
                 response=JSON.parse(response["_bodyText"])
                 //alert(JSON.stringify(response))
+                 console.log("*********all:" + JSON.stringify(response))
                 if(JSON.stringify(response[isbn])!=null){
                 productObject.averageRank = (JSON.stringify(response[isbn]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
                 else{
@@ -1029,7 +1235,9 @@ console.log("length" +len)
     }
 
     async averagePrice(asin){
-        await fetch('http://34.210.169.97/prices/amazon/average?asins=' + asin )
+         // removed await ahead of fetch for time optimization  ;) works or not -- no idea!!
+
+         fetch('http://34.210.169.97/prices/amazon/average?asins=' + asin )
             .then((response) => {
                 console.log("*********xyzavgPrice1")
                 response=JSON.parse(response["_bodyText"])
@@ -1045,7 +1253,7 @@ console.log("length" +len)
                     productObject.fbaAvg= "NA"
                 }
             })
-        await fetch('http://34.210.169.97/prices/new/average?asins=' + asin )
+         fetch('http://34.210.169.97/prices/new/average?asins=' + asin )
             .then((response) => {
                 console.log("*********xyzavgPrice2")
                 response=JSON.parse(response["_bodyText"])
@@ -1112,6 +1320,8 @@ console.log("length" +len)
         //productObject = new Product();
         //productObject.updateProductDataOnResponseFromES(response);
         //AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);
+       // MWSApi.fetchProduct(this.state.codeEnteredByUser, "New")
+        //MWSApi.fetchProduct(this.state.codeEnteredByUser, "Used")
         //this.updateStateOnSuccess(productObject)
     }
 
@@ -1127,6 +1337,8 @@ console.log("length" +len)
         //this.updateStateOnElasticsearchFailure()
         //this.setState({esResult:false})
         //AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);
+        //MWSApi.fetchProduct(this.state.codeEnteredByUser, "New")
+       // MWSApi.fetchProduct(this.state.codeEnteredByUser, "Used")
     }
 
     databaseProductFetchedSuccessCallBack(response){
@@ -1138,7 +1350,10 @@ console.log("length" +len)
                 this.updateStateOnSuccess(productObject)
             }
             else
-            {AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);}
+            {   AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);
+                //MWSApi.fetchProduct(this.state.codeEnteredByUser, "New")
+               // MWSApi.fetchProduct(this.state.codeEnteredByUser, "Used")
+            }
         })
 
 
@@ -1215,6 +1430,8 @@ console.log("length" +len)
        asinMissing=true
       console.log('*********xyzDatabaseFailure')
       AWSApi.fetchProduct(this.state.codeEnteredByUser,productCodeType);
+      MWSApi.fetchProduct(this.state.codeEnteredByUser, "New")
+      MWSApi.fetchProduct(this.state.codeEnteredByUser, "Used")
       this.closeWebView()
   }
 
@@ -1257,10 +1474,11 @@ console.log("*****************************callingupdateStateOnSuccess" )
               FBAUrl:productObject.FBAUrl,
               NewUrl:productObject.NewUrl,
               UsedUrl:productObject.UsedUrl,
-              AllOffersUrl:productObject.AllOffersUrl
+              AllOffersUrl:productObject.AllOffersUrl,
+              productCondition:productObject.productCondition
           },()=>{
               if(this.state.productAmazonRank == "-" || this.state.productAmazonRank== null){
-                  this.setState({headingText: (parseInt(this.state.productNetProfit.substring(1))>parseInt(LocalStorageSettingsApi.netProfit))
+                  this.setState({headingText: (parseInt(this.state.productNetProfit)>parseInt(LocalStorageSettingsApi.netProfit))
 
                           //productObject.calculateBaseProfit>=BuyTriggers.baseProfitValue
                           //productObject.calculateXRAYPercentage>=BuyTriggers.xRayPercentageValue
@@ -1270,7 +1488,7 @@ console.log("*****************************callingupdateStateOnSuccess" )
                   )
               }
               else{
-        this.setState({headingText: (parseInt(this.state.productNetProfit.substring(1))>parseInt(LocalStorageSettingsApi.netProfit) &&
+        this.setState({headingText: (parseInt(this.state.productNetProfit.substring)>parseInt(LocalStorageSettingsApi.netProfit) &&
                           parseInt(this.state.productAmazonRank)<parseInt(LocalStorageSettingsApi.averageSalesRankValue))
 
                          //productObject.calculateBaseProfit>=BuyTriggers.baseProfitValue
@@ -1312,14 +1530,14 @@ console.log("*****************************callingupdateStateOnSuccess" )
       }*/
     /*switch(company){
       case Constants.Company.KCompanyAmazon:{
-<<<<<<< .mine
+
         url = 'https://www.amazon.com/dp/'+productCode+'/ref=olp_product_details?_encoding=UTF8&me='
-||||||| .r299
+
         url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords='+productCode
-=======
+
         //url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords='+productCode
           url = "https://www.amazon.com/dp/" + productCode + "/ref=olp_product_details?_encoding=UTF8&me="
->>>>>>> .r311
+
 
       }
             break;
@@ -1396,7 +1614,6 @@ console.log("*****************************callingupdateStateOnSuccess" )
             }
             default:
                 break
-
         }
     }
 
@@ -1459,7 +1676,7 @@ const styles = StyleSheet.create({
     height:30,
   },
   minimizeExpandIconStyles:{
-flex:1,
+      flex:1,
     //width:30,
     //position:'absolute',
     //marginLeft:Utility.getFontSize()==50?screenWidth-70:screenWidth-30,
@@ -1507,7 +1724,6 @@ flex:1,
     borderRadius:5,
     justifyContent:'center',
     alignItems:'center',
-
   },
   fontColors:{
     color:'white'
@@ -1562,7 +1778,7 @@ flex:1,
     backgroundColor:'#f6f6f6'
   },
   scrollingTableRow:{
-    height:60,
+    height:40,
     justifyContent:'center',
     alignItems:'center'
   },

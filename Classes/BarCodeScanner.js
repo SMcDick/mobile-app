@@ -10,7 +10,7 @@ import {
     Dimensions
 } from 'react-native';
 
-import Camera from 'react-native-camera';
+//import Camera from 'react-native-camera';
 import BarcodeScanner from 'react-native-barcode-scanner-universal'
 const screenHeight=Dimensions.get('window').height
 const screenWidth=Dimensions.get('window').width

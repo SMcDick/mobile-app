@@ -8,7 +8,7 @@ import fastXmlParser from 'fast-xml-parser'
 export default class ProductApi{
 
    static fetchProduct(productCode,productCodeType){
-       //console.log("*********es failure -> aws.fetcgh")
+
        let parsedResponse = null
         return  fetch(ProductApi.getAmazonItemInfo(productCode,productCodeType))
                 .then((response) => {
@@ -18,7 +18,10 @@ export default class ProductApi{
                     console.log("******************"+JSON.stringify(parsedResponse))
                 })
                 .then(() => {
+           console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+JSON.stringify(parsedResponse))
+
                     if((!parsedResponse["ItemLookupResponse"]) || (!parsedResponse["ItemLookupResponse"]["Items"]) || (!parsedResponse["ItemLookupResponse"]["Items"]["Request"]) || (parsedResponse["ItemLookupResponse"]["Items"]["Request"]["Errors"])){
+
                             AWSResponse.getInstance().responseFailureCallBack(Constants.AWSErrorCodes.kInvalidParameterValue)
                     }else{
                         AWSResponse.getInstance().responseSucessCallBack(parsedResponse)
@@ -40,7 +43,6 @@ export default class ProductApi{
     static sha256(stringToSign, secretKey) {
         var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
         return hex.toString(CryptoJS.enc.Base64);
-
     }
 
     static timestamp() {
@@ -90,5 +92,6 @@ export default class ProductApi{
 
 
     }
+
 
 }

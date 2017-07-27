@@ -21,7 +21,7 @@ import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Payments from './Payments'
-import YouTube from 'react-native-youtube'
+//import YouTube from 'react-native-youtube'
 
 export default class Resources extends Component{
        render(){

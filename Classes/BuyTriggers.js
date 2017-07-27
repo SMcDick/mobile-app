@@ -211,21 +211,21 @@ export default class Trigger extends Component{
                     </View>
                     <View style={{flex:1}}>
                         <TouchableOpacity
-                            style={styles.sectionHeadingContainerStyles}
-                            onPress={this.toggle.bind(this,0)}
-                            activeOpacity={0.85}
-                        >
+                        style={styles.sectionHeadingContainerStyles}
+                        onPress={this.toggle.bind(this,0)}
+                        activeOpacity={0.85}
+                    >
 
-                            <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>Cost of Book</Text>
-                            </View>
+                        <View style={{height:50,flex:7,justifyContent:'center'}} >
+                            <Text style={styles.sectionHeadingStyles}>Cost of Book</Text>
+                        </View>
 
-                            <View style={{flex:1}}>
-                                {this.state.expanded[0]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>:
-                                    <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>}
+                        <View style={{flex:1}}>
+                            {this.state.expanded[0]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>:
+                                <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>}
 
-                            </View>
-                        </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
                         <Animated.View style={{height:this.state.animation[0]}}>
                             {this.state.expanded[0]?
                                 <Picker
