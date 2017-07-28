@@ -69,7 +69,6 @@ export default class FBAscanner extends Component{
                 if (JSON.stringify(result) == Constants.kTrue) {
                     //console.log("############################################ yes loggined")
                     this.setState({isLoggedIn: "true", isLoading: "false"});
-
                 } else {
                     //console.log("###########################################  not loggined")
                     this.setState({isLoading: "false"});

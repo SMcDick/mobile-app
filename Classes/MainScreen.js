@@ -69,7 +69,7 @@ export default class MainScreen extends Component{
         AWSResponse.getInstance().setReceiver(this);
         AnylineScanner.getInstance().setReceiver(this)
         MWSResponse.getInstance().setReceiver(this);
-       PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
 
         console.disableYellowBox = true;
 
@@ -280,13 +280,13 @@ export default class MainScreen extends Component{
 
           ).start();
 
-          Animated.timing(
+          /*Animated.timing(
               this.state.heightOfFBaOffersPage,
               {
                   toValue:screenHeight,
                   duration:200
               }
-          ).start();
+          ).start();*/
 
           this.setState({showFBAFullScreen:webViewIsFullScreen})
 
@@ -1219,6 +1219,7 @@ export default class MainScreen extends Component{
     }
 
      calculateAverageRank(isbn){
+
          console.log("*********xyzavgRank1")
         fetch('http://35.167.19.151/history/average/?asins=' + isbn )
             .then((response) => {
@@ -1231,7 +1232,11 @@ export default class MainScreen extends Component{
                 else{
                     productObject.averageRank='-'
                 }
-            }).then(()=>this.averagePrice(isbn)).then(()=>{this.updateStateOnSuccess(productObject)})
+            }).then(()=>this.averagePrice(isbn)).then(()=>{this.updateStateOnSuccess(productObject)}).catch((error)=>{
+               // alert(JSON.stringify(error))
+              this.averagePrice(isbn).then(()=>{this.updateStateOnSuccess(productObject)})
+            })
+
     }
 
     async averagePrice(asin){

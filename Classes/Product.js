@@ -21,7 +21,7 @@ export default class Product{
         this.productAmazonURL = null;
         this.nonFBAUsedOffersArray  = [];
         this.nonFBANewOffersArray = [];
-        this.fbaOffersArray = ["View"];
+        this.fbaOffersArray = [];
         this.numberOfUsedOffers = null;
         this.numberOfNewOffers = null;
         this.numberOfFBAOffers = null;

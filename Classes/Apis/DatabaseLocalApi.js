@@ -26,9 +26,7 @@ export default class DatabaseLocalApi{
         if(_databaseLocalApi == null) {
             _databaseLocalApi = new DatabaseLocalApi()
         }
-
         return _databaseLocalApi
-
         //DatabaseLocalApi.openDatabase();
     }
 

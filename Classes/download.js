@@ -26,8 +26,9 @@ import {
     Modal,
     ActivityIndicator,
     InteractionManager,
-Alert
+    Alert
 } from 'react-native';
+
 const screenWidth=Dimensions.get('window').width
 import RNFS from 'react-native-fs'
 import NavigationBar from './scenesNavBar'
@@ -65,14 +66,14 @@ export default class Download extends Component{
         this.downloadStartTime = 0.0;
         this.downLoadPath = null;
 
-        let downloadButton = null
+        this.downloadButton = null
         if(ElasticSearch.downLoadState === Constants.DownloadState.kRunning){
-            downloadButton = 'Pause'
+            this.downloadButton = 'Pause'
         }else{
               if(DataBase.getInstance().totalProductsInDataBase > 0){
-                  downloadButton = 'Resume'
+                  this.downloadButton = 'Resume'
                }else {
-                  downloadButton = 'Start'
+                  this.downloadButton = 'Start'
               }
         }
 
@@ -85,14 +86,12 @@ export default class Download extends Component{
             speed:0,
             remainingTime:'',
             //booksAndOtherMedia:LocalStorageSettingsApi.BooksAndOtherMedia,
-            downloadButtonText : downloadButton,
+            downloadButtonText : this.downloadButton,
             disConnected:null,
             isConnected:this.props.isConnected,
             showModal:false,
             spaceNeeded:false
         }
-
-
     }
     /*onValueChangeCallback(result,key){
         switch(key){
@@ -117,6 +116,13 @@ export default class Download extends Component{
         //this.activityCount++
     }
 
+   // onPressCancel(){
+     //   this.setState({
+       //     showModal:false,
+        //})
+        //DataBase.getInstance().openDatabase();
+   // }
+
     render(){
         return(
             <View style={{flex:1,backgroundColor:'rgb(233,234,238)'}}>
@@ -129,12 +135,26 @@ export default class Download extends Component{
                         style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(100,100,100,0.5)'}}
                     >
                         <ActivityIndicator
-                            size={'large'}
+                            size={'large'} 
                             color="rgb(0,149,242)"
                             //style={{color:'red'}}
                             //color={{color:'red'}}
                             //color={{'rgb(50,50,50')}}
                         />
+                        <Text 
+                            style={{textDecorationLine:'underline',fontWeight:'300',fontSize:18}} 
+                            onPress={() => {
+                                 if(DataBase.getInstance().totalProductsInDataBase > 0){
+                                       this.downloadButton = 'Resume'
+                                 }else {    
+                                 this.downloadButton = 'Start'
+                                 }
+                                this.setState({showModal:false, downloadButtonText:this.downloadButton})
+                                }
+                            }
+                        >
+                            cancel
+                        </Text>
                     </View>
                 </Modal> : null }
                 <View style={{height:Platform.OS=='ios'?70:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route} popScreenFunction={this.popScene.bind(this)}/></View>
@@ -309,7 +329,7 @@ startDownloadPDF(){
             [
                 {
                     text:'OK',
-                    //onPress:()=>this.setState({showModal:false})
+                    onPress:()=>this.setState({showModal:false})
                 }
             ]
         )
