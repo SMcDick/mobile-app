@@ -49,13 +49,16 @@ export default class Payments extends Component{
         }
 
         if(this.state.isSelectedPaypal) {
-            PayPal.initialize(PayPal.SANDBOX, "AbEECyMq0thmQAcfWS0bwS0e-KKZBkFZSOpI5ot_dAz2Re-E8Mk3UlHcFssWee15eezHoF5rQidU7FhJ");
+            debugger;
+            //PayPal.initialize(PayPal.SANDBOX, "AbEECyMq0thmQAcfWS0bwS0e-KKZBkFZSOpI5ot_dAz2Re-E8Mk3UlHcFssWee15eezHoF5rQidU7FhJ");
+            PayPal.initialize(PayPal.SANDBOX, "AaTUWCYMTD6U9xRbSsKziBSy0JaVHt1foyAWLsNpIDz2RfQMwHD6Wasd2eH-BKZ7iF5e3JE3ouqnx8Wq");
             PayPal.pay({
                 price: '5.00',
                 currency: 'USD',
                 description: 'Subscription fee for this app.',
             }).then((res)=>{
                 //console.log("payment successful" +JSON.stringify(res))
+                debugger;
                 this.props.navigator.popN(3);
                 Alert.alert(
                         'Success',

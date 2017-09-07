@@ -115,6 +115,15 @@ export default class SideMenu extends Component{
                                     style={styles.touchableStyles}
                                     onPress={()=>{
                                         this.closeSideMenu()
+                                        this.props.navigator.push({name:'Payments',prevScreen:'Back'})
+                                    }}
+                                >
+                                    <Text style={styles.touchableContentStyles}>Payments</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.touchableStyles}
+                                    onPress={()=>{
+                                        this.closeSideMenu()
                                         this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
                                     }}
                                 >

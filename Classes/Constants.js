@@ -126,8 +126,8 @@ import { Dimensions , Platform } from 'react-native';
 
     //Original AWS details
     static kAssociateTag = 'textdominatio-20'
-    static kAWSSecretKey = "CWwRAdR0DMjhc053KTT5gWNv1cYMzSZmySs9zyiT"
-    static kAWSAccessKeyId = "AKIAILZSQFO5UTM4CCUQ"
+    static kAWSSecretKey = "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"//"CWwRAdR0DMjhc053KTT5gWNv1cYMzSZmySs9zyiT"
+    static kAWSAccessKeyId = "AKIAJ4QJBSZAB3JBVMEQ"//"AKIAILZSQFO5UTM4CCUQ"
 
      //original MWS details
      static AWSAccessKeyId = 'AKIAJWG5UCTUZM73TETA'

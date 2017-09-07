@@ -7,15 +7,35 @@ import fastXmlParser from 'fast-xml-parser'
 
 export default class ProductApi{
 
+
    static fetchProduct(productCode,productCodeType){
 
        let parsedResponse = null
+
+       const parseString = require('react-native-xml2js').parseString;
+
         return  fetch(ProductApi.getAmazonItemInfo(productCode,productCodeType))
-                .then((response) => {
+                      .then(response => response.text())
+                      .then((response) => {
+                          parseString(response, function (err, result) {
+                              console.log(response);
+                              console.log("HERE RINAT");
+                              response = fastXmlParser.getTraversalObj(response);
+                              parsedResponse = fastXmlParser.convertToJson(response);
+                              if((!parsedResponse["ItemLookupResponse"]) || (!parsedResponse["ItemLookupResponse"]["Items"]) || (!parsedResponse["ItemLookupResponse"]["Items"]["Request"]) || (parsedResponse["ItemLookupResponse"]["Items"]["Request"]["Errors"])){
+                                  AWSResponse.getInstance().responseFailureCallBack(Constants.AWSErrorCodes.kInvalidParameterValue)
+                                  console.log("NOT WORKING");
+                              }else{
+                                  AWSResponse.getInstance().responseSucessCallBack(parsedResponse)
+                                  console.log("MAYBE WORKING?00");
+                              }
+                          });
+                      })
+                      /*
+              .then((response) => { //OLD CODE
                     response  = response["_bodyInit"]
                     response = fastXmlParser.getTraversalObj(response);
                     parsedResponse = fastXmlParser.convertToJson(response);
-                    console.log("******************"+JSON.stringify(parsedResponse))
                 })
                 .then(() => {
            console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+JSON.stringify(parsedResponse))
@@ -26,7 +46,7 @@ export default class ProductApi{
                     }else{
                         AWSResponse.getInstance().responseSucessCallBack(parsedResponse)
                     }
-                })
+                })*/
                 .catch((error) => {
                     console.error(error);
                 });
