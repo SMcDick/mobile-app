@@ -9,7 +9,7 @@ import Constants from '../Constants'
 export default class MWSApi{
 
     static fetchProduct(productId, ItemCondition, Action){
-        console.log("Action" +Action)
+       /* console.log("Action" +Action)
         console.log("productId" +productId)
         if(ItemCondition == 'New'){
             console.log('123456789 New fetch')
@@ -64,13 +64,13 @@ export default class MWSApi{
             })
             .catch((error) => {
                 console.error(error);
-            });
+            });*/
     }
 
 
     static getAmazonItemInfo(productId, ItemCondition, Action) {
 
-        if(Action == "GetLowestOfferListingsForASIN"){
+        /*if(Action == "GetLowestOfferListingsForASIN"){
 
             var param = [];
             param.push("AWSAccessKeyId=" + Constants.AWSAccessKeyId);
@@ -98,7 +98,7 @@ export default class MWSApi{
         if(Action == 'GetLowestPricedOffersForASIN') {
 
 
-            var param = [];
+            /*var param = [];
             param.push("AWSAccessKeyId=" + Constants.AWSAccessKeyId);
             param.push("Action=" + Action);
             param.push("SellerId=" + Constants.SellerId);
@@ -122,17 +122,17 @@ export default class MWSApi{
             console.log("******* mws amazonUrl" + amazonUrl)
 
             return amazonUrl;
-        }
+        }*/
 
     }
 
     static sha256(stringToSign, secretKey) {
-        var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
-        return hex.toString(CryptoJS.enc.Base64);
+        /*var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
+        return hex.toString(CryptoJS.enc.Base64);*/
     }
 
     static timestamp() {
-        var date = new Date();
+        /*var date = new Date();
         var y = date.getUTCFullYear().toString();
         var m = (date.getUTCMonth() + 1).toString();
         var d = date.getUTCDate().toString();
@@ -148,7 +148,7 @@ export default class MWSApi{
 
         var date = y + "-" + m + "-" + d;
         var time = h + ":" + min + ":" + s;
-        return date + "T" + time + ".000Z";
+        return date + "T" + time + ".000Z";*/
     }
 }
 

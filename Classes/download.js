@@ -66,6 +66,8 @@ export default class Download extends Component{
         this.downloadStartTime = 0.0;
         this.downLoadPath = null;
 
+        debugger;
+
         this.downloadButton = null
         if(ElasticSearch.downLoadState === Constants.DownloadState.kRunning){
             this.downloadButton = 'Pause'
@@ -144,6 +146,7 @@ export default class Download extends Component{
                         <Text 
                             style={{textDecorationLine:'underline',fontWeight:'300',fontSize:18}} 
                             onPress={() => {
+                            debugger;
                                  if(DataBase.getInstance().totalProductsInDataBase > 0){
                                        this.downloadButton = 'Resume'
                                  }else {    

@@ -10,7 +10,7 @@ export default class ProductApi{
 
    static fetchProduct(productCode,productCodeType){
 
-       let parsedResponse = null
+      /* let parsedResponse = null
 
        const parseString = require('react-native-xml2js').parseString;
 
@@ -30,7 +30,7 @@ export default class ProductApi{
                                   console.log("MAYBE WORKING?00");
                               }
                           });
-                      })
+                      })*/
                       /*
               .then((response) => { //OLD CODE
                     response  = response["_bodyInit"]
@@ -47,26 +47,26 @@ export default class ProductApi{
                         AWSResponse.getInstance().responseSucessCallBack(parsedResponse)
                     }
                 })*/
-                .catch((error) => {
+                /*.catch((error) => {
                     console.error(error);
-                });
+                });*/
         }
 
     getSignatureKey(Crypto, key, dateStamp, regionName, serviceName) {
-        var kDate = Crypto.HmacSHA256(dateStamp, "AWS4" + key);
+        /*var kDate = Crypto.HmacSHA256(dateStamp, "AWS4" + key);
         var kRegion = Crypto.HmacSHA256(regionName, kDate);
      var kService = Crypto.HmacSHA256(serviceName, kRegion);
         var kSigning = Crypto.HmacSHA256("aws4_request", kService);
-        return kSigning;
+        return kSigning;*/
     }
 
     static sha256(stringToSign, secretKey) {
-        var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
-        return hex.toString(CryptoJS.enc.Base64);
+        /*var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
+        return hex.toString(CryptoJS.enc.Base64);*/
     }
 
     static timestamp() {
-        var date = new Date();
+        /*var date = new Date();
         var y = date.getUTCFullYear().toString();
         var m = (date.getUTCMonth() + 1).toString();
         var d = date.getUTCDate().toString();
@@ -82,12 +82,12 @@ export default class ProductApi{
 
         var date = y + "-" + m + "-" + d;
         var time = h + ":" + min + ":" + s;
-        return date + "T" + time + ".000Z";
+        return date + "T" + time + ".000Z";*/
     }
 
     static getAmazonItemInfo(barcode,productCodeType) {
 
-        var responseGroup = encodeURIComponent("Images,ItemAttributes,OfferFull,OfferListings,Offers,OfferSummary,SalesRank,VariationOffers")
+        /*var responseGroup = encodeURIComponent("Images,ItemAttributes,OfferFull,OfferListings,Offers,OfferSummary,SalesRank,VariationOffers")
 
         var parameters = [];
         parameters.push("AWSAccessKeyId=" + Constants.kAWSAccessKeyId);
@@ -109,7 +109,7 @@ export default class ProductApi{
         var amazonUrl =  "http://webservices.amazon.com/onca/xml?" + paramString + "&Signature=" + signature;
         console.log(amazonUrl)
         return amazonUrl;
-
+*/
 
     }
 

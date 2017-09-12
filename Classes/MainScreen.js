@@ -60,7 +60,8 @@ let asin;
 export default class MainScreen extends Component{
 
    constructor(props){
-      super(props);
+        super(props);
+
 
         NetworkConnectivity.getInstance().internetAvailable
         LocalStorageSettingsResponse.getInstance().setReceiver(this);
@@ -358,7 +359,7 @@ export default class MainScreen extends Component{
  }
 
   render(){
-    let navigationBar =  (
+  let navigationBar =  (
         <View style={styles.navBar}>
             <View style= {{flexGrow:1}}>
                 <TouchableOpacity
@@ -1626,6 +1627,12 @@ console.log("*****************************callingupdateStateOnSuccess" )
         this.setState({openCamera:value})
 
         this.props.navigator.push({name:'AnyLineScanner',prevScreen:'Back'})
+    }
+
+    showPayment(){
+        debugger;
+        this.setState({payment:true})
+        this.props.navigator.push({name:'Payments',prevScreen:'Back'})
     }
 
 }

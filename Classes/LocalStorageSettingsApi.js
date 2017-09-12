@@ -38,6 +38,7 @@ export default class LocalStorageApi extends  Component {
     static baseProfitValue = null
     static averageSalesRankValue = null
     static isUserLoggined = null
+    static isUserPaid = null
     static isTrialPeriod = null
     static numberOfScansInTrial = 0
     static accessToken = 'token_id'
@@ -718,16 +719,48 @@ export default class LocalStorageApi extends  Component {
         //console.log("****************************LocalStorage")
         await AsyncStorage.getItem(Constants.KkeyforIsUserLoggined, (error, result)=> {
             if (result == null) {
+                debugger;
                 LocalStorageApi.isUserLoggined = "false"
                 //console.log("****************************Local Storage" + Constants.KkeyforIsUserLoggined)
             }
             else {
+                debugger;
                 LocalStorageApi.isUserLoggined = result
                 //console.log("****************************Local Storage " + Constants.KkeyforIsUserLoggined)
             }
             LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.KkeyforIsUserLoggined);
         })
     }
+
+    static async setIsUserPaid(value) {
+            try {
+                await AsyncStorage.setItem(Constants.KkeyforIsUserPaid, value, ()=> {
+                    LocalStorageApi.isUserPaid = value
+                    //console.log("*********************" +Constants.KkeyforPaidd)
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        static async getIsUserPaid() {
+            //console.log("****************************LocalStorage")
+            debugger;
+            await AsyncStorage.getItem(Constants.KkeyforIsUserPaid, (error, result)=> {
+                if (result == null) {
+                    debugger;
+                    LocalStorageApi.isUserPaid = "false"
+                    console.log("****************************Local Storage" + Constants.KkeyforIsUserPaid)
+                }
+                else {
+                    debugger;
+                    LocalStorageApi.isUserPaid = result
+                    console.log("****************************Local Storage " + Constants.KkeyforIsUserPaid)
+                }
+                LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.KkeyforIsUserPaid);
+            })
+        }
+
 
     static async setIsTrialPeriod(value) {
         try {

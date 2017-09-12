@@ -41,11 +41,13 @@ export default class FBAscanner extends Component{
        //LoginResponse.getInstance().setReceiver(this);
         LocalStorageSettingsApi.getIsAppFirstTimeLaunch();
         LocalStorageSettingsApi.getIsUserLoggined();
+        LocalStorageSettingsApi.getIsUserPaid();
         LocalStorageSettingsApi.getIsTrialPeriod();
         LocalStorageSettingsApi.getTotalScansDoneInTrial();
         this.state={
             isLoading:"true",
-            isLoggedIn:"false"
+            isLoggedIn:"false",
+            isPaid:"false"
         }
     }
 
@@ -75,6 +77,17 @@ export default class FBAscanner extends Component{
                 }
                 break;
             }
+            case Constants.KkeyforIsUserPaid:
+             {
+                 if (JSON.stringify(result) == Constants.kTrue) {
+                     //console.log("############################################ yes loggined")
+                     this.setState({isPaid: "true", isLoading: "false"});
+                 } else {
+                     //console.log("###########################################  not loggined")
+                     this.setState({isLoading: "false"});
+                 }
+                 break;
+             }
             //break;
             case Constants.kKeyForTrialPeriod:
             {
@@ -98,12 +111,17 @@ export default class FBAscanner extends Component{
             var initialRoute = "";
             //console.log("****************************render " + LocalStorageSettingsApi.isUserLoggined)
             if (this.state.isLoading== "false") {
-                if (LocalStorageSettingsApi.isUserLoggined == "false") {
+                /*if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
                     initialRoute = "Account";
                 }
+                else*/ //if (LocalStorageSettingsApi.isUserPaid == "false") {
+                if(this.state.isPaid=="false")
+                    initialRoute = "Payments";
+                }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
+                    console.log("************************" + this.state.isLoading + "**********************" + this.state.isPaid + "initialRoute = Account")
                     initialRoute = "MainScreen";
                 }
             }
@@ -114,7 +132,7 @@ export default class FBAscanner extends Component{
 
             return (
                 <Navigator
-                    initialRoute={{name: "MainScreen"}}
+                    initialRoute={{name: initialRoute}}
                     renderScene={(route, navigator) => {
                         if (route.name === 'Account')
                             return (<Account navigator={navigator} route={route}/>)

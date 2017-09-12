@@ -127,6 +127,7 @@ export default class ElasticSearch{
                    // }
                 })
         }else{
+        debugger;
             console.log("***DEBUG***RESUME")
             fetch(url , {
                 headers: headers,
@@ -137,15 +138,18 @@ export default class ElasticSearch{
                     if(JSON.stringify(response['status']) ==='404'){
                         alert('Error')
                     }else{
+                        debugger;
                         console.log("***DEBUG***RESUME" + JSON.stringify(response))
                         let jsonResult = response[0];
                         let storeSize = jsonResult['store.size']
                         //  alert(JSON.stringify(response))
                         // storeSize = response['store.size']
                         storeSize = storeSize.replace(/[^0-9\.]+/g, "")
+                        debugger;
                         console.log("***DEBUG***RESUME" + storeSize);
                         //return storeSize
                         contentLength = storeSize * 1024 * 1024 * 1024;  // Convert gb to bytes
+                        debugger;
                         console.log("***DEBUG***RESUME" + contentLength)
                         //alert("content length == " + contentLength)
                         //this.startDownload()
@@ -197,6 +201,7 @@ export default class ElasticSearch{
     static startDownload(){
     //alert("instartDownload")
     //prevTime=Date.now();
+    debugger;
         ElasticSearch.scrollnumber = 0
         ElasticSearch.downLoadState = Constants.DownloadState.kStarted
         let headers = {
@@ -231,6 +236,7 @@ export default class ElasticSearch{
         //prevTime=Date.now();
         //console.log("*****scrollNumber:*****"+ ElasticSearch.scrollnumber)
         console.log('Scroll id ' +LocalStorageSettingsApi.scrollId )
+        debugger;
         let downloadUrl = "https://f505e785.qb0x.com:31644/_search/scroll?q=_exists_:refreshed_at&scroll=24h&scroll_id="+LocalStorageSettingsApi.scrollId
         ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/test.json';
 
@@ -260,6 +266,7 @@ export default class ElasticSearch{
     static resumeDownload() {
         console.log("***DEBUG***RESUMEDOWNLOAD")
         //prevTime = Date.now();
+        debugger;
         let totalProductInDataBase = DataBase.getInstance().totalProductsInDataBase
         ElasticSearch.downLoadState = Constants.DownloadState.kStarted
         ElasticSearch.scrollnumber = 0
