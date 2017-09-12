@@ -111,17 +111,17 @@ export default class FBAscanner extends Component{
             var initialRoute = "";
             //console.log("****************************render " + LocalStorageSettingsApi.isUserLoggined)
             if (this.state.isLoading== "false") {
-                /*if (LocalStorageSettingsApi.isUserLoggined == "false") {
+                /*/if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
                     initialRoute = "Account";
                 }
                 else*/ //if (LocalStorageSettingsApi.isUserPaid == "false") {
-                if(this.state.isPaid=="false")
+                if(this.state.isPaid=="false"){
                     initialRoute = "Payments";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
-                    console.log("************************" + this.state.isLoading + "**********************" + this.state.isPaid + "initialRoute = Account")
+                    //console.log("************************" + this.state.isLoading + "**********************" + this.state.isPaid + "initialRoute = Account")
                     initialRoute = "MainScreen";
                 }
             }
@@ -132,7 +132,7 @@ export default class FBAscanner extends Component{
 
             return (
                 <Navigator
-                    initialRoute={{name: initialRoute}}
+                    initialRoute={{name: "MainScreen"}}
                     renderScene={(route, navigator) => {
                         if (route.name === 'Account')
                             return (<Account navigator={navigator} route={route}/>)
