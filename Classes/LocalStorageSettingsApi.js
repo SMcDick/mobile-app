@@ -719,12 +719,10 @@ export default class LocalStorageApi extends  Component {
         //console.log("****************************LocalStorage")
         await AsyncStorage.getItem(Constants.KkeyforIsUserLoggined, (error, result)=> {
             if (result == null) {
-                debugger;
                 LocalStorageApi.isUserLoggined = "false"
                 //console.log("****************************Local Storage" + Constants.KkeyforIsUserLoggined)
             }
             else {
-                debugger;
                 LocalStorageApi.isUserLoggined = result
                 //console.log("****************************Local Storage " + Constants.KkeyforIsUserLoggined)
             }
@@ -745,15 +743,12 @@ export default class LocalStorageApi extends  Component {
 
         static async getIsUserPaid() {
             //console.log("****************************LocalStorage")
-            debugger;
             await AsyncStorage.getItem(Constants.KkeyforIsUserPaid, (error, result)=> {
                 if (result == null) {
-                    debugger;
                     LocalStorageApi.isUserPaid = "false"
                     console.log("****************************Local Storage" + Constants.KkeyforIsUserPaid)
                 }
                 else {
-                    debugger;
                     LocalStorageApi.isUserPaid = result
                     console.log("****************************Local Storage " + Constants.KkeyforIsUserPaid)
                 }
