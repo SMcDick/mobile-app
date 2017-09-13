@@ -29,7 +29,8 @@
     "react-native-stripe-api": "0.0.6",
     "react-native-vector-icons": "^4.0.0",
     "react-native-xml2js": "^1.0.3",
-    "react-native-youtube": "^1.0.0-alpha.4"
+    "react-native-youtube": "^1.0.0-alpha.4",
+    "react-native-zip-archive": "^2.0.0"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",

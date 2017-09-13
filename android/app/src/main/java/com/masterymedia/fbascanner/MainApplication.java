@@ -2,6 +2,7 @@ package com.masterymedia.fbascanner;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.rnziparchive.RNZipArchivePackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
 import com.anyline.reactnative.AnylinePackage;
 import com.taessina.paypal.RNPaypalWrapperPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNZipArchivePackage(),
             new ReactNativeYouTube(),
             new RNPaypalWrapperPackage(),
             new VectorIconsPackage(),

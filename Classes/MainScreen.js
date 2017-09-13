@@ -47,6 +47,8 @@ import Icons from 'react-native-vector-icons/FontAwesome';
 import Icon_min from 'react-native-vector-icons/MaterialCommunityIcons'
 import NetworkConnectivity from './NetworkConnectivity'
 
+import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
+import { MainBundlePath, DocumentDirectoryPath } from 'react-native-fs'
 
 //import Anyline from 'anyline-ocr-react-native-module';
 //import config from '../config';
@@ -313,6 +315,92 @@ export default class MainScreen extends Component{
       }
   }
 
+    ziparchive(){
+
+    var RNFS = require('react-native-fs');
+
+    // create a path you want to write to
+    var path = RNFS.DocumentDirectoryPath + '/test2.txt';
+
+    // write the file
+    RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
+      .then((success) => {
+        console.log('FILE WRITTEN!');
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+        const targetPath = `${DocumentDirectoryPath}/myFile.zip`
+        const sourcePath = `${DocumentDirectoryPath}/test2.txt` //DocumentDirectoryPath
+
+        zip(sourcePath, targetPath)
+        .then((path) => {
+          console.log(`zip completed at ${path}`)
+        })
+        .catch((error) => {
+        console
+          console.log(error)
+        })
+        const sourcePath1 = `${DocumentDirectoryPath}/myFile.zip`
+        const targetPath1 = `${DocumentDirectoryPath}/myFolder`
+        //const downloadHeaderPath = RNFS.DocumentDirectoryPath + '/test1.txt'
+
+        unzip(sourcePath1, targetPath1)
+        .then((path) => {
+          console.log(`unzip completed at ${path}`)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+        // require the module
+       // var RNFS = require('react-native-fs');
+
+        // get a list of files and directories in the main bundle
+        /*RNFS.readDir(RNFS.DocumentDirectoryPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+          .then((result) => {
+            console.log('GOT RESULT', result);
+
+            // stat the first file
+            return Promise.all([RNFS.stat(result[0].path), result[0].path]);
+          })
+          .then((statResult) => {
+            if (statResult[0].isFile()) {
+              // if we have a file, read it
+              return RNFS.readFile('/data/user/0/com.masterymedia.fbascanner/files/test1.txt', 'utf8');
+            }
+
+            return 'no file';
+          })*/
+          /*RNFS.readFile(targetPath1, 'utf8')
+          .then((contents) => {
+            // log the file contents
+            console.log("Rinat contents"+contents);
+            //console.log(contents);
+          })
+          .catch((err) => {
+            console.log(err.message, err.code);
+          });*/
+    }
+
+    readFile1()
+    {
+    var RNFS = require('react-native-fs');
+    const targetPath1 = `${DocumentDirectoryPath}/myFolder/test2.txt`
+
+            RNFS.readFile(targetPath1, 'utf8')
+              .then((contents) => {
+                // log the file contents
+                console.log("Rinat contents"+contents);
+                console.log("target path:" +targetPath1);
+                //console.log(contents);
+              })
+              .catch((err) => {
+                console.log(err.message, err.code);
+                console.log("target path:" +targetPath1);
+              });
+    }
     cameraAlert(){
         Alert.alert(
             'Camera Scanning Options',
@@ -333,6 +421,8 @@ export default class MainScreen extends Component{
             ]
         )
     }
+
+
 
  changeAmazonPriceToOffersPrice(value, index, name){
 
@@ -407,7 +497,6 @@ export default class MainScreen extends Component{
             <View style= {{flexGrow:1}}>
                 <TouchableOpacity
                     onPress = {()=>{
-                        //this.showCamera(true)
                         this.cameraAlert()
                     }}
                     style={{flex:1,justifyContent:'center',alignItems:'center'}}

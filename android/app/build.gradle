@@ -154,6 +154,7 @@ android {
 dependencies {
     compile project(':react-native-youtube')
     compile project(':anyline-ocr-react-native-module')
+    compile project(':react-native-zip-archive')
     compile project(':react-native-paypal-wrapper')
     compile project(':react-native-sqlite-storage')
     compile project(':react-native-vector-icons')
