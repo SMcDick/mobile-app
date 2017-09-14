@@ -66,17 +66,15 @@ export default class Download extends Component{
         this.downloadStartTime = 0.0;
         this.downLoadPath = null;
 
-        debugger;
-
         this.downloadButton = null
         if(ElasticSearch.downLoadState === Constants.DownloadState.kRunning){
             this.downloadButton = 'Pause'
         }else{
-              if(DataBase.getInstance().totalProductsInDataBase > 0){
-                  this.downloadButton = 'Resume'
-               }else {
+              //if(DataBase.getInstance().totalProductsInDataBase > 0){
+              //    this.downloadButton = 'Resume'
+               //}else {
                   this.downloadButton = 'Start'
-              }
+              //}
         }
 
         //let percen = DataBase.getInstance().totalProductsInDataBase/LocalStorageSettingsApi.TotalProductsonES
@@ -215,8 +213,8 @@ export default class Download extends Component{
                                         let  startTime=ISOdate.slice(0,-1)
                                         console.log('Start time ' + startTime + "======" + ISOdate);
                                         LocalStorageSettingsApi.setDownloadStartTime(startTime)
-                                        ElasticSearch.getESDataSize(1)
-
+                                        //ElasticSearch.getESDataSize(1)
+                                        ElasticSearch.DownloadZipFile();
                                         this.setState({downloadButtonText:'Pause'})
                                     }
                                 }

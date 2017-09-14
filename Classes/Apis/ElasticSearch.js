@@ -13,6 +13,9 @@ import LocalStorageSettingsResponse from '../LocalStorageSettingsResponse'
 import Constants from '../Constants'
 import LocalStorageSettingsApi from '../LocalStorageSettingsApi'
 import Download from '../download'
+import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
+import { MainBundlePath, DocumentDirectoryPath } from 'react-native-fs'
+
 
 let remainingContentLength;
 let percentage;
@@ -83,10 +86,122 @@ export default class ElasticSearch{
 
     }
 
+    /* zipArchive():
+     * This is a test function to write a file, zip it, unzip it and read it. it also reads the directory of the file
+    */
+    static zipArchive(){
 
+        var RNFS = require('react-native-fs');
+
+        // create a path you want to write to
+        const sourcePath = RNFS.DocumentDirectoryPath + '/test.json';  //one option to access DocumentDirectoryPath
+        const targetPath = `${DocumentDirectoryPath}/testFile.zip`;       //another option to access DocumentDirectoryPath
+        const unzipToPath = `${DocumentDirectoryPath}/testFolder`;
+
+        // write the file
+        RNFS.writeFile(sourcePath, 'Lorem ipsum dolor sit amet', 'utf8')
+        .then((success) => {
+            console.log('File written at'+sourcePath);
+
+            //zip the file
+            zip(sourcePath, targetPath)
+            .then((path) => {
+                console.log('zip completed at'+ path)
+
+                //unzip the file
+                unzip(targetPath, unzipToPath)
+                .then((path) => {
+                    console.log('unzip completed at'+ path)
+
+                    //get a list of files and directories in unzipToPath
+                    RNFS.readDir(unzipToPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+                    .then((result) => {
+                        console.log('Files in '+unzipToPath, result);
+
+                        // stat the first file
+                        return Promise.all([RNFS.stat(result[0].path), result[0].path]);
+                     })
+                    .then((statResult) => {
+                        if (statResult[0].isFile()) {
+                            // if we have a file, read it
+                            return RNFS.readFile(statResult[1], 'utf8'); //NOTE: This assumes that this is the first file in the unzipped folder. Another option to read the file is to send the actual path instead of statResult[1] as at the next readFile
+                        }
+
+                        return 'no file';
+                    })
+                    .then((contents) => {
+                        // log the file contents
+                        console.log('unzipped file content:'+contents);
+
+                        // a second option to read the file
+                        RNFS.readFile(unzipToPath+'/test.json', 'utf8')
+                          .then((contents) => {
+                            // log the file contents
+                            console.log('File contents'+contents);
+                          })
+                     })
+                })
+            })
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+
+        /******************Deleting a File**********************
+           RNFS.unlink(ElasticSearch.downLoadPath)
+          .then(() => {
+            alert('FILE DELETED');
+          })
+          // `unlink` will throw an error, if the item to unlink does not exist
+          .catch((err) => {
+            alert(err.message);
+          });*/
+    }
+
+    static DownloadZipFile()
+    {
+        let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful'; //url to download from
+        ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/books.zip';                     //path for the zip file
+        const targetPath = `${DocumentDirectoryPath}/FbaScanner`;                                   //path to the folder to put the unzipped file
+        const unzippedFilePath = targetPath+'/test_data.json';                                           //path to the unzipped file
+
+        console.log('Download path=' + ElasticSearch.downLoadPath);
+
+        RNFS.downloadFile({fromUrl:downloadUrl,
+             toFile:ElasticSearch.downLoadPath //,
+             //headers:headers,
+             //begin : ElasticSearch.downloadBeganCallBack,
+             //progress : ElasticSearch.downloadProgressCallBack
+             }).promise.then(res => {
+               //DataBase.getInstance().deleteAllDataFromProductDataTableIfExist()
+               //RNFS.readFile(ElasticSearch.downLoadPath).then((data)=>{
+               //ElasticSearchResponse.getInstance().dataPacketDownloaded(data)
+               console.log('in DownloadZipFile File was downloaded to'+ElasticSearch.downloadPath)
+
+               console.log('starting unzip');
+               unzip(ElasticSearch.downLoadPath, targetPath)
+               .then((path) => {
+                    console.log(`unzip completed at ${path}`);
+                    console.log('starting reading zip file');
+
+                    RNFS.read(unzippedFilePath, 100, 0, 'utf8')
+                   .then((contents) => {
+                     // log the file contents
+                     console.log("unzipped file contents"+contents);
+                     console.log("unzipped file path:" +unzippedFilePath);
+                   })
+               })
+            })
+            .catch((error)=>{
+                alert('in startDownload downloadfile error'+ error)
+              //  ElasticSearch.downloadFailed()
+            });
+
+    }
     // Downloading part for data
 
      static getESDataSize(option){
+        debugger;
         let parsedResponse = null
         let url = 'https://f505e785.qb0x.com:31644/_cat/indices/items/?pretty=1&format=json'
         var headers = new Headers();
