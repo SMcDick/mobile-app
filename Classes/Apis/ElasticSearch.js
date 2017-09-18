@@ -160,10 +160,10 @@ export default class ElasticSearch{
 
     static DownloadZipFile()
     {
-        let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful'; //url to download from
-        ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/books.zip';                     //path for the zip file
+        let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful/binary'; //url to download from
+        ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/binary-data.zip';                     //path for the zip file
         const targetPath = `${DocumentDirectoryPath}/FbaScanner`;                                   //path to the folder to put the unzipped file
-        const unzippedFilePath = targetPath+'/test_data.json';                                           //path to the unzipped file
+        const unzippedFilePath = targetPath+'/binary-data';                                           //path to the unzipped file
 
         console.log('Download path=' + ElasticSearch.downLoadPath);
 
@@ -176,7 +176,7 @@ export default class ElasticSearch{
                //DataBase.getInstance().deleteAllDataFromProductDataTableIfExist()
                //RNFS.readFile(ElasticSearch.downLoadPath).then((data)=>{
                //ElasticSearchResponse.getInstance().dataPacketDownloaded(data)
-               console.log('in DownloadZipFile File was downloaded to'+ElasticSearch.downloadPath)
+               console.log('in DownloadZipFile File was downloaded to'+ElasticSearch.downloadPath);
 
                console.log('starting unzip');
                unzip(ElasticSearch.downLoadPath, targetPath)
@@ -184,20 +184,48 @@ export default class ElasticSearch{
                     console.log(`unzip completed at ${path}`);
                     console.log('starting reading zip file');
 
-                    RNFS.read(unzippedFilePath, 100, 0, 'utf8')
+                    RNFS.read(unzippedFilePath, 64, 0, 'base64')
                    .then((contents) => {
                      // log the file contents
-                     console.log("unzipped file contents"+contents);
+                     console.log("unzipped file contents"+JSON.stringify(contents));
                      console.log("unzipped file path:" +unzippedFilePath);
                    })
                })
             })
             .catch((error)=>{
-                alert('in startDownload downloadfile error'+ error)
+                console.log('in startDownload downloadfile error'+ error)
               //  ElasticSearch.downloadFailed()
             });
 
     }
+
+    static ReadBinaryFile()
+        {
+            let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful/binary'; //url to download from
+            ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/binary-data.zip';                     //path for the zip file
+            const targetPath = `${DocumentDirectoryPath}/FbaScanner`;                                   //path to the folder to put the unzipped file
+            const unzippedFilePath = targetPath+'/binary-data';                                           //path to the unzipped file
+
+            var base64 = require('base-64');
+
+            console.log('starting reading zip file');
+
+            RNFS.read(unzippedFilePath, 64, 0, 'base64')
+           .then((contents) => {
+             // log the file contents
+             console.log("unzipped file contents"+JSON.stringify(contents));
+             console.log("unzipped file contents2"+contents);
+             var decodedData = base64.decode(contents);
+             //console.log("unzipped file contents3"+JSON.stringify(decodedData));
+             console.log("unzipped file contents4"+decodedData);
+             console.log("unzipped file path:" +unzippedFilePath);
+           })
+            .catch((error)=>{
+                console.log('in startDownload downloadfile error'+ error)
+              //  ElasticSearch.downloadFailed()
+            });
+
+        }
     // Downloading part for data
 
      static getESDataSize(option){

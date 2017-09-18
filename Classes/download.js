@@ -214,7 +214,7 @@ export default class Download extends Component{
                                         console.log('Start time ' + startTime + "======" + ISOdate);
                                         LocalStorageSettingsApi.setDownloadStartTime(startTime)
                                         //ElasticSearch.getESDataSize(1)
-                                        ElasticSearch.DownloadZipFile();
+                                        ElasticSearch.ReadBinaryFile();
                                         this.setState({downloadButtonText:'Pause'})
                                     }
                                 }
