@@ -9,7 +9,7 @@ import Constants from '../Constants'
 export default class MWSApi{
 
     static fetchProduct(productId, ItemCondition, Action){
-       /* console.log("Action" +Action)
+        console.log("Action" +Action)
         console.log("productId" +productId)
         if(ItemCondition == 'New'){
             console.log('123456789 New fetch')
@@ -18,13 +18,21 @@ export default class MWSApi{
             console.log('123456789 Used fetch')
         }
         let parsedResponse = null
+        const parseString = require('react-native-xml2js').parseString;
 
         return fetch(MWSApi.getAmazonItemInfo(productId, ItemCondition, Action), {method:'GET' , headers:{
             "x-amazon-user-agent": "AmazonJavascriptScratchpad/1.0 (Language=Javascript)",
             "Content-Type": "text/xml"
         } , Host:"mws.amazonservices.com"
-        })
-            .then((response) => {
+        }).then(response => response.text())
+          .then((response) => {
+              parseString(response, function (err, result) {
+              console.log(response);
+              console.log("HERE RINAT");
+              response = fastXmlParser.getTraversalObj(response);
+              parsedResponse = fastXmlParser.convertToJson(response);
+            /*.then((response) => {
+                debugger;
                 console.log("***********gurdial **MWS*****"+JSON.stringify(response))
                 response  = response["_bodyInit"]
 
@@ -41,10 +49,11 @@ export default class MWSApi{
                 });
                 response = fastXmlParser.getTraversalObj(response);
                 parsedResponse = fastXmlParser.convertToJson(response);
-
+*/
                 console.log("******************pmTesting"+JSON.stringify(parsedResponse))
-            })
-            .then(() => {
+
+            //})
+            //.then(() => {
 
                 if(ItemCondition == 'New' && Action== 'GetLowestOfferListingsForASIN'){
                     console.log('123456789 New fetch resolved GetLowestOfferListingsForASIN')
@@ -61,16 +70,18 @@ export default class MWSApi{
                     MWSResponse.getInstance().responseSucessCallBack(parsedResponse, ItemCondition, Action)
                 }
 
+            //})
+            });
             })
             .catch((error) => {
                 console.error(error);
-            });*/
+            });
     }
 
 
     static getAmazonItemInfo(productId, ItemCondition, Action) {
 
-        /*if(Action == "GetLowestOfferListingsForASIN"){
+        if(Action == "GetLowestOfferListingsForASIN"){
 
             var param = [];
             param.push("AWSAccessKeyId=" + Constants.AWSAccessKeyId);
@@ -92,13 +103,14 @@ export default class MWSApi{
             signature = encodeURIComponent(signature);
 
             var amazonUrl =  "https://mws.amazonservices.com/Products/2011-10-01?" + paramString+"&Signature=" + signature ;
+            console.log('AMAZON URL:'+amazonUrl);
             return amazonUrl;
         }
 
         if(Action == 'GetLowestPricedOffersForASIN') {
 
 
-            /*var param = [];
+            var param = [];
             param.push("AWSAccessKeyId=" + Constants.AWSAccessKeyId);
             param.push("Action=" + Action);
             param.push("SellerId=" + Constants.SellerId);
@@ -122,17 +134,17 @@ export default class MWSApi{
             console.log("******* mws amazonUrl" + amazonUrl)
 
             return amazonUrl;
-        }*/
+        }
 
     }
 
     static sha256(stringToSign, secretKey) {
-        /*var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
-        return hex.toString(CryptoJS.enc.Base64);*/
+        var hex = CryptoJS.HmacSHA256(stringToSign, secretKey);
+        return hex.toString(CryptoJS.enc.Base64);
     }
 
     static timestamp() {
-        /*var date = new Date();
+        var date = new Date();
         var y = date.getUTCFullYear().toString();
         var m = (date.getUTCMonth() + 1).toString();
         var d = date.getUTCDate().toString();
@@ -148,7 +160,7 @@ export default class MWSApi{
 
         var date = y + "-" + m + "-" + d;
         var time = h + ":" + min + ":" + s;
-        return date + "T" + time + ".000Z";*/
+        return date + "T" + time + ".000Z";
     }
 }
 

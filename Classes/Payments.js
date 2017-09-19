@@ -115,7 +115,7 @@ export default class Payments extends Component{
                         <TouchableOpacity
                             activeOpacity={0.9}
                             //style={styles.touchableContentSectionStyles}
-                            onPress={()=>{this.setState({isSelectedPaypal:false,isSelectedAmazon:true, isSelectedCredit:false })}}
+                            onPress={()=>{this.setState({isSelectedPaypal:false,isSelectedAmazon:true, isSelectedCredit:false }, this.onSubmit())}}
                         >
                             <Image source={require('../assets/AmazonPay.png')} style={styles.PayLogoStyle}/>
                         </TouchableOpacity>
@@ -124,7 +124,7 @@ export default class Payments extends Component{
                         <TouchableOpacity
                             activeOpacity={0.9}
                             //style={styles.touchableContentSectionStyles}
-                            onPress={()=>{this.setState({isSelectedPaypal:false ,isSelectedAmazon:true, isSelectedCredit:false })}}
+                            onPress={()=>{this.setState({isSelectedPaypal:true ,isSelectedAmazon:false, isSelectedCredit:false }, this.onSubmit())}}
                         >
                             <Image source={require('../assets/PayPalButton.png')} style={styles.PayLogoStyle}/>
                         </TouchableOpacity>

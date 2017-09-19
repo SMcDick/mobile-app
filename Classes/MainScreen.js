@@ -1044,6 +1044,7 @@ export default class MainScreen extends Component{
     }
 
     mwsResponseSucessCallBack(response, ItemCondition){
+    debugger;
         console.log("mwsResponseSucessCallBack" +JSON.stringify(response))
         var PriceArray=[]
         var FBAOffers=[]
@@ -1051,7 +1052,9 @@ export default class MainScreen extends Component{
         let FBAOffersPrice
         //response.GetLowestOfferListingsForASINResponse.GetLowestOfferListingsForASINResult.Product.LowestOfferListings.LowestOfferListing.Price.ListingPrice.Amount))
         let ListingArray=response["GetLowestOfferListingsForASINResponse"]["GetLowestOfferListingsForASINResult"]["Product"]
-        let ProductArray=ListingArray["LowestOfferListings"]
+        if(JSON.stringify(response["GetLowestOfferListingsForASINResponse"]["GetLowestOfferListingsForASINResult"]).substring(0,5)!='ERROR' && ListingArray!=undefined )
+        {
+        let ProductArray=ListingArray["LowestOfferListings"];
 
         if(ProductArray != ""){
             console.log("Product array is not null")
@@ -1180,7 +1183,7 @@ export default class MainScreen extends Component{
 
             }
 
-        }
+        }}
     }
 
 

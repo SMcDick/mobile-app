@@ -113,7 +113,8 @@ export default class FBAscanner extends Component{
             if (this.state.isLoading== "false") {
                 if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
-                    initialRoute1 = "NewUserRegistration";
+                    //initialRoute1 = "NewUserRegistration";
+                    initialRoute1 = "MainScreen";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
