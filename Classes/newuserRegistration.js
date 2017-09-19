@@ -9,6 +9,7 @@ import {
     View,
     Navigator,
     TextInput,
+    Image,
     TouchableOpacity,
     Dimensions,
     Platform,
@@ -29,7 +30,6 @@ import LocalStorageApi from './LocalStorageSettingsApi'
 export default class NewUserRegistration extends Component{
     constructor(props){
     super(props)
-
     this.state = {
       email: '',
       password: '',
@@ -59,7 +59,8 @@ export default class NewUserRegistration extends Component{
             this.setState({modalState:false})
             alert("Password must contain at least one Uppercase, one lowercase, one numeric character, one special character and have minimum of 8 characters")
         }else{
-            NewUserRegistrationApi.testCall(this.state.email,this.state.password)
+            //NewUserRegistrationApi.testCall(this.state.email,this.state.password)
+            this.props.navigator.push({name:'Payments',prevScreen:'Back'})
         }
     }
     render(){
@@ -68,6 +69,7 @@ export default class NewUserRegistration extends Component{
                 <Modal
                     visible = {this.state.modalState}
                     transparent = {true}
+                    onRequestClose={() => null}
                 >
                     <TouchableOpacity
                         style={{flex:1,justifyContent:'center',backgroundColor:'rgba(20,20,20,0.6)'}}
@@ -77,7 +79,14 @@ export default class NewUserRegistration extends Component{
                         <ActivityIndicator size={"large"} color="black" />
                     </TouchableOpacity>
                 </Modal>
-                <View style={{height:Platform.OS=='ios'?75:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route}/></View>
+                <View style={{alignItems:'center'}}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                </View>
+                <View style={{padding:10,alignItems:'center',backgroundColor:'rgb(184,207,245)'}}>
+                    <Text style={styles.wordBoldStyle}>Start your free trial</Text>
+                    <Text style={{fontSize:16}}>{'\u2022 Get 30 days or 100 scans free'}</Text>
+                    <Text style={{fontSize:16}}>{'\u2022 You won\'t be charged until the end of your trial'}</Text>
+                </View>
                 <View style={{flex:1,padding:10,alignItems:'center'}}>
                     <TextInput
                         autoCorrect={false}
@@ -109,7 +118,7 @@ export default class NewUserRegistration extends Component{
                              //NewUserRegistrationApi.testCall(this.state.email,this.state.password);
                                     }}
                     >
-                        <Text style={styles.registerTextStyle}>Register</Text>
+                        <Text style={styles.registerTextStyle}>Submit</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -154,11 +163,25 @@ const styles=StyleSheet.create({
         borderRadius:5,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'steelblue'
+        backgroundColor:'rgb(146,182,241)'
     },
     registerTextStyle:{
         color:'white',
         fontSize:Utility.getFontSize()*0.6,
         fontWeight:'600'
+    },
+    image:{
+        flex:1,
+        resizeMode:'contain',
+        width:70,
+        height:70,
+    },
+    ZenLogoStyle:{
+        width:350,
+        height:50,
+    },
+    wordBoldStyle:{
+      fontWeight: 'bold',
+      fontSize:20,
     }
 });

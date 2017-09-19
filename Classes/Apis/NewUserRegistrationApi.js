@@ -3,6 +3,7 @@
 import NewUserRegistrationResponse from './NewUserRegistrationResponse'
 export default class NewUSerRegistraionApi {
     static testCall(emailValue, passwordValue) {
+        debugger;
         var formData = new FormData()
         formData.append('email', emailValue)
         formData.append('password', passwordValue)
@@ -15,6 +16,7 @@ export default class NewUSerRegistraionApi {
             body: formData
         })
             .then((response) => {
+                debugger;
                 response = response['_bodyInit']
                 response = JSON.parse(response)
 

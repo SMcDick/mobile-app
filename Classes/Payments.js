@@ -13,6 +13,7 @@ import {
     View,
     Navigator,
     TextInput,
+    Image,
     TouchableOpacity,
     Dimensions,
     Platform,
@@ -77,85 +78,56 @@ export default class Payments extends Component{
         }
     }
 
+    popIfExists() {
+      if (navigator.getCurrentIndex() > 0) {
+        navigator.pop()
+        return true // do not exit app
+      } else {
+        return false // exit app
+      }
+    }
+
     render(){
         return(
-            <View style={{flex:1, backgroundColor:'rgb(233,234,238)'}}>
-                <View style={{height:Platform.OS=='ios'?75:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route}/></View>
+            <View style={{flex:1, backgroundColor:'white'}}>
+                <View style={{alignItems:'center'}}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                </View>
                 <ScrollView>
-                    <View style={{justifyContent:'center',alignItems:'center',height:40}}>
-                        <Text style={styles.headingText}>Select a Payment Method</Text>
+                    <View style={{padding:10,alignItems:'center',backgroundColor:'rgb(184,207,245)'}}>
+                        <Text style={styles.wordBoldStyle}>{'Two steps and you\'re done'}</Text>
+                        <Text style={{fontSize:16}}>{'\u2022 Unlimited database downloads'}</Text>
+                        <Text style={{fontSize:16}}>{'\u2022 Unlimited scans'}</Text>
+                        <Text style={{fontSize:16}}>{'\u2022 Full access'}</Text>
                     </View>
-                    <View style={{padding:10}}>
-                        <View style={{backgroundColor:"rgba(128,128,128,0.15)",padding:10,borderRadius:10}}>
-                            <Text style={{color:"rgb(80,80,80)"}}>• No commitment</Text>
-                            <Text style={{color:"rgb(80,80,80)"}}>• Month-to-month - no contracts</Text>
-                            <Text style={{color:"rgb(80,80,80)"}}>• Cancel anytime</Text>
-                            <Text style={{color:"rgb(80,80,80)"}} />
-                            <Text style={{color:"rgb(80,80,80)"}}>You will receive 30 days and 100 scans for free. You will not be billed until the end of your free trial, and you can cancel anytime </Text>
+                    <View style={{flexDirection: 'row', padding:20}}>
+                        <View style={{borderWidth: 0.5,
+                                          borderColor: 'rgb(60,60,60)',width:50, height:50, borderRadius:50,backgroundColor:'rgb(184,207,245)',alignItems:'center'}}>
+                            <Text style={{fontSize:36}}>1</Text>
+                        </View>
+                        <View style={{flexDirection:'column', justifyContent:'flex-start',paddingHorizontal:10}}>
+                            <Text style={styles.wordBoldStyle}>{'Activate your subscription'}</Text>
+                            <Text style={{fontSize:16}}>{'Enter a payment preference'}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity
-                        activeOpacity={0.9}
-                        style={styles.touchableContentSectionStyles}
-                        onPress={()=>{this.setState({isSelectedPaypal:true,isSelectedAmazon:false, isSelectedCredit:false })}}
-                    >
-                        <View style={styles.contentAdjustStyles}>
-                            <View style={{flex:1}}>
-                                {this.state.isSelectedPaypal ?
-                                    <Icon name="radiobox-marked" size={16} color='black' style={styles.iconStyles}/>
-                                    :
-                                    <Icon name="radiobox-blank" size={16} color='black' style={styles.iconStyles}/>}
-                            </View>
-                            <View style={{flex:8}}>
-                                <Text style={styles.sectionHeadingTextComponentsStyles}>Paypal</Text>
-                            </View>
+                    <View style={{flex:1, flexDirection:'column', padding:10, justifyContent:'space-around', alignItems:'center',height:125}}>
+                    <View style={{justifyContent:'space-around'}}>
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            //style={styles.touchableContentSectionStyles}
+                            onPress={()=>{this.setState({isSelectedPaypal:false,isSelectedAmazon:true, isSelectedCredit:false })}}
+                        >
+                            <Image source={require('../assets/AmazonPay.png')} style={styles.PayLogoStyle}/>
+                        </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
-                    <View style={styles.dividerCellStyles}/>
-                    <TouchableOpacity
-                        activeOpacity={0.9}
-                        style={styles.touchableContentSectionStyles}
-                        onPress={()=>{this.setState({isSelectedPaypal:false ,isSelectedAmazon:true, isSelectedCredit:false })}}
-                    >
-                        <View style={styles.contentAdjustStyles}>
-                            <View style={{flex:1}}>
-                                {this.state.isSelectedAmazon ?
-                                    <Icon name="radiobox-marked" size={16} color='black' style={styles.iconStyles}/>
-                                    :
-                                    <Icon name="radiobox-blank" size={16} color='black' style={styles.iconStyles}/>}
-                            </View>
-                            <View style={{flex:8}}>
-                                <Text style={styles.sectionHeadingTextComponentsStyles}>Amazon</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.dividerCellStyles}/>
-                    <TouchableOpacity
-                        activeOpacity={0.9}
-                        style={styles.touchableContentSectionStyles}
-                        onPress={()=>{this.setState({isSelectedPaypal:false ,isSelectedAmazon:false, isSelectedCredit:true})}}
-                    >
-                        <View style={styles.contentAdjustStyles}>
-                            <View style={{flex:1}}>
-                                {this.state.isSelectedCredit ?
-                                    <Icon name="radiobox-marked" size={16} color='black' style={styles.iconStyles}/>
-                                    :
-                                    <Icon name="radiobox-blank" size={16} color='black' style={styles.iconStyles}/>}
-                            </View>
-                            <View style={{flex:8}}>
-                                <Text style={styles.sectionHeadingTextComponentsStyles}>Credit Card</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.blankSectionStyles}/>
-                    <View style={styles.buttonSectionLayoutStyles}>
-                        <View style={styles.buttonSectionStyles}>
-                            <TouchableOpacity style={styles.modalButtonsStyles} onPress={()=>{this.props.navigator.pop()}}>
-                                <Text style={styles.modalButtonsTextStyles}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.modalButtonsStyles} onPress={()=>{this.onSubmit()}}>
-                                <Text style={styles.modalButtonsTextStyles}>Continue</Text>
-                            </TouchableOpacity>
+                        <View style={{justifyContent:'space-around'}}>
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            //style={styles.touchableContentSectionStyles}
+                            onPress={()=>{this.setState({isSelectedPaypal:false ,isSelectedAmazon:true, isSelectedCredit:false })}}
+                        >
+                            <Image source={require('../assets/PayPalButton.png')} style={styles.PayLogoStyle}/>
+                        </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>
@@ -180,10 +152,6 @@ const styles=StyleSheet.create({
         alignSelf:'center',
         fontWeight:'300',
         fontSize:Utility.getFontSize()===50?50*0.4:23*0.6
-    },
-    dividerCellStyles:{
-        borderWidth:0.2,
-        //backgroundColor:'rgb(0,133,248)'
     },
     sectionHeadingTextComponentsStyles:{
         fontWeight:'300',
@@ -239,5 +207,17 @@ const styles=StyleSheet.create({
     buttonSectionLayoutStyles:{
         flex:3.5,
         backgroundColor:'blue'
+    },
+    ZenLogoStyle:{
+        width:350,
+        height:50,
+    },
+    PayLogoStyle:{
+        width:148,
+        height:30,
+    },
+    wordBoldStyle:{
+      fontWeight: 'bold',
+      fontSize:20,
     }
 })

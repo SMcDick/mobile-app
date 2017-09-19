@@ -20,7 +20,7 @@ import Settings from './settings'
 import Download from './download'
 import Mode from './mode'
 import Account from './account'
-import Registration from './newuserRegistration'
+import NewUserRegistration from './newuserRegistration'
 import AmazonLoginWebView from './AmazonLoginWebView'
 import Category from './category'
 import Triggers from './Triggers'
@@ -113,7 +113,7 @@ export default class FBAscanner extends Component{
             if (this.state.isLoading== "false") {
                 if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
-                    initialRoute1 = "Account";
+                    initialRoute1 = "NewUserRegistration";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
@@ -132,6 +132,8 @@ export default class FBAscanner extends Component{
                     renderScene={(route, navigator) => {
                         if (route.name === 'Account')
                             return (<Account navigator={navigator} route={route}/>)
+                        if (route.name === 'NewUserRegistration')
+                            return (<NewUserRegistration navigator={navigator} route={route}/>)
                         if (route.name === 'MainScreen')
                             return (<MainScreen navigator={navigator} route={route}/>)
                         if (route.name === 'Settings')
