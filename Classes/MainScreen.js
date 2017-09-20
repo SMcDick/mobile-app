@@ -109,6 +109,8 @@ export default class MainScreen extends Component{
         displayProductQuantity:false,
         displayTradeValue:true,
         showFBAOffersAutomatically:false,
+        FBAXRayThreshold:null,
+        FBAXRayNewOrUsed:null,
         showAllOffers:false,
         showFBAFullScreen:false,
         expandFBAOffersValue: new Animated.Value(0),
@@ -137,6 +139,8 @@ export default class MainScreen extends Component{
    }
     getUserSettingsUserDefaults(){
         LocalStorageSettingsApi.getShowFBAOffersPageAutomatically()
+        LocalStorageSettingsApi.getFBAXRayThreshold()
+        LocalStorageSettingsApi.getFBAXRayNewOrUsed()
         LocalStorageSettingsApi.getAllAmazonOffersPage()
         LocalStorageSettingsApi.getDisplayProductCondition()
         LocalStorageSettingsApi.getDisplayProductQuantity()
@@ -1044,7 +1048,6 @@ export default class MainScreen extends Component{
     }
 
     mwsResponseSucessCallBack(response, ItemCondition){
-    debugger;
         console.log("mwsResponseSucessCallBack" +JSON.stringify(response))
         var PriceArray=[]
         var FBAOffers=[]
@@ -1451,13 +1454,16 @@ export default class MainScreen extends Component{
           this.refs.bluetoothMode.clear();
       }
 
+      FBAXRayThreshold = this.state.FBAXRayThreshold;
+      FBAXRayNewOrUsed = this.state.FBAXRayNewOrUsed;
+
 console.log("*****************************callingupdateStateOnSuccess" )
       productObject.calculateTopRankPercentage((result)=>{
           //console.log("RESULT: " + result)
           this.setState({
               productCategory: productObject.category,
               productTitle: productObject.title,
-              productFBAOffersPercent: productObject.calculateFBAPercentage(),
+              productFBAOffersPercent: productObject.calculateFBAPercentage(FBAXRayThreshold, FBAXRayNewOrUsed),
               productAmazonPrice: productObject.amazonPrice,
               productNetProfit: productObject.calculateNetProfit(),
               productBuyBox: productObject.calculateBuyBoxPrice(),
@@ -1516,7 +1522,6 @@ console.log("*****************************callingupdateStateOnSuccess" )
       if(this.state.showAllOffers){
           this.expandCollapseWebView(false,Constants.kOffersType.kAllOffers)
       }
-
   }
 
   openProductLink(productCode , company){
@@ -1595,6 +1600,15 @@ console.log("*****************************callingupdateStateOnSuccess" )
                 this.setState({showFBAOffersAutomatically:result})
                 break;
             }
+            case Constants.kKeyForFBAXRayThreshold:{
+                this.setState({FBAXRayThreshold:result})
+                break;
+            }
+            case Constants.kKeyForFBAXRayNewOrUsed:{
+                this.setState({FBAXRayNewOrUsed:result})
+                break;
+            }
+
             case Constants.kKeyForAllAmazonOffersPage:{
                 this.setState({showAllOffers:result})
                 break;

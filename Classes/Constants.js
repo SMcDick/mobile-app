@@ -14,6 +14,8 @@ import { Dimensions , Platform } from 'react-native';
      static KkeyforIsUserLoggined="false"
      static KkeyforIsUserPaid="false"
     static kKeyForFBAOffersPageAutomatically =   "keyForFBAOffersPageAutomatically"
+    static kKeyForFBAXRayThreshold = "KeyForFBAXRayThreshold"
+    static kKeyForFBAXRayNewOrUsed = "KeyForFBAXRayNewOrUsed"
      static kKeyForAllAmazonOffersPage='kKeyForAllAmazonOffersPage'
     static kKeyForDisplayCondition = "keyForDisplayCondition"
     static kKeyForDisplayQuantity =  "keyForDisplayQuantity"

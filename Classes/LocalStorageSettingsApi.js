@@ -14,6 +14,8 @@ import LoginResponse from './Apis/LoginResponse'
 
 export default class LocalStorageApi extends  Component {
     static showFBAAutomatically = null;
+    static FBAXRayThreshold = null;
+    static FBAXRayNewOrUsed = null
     static showAllOffers = null;
     static ShowLandedPriceWithShipping = null;
     static ShowAlertIfRestricted = null;
@@ -72,6 +74,50 @@ export default class LocalStorageApi extends  Component {
             }
             LocalStorageApi.showFBAAutomatically = result;
             LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.kKeyForFBAOffersPageAutomatically);
+
+        })
+    }
+
+    static async setFBAXRayThreshold(value) {
+        try {
+            await AsyncStorage.setItem(Constants.kKeyForFBAXRayThreshold, value, ()=> {
+                LocalStorageApi.getFBAXRayThreshold()
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async getFBAXRayThreshold(){
+        await AsyncStorage.getItem(Constants.kKeyForFBAXRayThreshold, (error, result)=> {
+            if (result == null) {
+                result = '25'
+            }
+
+            LocalStorageApi.FBAXRayThreshold = result;
+            LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.kKeyForFBAXRayThreshold);
+
+        })
+    }
+
+    static async setFBAXRayNewOrUsed(value) {
+        try {
+            await AsyncStorage.setItem(Constants.kKeyForFBAXRayNewOrUsed, value, ()=> {
+                LocalStorageApi.getFBAXRayNewOrUsed()
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async getFBAXRayNewOrUsed(){
+        await AsyncStorage.getItem(Constants.kKeyForFBAXRayNewOrUsed, (error, result)=> {
+            if (result == null) {
+                result = 'new'
+            }
+
+            LocalStorageApi.FBAXRayNewOrUsed = result;
+            LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.kKeyForFBAXRayNewOrUsed);
 
         })
     }

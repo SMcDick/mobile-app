@@ -33,8 +33,7 @@ export default class MWSResponse {
 
     responseSucessCallBack(response, ItemCondition, Action){
         console.log("__action__" +Action)
-        debugger;
-        console.log('REAPONSE:'+response);
+        console.log('responseSucessCallBack REAPONSE:'+response);
         if(Action == "GetLowestPricedOffersForASIN"){
             for(i = 0 ; i < this.receivers.length ; i++){
                 this.receivers[i].mwsOffersResponseSucessCallBack(response, ItemCondition)

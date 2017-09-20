@@ -7,6 +7,7 @@
  * @flow
  */
 import React, { Component } from 'react';
+import fastXmlParser from 'fast-xml-parser'
 var RankPercentageData = require('./RankPercentage.json');
 
 
@@ -19,6 +20,8 @@ export default class Product{
         this.salesRank = null;
         this.image = null;
         this.productAmazonURL = null;
+        this.lowestNewPrice = null;
+        this.lowestUsedPrice = null;
         this.nonFBAUsedOffersArray  = [];
         this.nonFBANewOffersArray = [];
         this.fbaOffersArray = [];
@@ -55,6 +58,8 @@ export default class Product{
         this.title = itemArray["ItemAttributes"]?itemArray["ItemAttributes"]["Title"]:null
         this.amazonPrice = itemArray["ItemAttributes"]["ListPrice"]?itemArray["ItemAttributes"]["ListPrice"]["FormattedPrice"]:null
         this.salesRank = itemArray["SalesRank"]?itemArray["SalesRank"]: null
+        this.lowestNewPrice = itemArray["OfferSummary"]?itemArray["OfferSummary"]?itemArray["OfferSummary"]["LowestNewPrice"]?itemArray["OfferSummary"]["LowestNewPrice"]["FormattedPrice"]:null:null:null;
+        this.lowestUsedPrice = itemArray["OfferSummary"]?itemArray["OfferSummary"]["LowestUsedPrice"]?itemArray["OfferSummary"]["LowestUsedPrice"]["FormattedPrice"]:null:null;
         this.compareSalesRank=itemArray["SalesRank"]?itemArray["SalesRank"]: null
         this.image =  itemArray["SmallImage"]?itemArray["SmallImage"]["URL"]:null
         this.numberOfNewOffers  = itemArray["OfferSummary"]["TotalNew"];
@@ -102,7 +107,51 @@ export default class Product{
     }
 
 
-    calculateFBAPercentage(){
+    GetFbaXRayUrl(FBAXRayThreshold){
+
+        var SalesRank;
+        //alert("in GetFbaXRayUrl() FBAXRayThreshold:"+FBAXRayThreshold)
+        if(this.averageRank!=undefined)
+        {
+            SalesRank = this.averageRank;
+        }
+        else
+        {
+            SalesRank = this.salesRank;
+        }
+
+        var fbaXRayUrl = 'http://server.nickgermaine.com:8080/single?threshold='+FBAXRayThreshold+'&fbmnewprice='+this.lowestNewPrice+'&fbmusedprice='+this.lowestUsedPrice+'&OfferCountNew='+this.numberOfNewOffers+'&OfferCountUsed='+this.numberOfUsedOffers+'&SalesRank='+SalesRank;
+
+        return fbaXRayUrl;
+    }
+
+    calculateFBAPercentage(FBAXRayThreshold, FBAXRayNewOrUsed){
+
+        let parsedResponse = null
+        const parseString = require('react-native-xml2js').parseString;
+
+        //var obj=null;
+
+        fetch(this.GetFbaXRayUrl(FBAXRayThreshold))
+        .then(response =>response.text())
+        .then((response) => {
+            var obj = JSON.parse(response);
+            alert("calculateFBAPercentage RESPONSE:"+obj["results"]["new"]);
+            if(FBAXRayNewOrUsed=='Used'){
+               //alert('calculateFBAPercentage:used')
+               return obj["results"]["used"]
+            }
+            else{
+               //alert('calculateFBAPercentage:new:')
+               return obj["results"]["new"]
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+            //return obj["results"]["new"];
+        return '--';
 
     }
 

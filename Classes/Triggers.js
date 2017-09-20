@@ -26,6 +26,9 @@ import TriggerData from './TriggersData'
 import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
 import Icons from 'react-native-vector-icons/Entypo'
+import Constants from './Constants'
+import LocalStorageSettingsApi from './LocalStorageSettingsApi'
+import LocalStorageSettingsResponse from './LocalStorageSettingsResponse'
 //const B = (props) => <Text style={{fontWeight: 'bold'}}>{props.children}</Text>
 
 export default class Trigger extends Component{
@@ -35,10 +38,11 @@ export default class Trigger extends Component{
         animated3 = new Animated.Value(0)
         super();
         this.localArray=[false , false , false]
+        LocalStorageSettingsResponse.getInstance().setReceiver(this);
        this.state={
-            selectedPercentValue:'25',
+            selectedPercentValue:LocalStorageSettingsApi.getFBAXRayThreshold(),
             salesRankValue:'100000',
-           selectedCategory:'New',
+           selectedCategory:LocalStorageSettingsApi.getFBAXRayNewOrUsed(),
             expanded:[false, false , false],
             animation:[animated1,animated2,animated3],
            icon_name:'chevron-small-down'
@@ -60,6 +64,41 @@ export default class Trigger extends Component{
     ).start();
     }
 )}
+
+    onValueChangeCallback(value,key){
+        switch (key){
+            case Constants.kKeyForFBAXRayThreshold:{
+                this.setState({selectedPercentValue: value});
+                LocalStorageSettingsApi.setFBAXRayThreshold(value);
+                break;
+            }
+            case Constants.kKeyForFBAXRayNewOrUsed:{
+                this.setState({selectedCategory: value});
+                LocalStorageSettingsApi.setFBAXRayNewOrUsed(value);
+                break;
+            }
+            default:
+                break
+
+        }
+
+    }
+
+    localStorageSettingsResponseSuccessCallback(result,key){
+        switch (key){
+            case Constants.kKeyForFBAXRayThreshold:{
+                this.setState({selectedPercentValue:result})
+                break;
+            }
+            case Constants.kKeyForFBAXRayNewOrUsed:{
+                this.setState({selectedCategory:result})
+                break;
+            }
+            default:
+                break
+
+        }
+    }
 
     render(){
         return(
@@ -87,7 +126,12 @@ export default class Trigger extends Component{
                                 {this.state.expanded[0]?
                                         <Picker
                                             selectedValue={this.state.selectedPercentValue}
-                                            onValueChange={(value) => this.setState({selectedPercentValue: value})}
+                                            onValueChange={(value)=> {
+                                                this.onValueChangeCallback(value,Constants.kKeyForFBAXRayThreshold)
+                                            }}
+
+
+                                            //onValueChange={(value) => this.setState({selectedPercentValue: value})}
                                             style={{backgroundColor:'rgb(255,255,255)'}}
                                         >
                                             <Picker.Item label="$5 above" value="5"/>
@@ -159,7 +203,12 @@ export default class Trigger extends Component{
                             {this.state.expanded[2]?
                                 <Picker
                                     selectedValue={this.state.selectedCategory}
-                                    onValueChange={(value) => this.setState({selectedCategory: value})}
+                                    onValueChange={(value)=> {
+                                        this.onValueChangeCallback(value,Constants.kKeyForFBAXRayNewOrUsed)
+                                    }}
+
+                                    //selectedValue={this.state.selectedCategory}
+                                    //onValueChange={(value) => this.setState({selectedCategory: value})}
                                     style={{backgroundColor:'rgb(255,255,255)'}}
                                 >
                                     <Picker.Item label="New(compare against new only)" value="New"/>
@@ -172,6 +221,10 @@ export default class Trigger extends Component{
             </View>
         )
     }
+
+    componentWillUnmount(){
+         LocalStorageSettingsResponse.getInstance().removeReceiver(this)
+   }
 }
 
 
