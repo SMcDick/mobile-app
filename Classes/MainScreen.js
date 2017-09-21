@@ -807,7 +807,7 @@ export default class MainScreen extends Component{
           return;
       }
 
-      if(productCode.length!=10 && productCode.length!=13 && !this.state.bluetoothMode) {
+      /*if(productCode.length!=10 && productCode.length!=13 && !this.state.bluetoothMode) {
           alert('Please enter a valid ISBN OR UPC code')
           return;
       }
@@ -818,7 +818,7 @@ export default class MainScreen extends Component{
               alert("Number of free scans exceeded")
           }
           return
-      }
+      }*/
       Keyboard.dismiss();
       this.setState({webViewModal:true, selectedOffer:"used"});
       if((LocalStorageSettingsApi.OperatingMode != JSON.stringify(Constants.SearchMode.kDataBase))) {
@@ -956,6 +956,9 @@ export default class MainScreen extends Component{
             productObject.UsedUrl = UsedUrl;
             productObject.NewUrl = NewUrl;
             productObject.AllOffersUrl = AllOffersUrl
+            productObject.lowestNewPrice = LowestNewPrice
+            productObject.lowestUsedPrice = LowestUsedPrice
+            alert('LowestNewPrice1='+LowestNewPrice);
 
         }else {
             let len=itemArray.length
@@ -969,7 +972,7 @@ export default class MainScreen extends Component{
             let title = itemArray[len-1]["ItemAttributes"]?itemArray[len-1]["ItemAttributes"]["Title"]:null
             let TotalNew=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["TotalNew"]:null:null
             let TotalUsed=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["TotalUsed"]:null:null
-           // let LowestNewPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]["FormattedPrice"]:null:null:null
+            let LowestNewPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]["FormattedPrice"]:null:null:null
             let LowestUsedPrice=itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]?itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]["FormattedPrice"]:null:null:null
             let AllOffersUrl = itemArray[len-1]["ItemLinks"]["ItemLink"][(itemArray[len-1]["ItemLinks"]["ItemLink"].length - 1)]["URL"]
             let FBAUrl = itemArray[len-1]["ItemLinks"]["ItemLink"][(itemArray[len-1]["ItemLinks"]["ItemLink"].length - 1)]["URL"] + "/ref=olp_f_primeEligible?ie=UTF8&f_primeEligible=true&force-full-site=1";
@@ -1026,6 +1029,9 @@ export default class MainScreen extends Component{
             productObject.UsedUrl = UsedUrl;
             productObject.NewUrl = NewUrl;
             productObject.AllOffersUrl = AllOffersUrl
+            productObject.lowestNewPrice = (itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestNewPrice"]?((itemArray[len-1]["OfferSummary"]["LowestNewPrice"]["Amount"])/100):null:null:null)
+            productObject.lowestUsedPrice = (itemArray[len-1]?itemArray[len-1]["OfferSummary"]?itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]?((itemArray[len-1]["OfferSummary"]["LowestUsedPrice"]["Amount"])/100):null:null:null)
+           //alert('LowestNewPrice2='+productObject.lowestNewPrice);
             //productObject.productCode = productCode
         }
         LocalStorageSettingsApi.setTotalScansDoneInTrial(JSON.stringify((LocalStorageSettingsApi.numberOfScansInTrial)+1)).then(() => {
@@ -1235,7 +1241,10 @@ export default class MainScreen extends Component{
                 //alert(JSON.stringify(response))
                  console.log("*********all:" + JSON.stringify(response))
                 if(JSON.stringify(response[isbn])!=null){
-                productObject.averageRank = (JSON.stringify(response[isbn]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
+                //productObject.averageRank = (JSON.stringify(response[isbn]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
+                productObject.averageRank = JSON.stringify(response[isbn]);//
+                alert('calculateAverageRank ()averageRank:'+JSON.stringify(response[isbn]));
+                }
                 else{
                     productObject.averageRank='-'
                 }

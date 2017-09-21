@@ -68,12 +68,15 @@ export default class Product{
         this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
         this.lowestNewPrice=itemArray["OfferSummary"]["TotalNew"]?itemArray["OfferSummary"]["TotalNew"]["LowestNewPrice"]["FormattedPrice"]: null
         this.lowestUsedPrice=itemArray["OfferSummary"]["TotalUsed"]?itemArray["OfferSummary"]["TotalNew"]["LowestUsedPrice"]["FormattedPrice"]: null
+
+        alert("Lowest new price:"+JSON.stringify(itemArray["OfferSummary"]["TotalNew"]));
         //this.nonFBAUsedOffersArray =[...this.nonFBAUsedOffersArray, this.lowestUsedPrice]
         //this.nonFBANewOffersArray =[...this.nonFBANewOffersArray, this.lowestNewPrice]
 
     }
 
     updateProductDataOnResponseFromES(response){
+        alert('updateProductDataOnResponseFromES() response:'+response);
         this.productCode =  response['hits']['hits'][0]['_id']? response['hits']['hits'][0]['_id']:null;
         response = response['hits']['hits'][0]['_source']
         this.title = response['title']? response['title']:null
@@ -91,6 +94,7 @@ export default class Product{
 
 
     updateProductDataOnLocalDataBaseResponse(response){
+        alert('updateProductDataOnLocalDataBaseResponse() response:'+response);
         console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. error")
         this.productCode =  response['_id']? response['_id']:null;
         this.title = response['title']? response['title']:null
@@ -114,14 +118,17 @@ export default class Product{
         if(this.averageRank!=undefined)
         {
             SalesRank = this.averageRank;
+            //alert("this.averageRank"+this.averageRank);
         }
         else
         {
             SalesRank = this.salesRank;
+            alert("this.SalesRank"+this.SalesRank);
         }
 
         var fbaXRayUrl = 'http://server.nickgermaine.com:8080/single?threshold='+FBAXRayThreshold+'&fbmnewprice='+this.lowestNewPrice+'&fbmusedprice='+this.lowestUsedPrice+'&OfferCountNew='+this.numberOfNewOffers+'&OfferCountUsed='+this.numberOfUsedOffers+'&SalesRank='+SalesRank;
 
+        alert('XRay url:'+fbaXRayUrl);
         return fbaXRayUrl;
     }
 
@@ -132,23 +139,25 @@ export default class Product{
 
         //var obj=null;
 
-        /*fetch(this.GetFbaXRayUrl(FBAXRayThreshold))
+        fetch(this.GetFbaXRayUrl(FBAXRayThreshold))
         .then(response =>response.text())
         .then((response) => {
+            //alert('response'+response);
             var obj = JSON.parse(response);
-            alert("calculateFBAPercentage RESPONSE:"+obj["results"]["new"]);
+            //alert("response:"+response);
+            //alert("calculateFBAPercentage RESPONSE:"+obj["results"]["new"]);
             if(FBAXRayNewOrUsed=='Used'){
-               //alert('calculateFBAPercentage:used')
+               //alert('calculateFBAPercentage:used'+JSON.stringify(obj["results"]["used"]))
                return obj["results"]["used"]
             }
             else{
-               //alert('calculateFBAPercentage:new:')
+               //alert('calculateFBAPercentage:new'+JSON.stringify(obj["results"]["new"]))
                return obj["results"]["new"]
             }
         })
         .catch((error) => {
             console.error(error);
-        });*/
+        });
 
             //return obj["results"]["new"];
         return '--';
