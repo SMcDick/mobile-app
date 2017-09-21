@@ -25,6 +25,7 @@ import LocalStorageSettingsApi from './LocalStorageSettingsApi'
 import Utility from './Utility'
 import Constants from './Constants'
 import ElasticSearch from './Apis/ElasticSearch'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 
 const screenWidth=Dimensions.get('window').width;
@@ -98,28 +99,29 @@ export default class SideMenu extends Component{
                         onPress={()=>this.closeSideMenu()}
                     />
                     <View style={{flex:1,flexDirection:'row'}}>
-                        <View
-                            style={styles.sideMenuStyles}
-                        >
+                        <View style={styles.sideMenuStyles}>
                             <View style={{flex:3}}>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                     onPress={()=>{
                                         this.closeSideMenu()
                                         this.props.navigator.push({name:'Download',prevScreen:'Back'})
-                                    }}
-                                >
+                                    }}>
+                                    <FontAwesome>{Icons.download}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Download</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                     onPress={()=>{
                                         this.closeSideMenu()
                                         this.props.navigator.push({name:'Payments',prevScreen:'Back'})
-                                    }}
-                                >
+                                    }}>
+                                    <FontAwesome>{Icons.paypal}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Payments</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                     onPress={()=>{
@@ -127,8 +129,10 @@ export default class SideMenu extends Component{
                                         this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
                                     }}
                                 >
+                                    <FontAwesome>{Icons.wrench}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Operating Mode</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                     onPress={()=>{
@@ -136,18 +140,24 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                     }}
                                 >
+                                    <FontAwesome>{Icons.gears}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Settings</Text>
                                 </TouchableOpacity>
                             </View>
+
+
                             <View style={{flex:2}}>
+
                                 <TouchableOpacity
                                     onPress={()=>{
                                         this.props.navigator.push({name:'Category',prevScreen:'Back'})
                                         this.closeSideMenu()
                                     }}
                                     style={styles.touchableStyles}>
+                                    <FontAwesome>{Icons.lineChart}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                     onPress={()=>{
@@ -155,9 +165,12 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                     }}
                                 >
+                                    <FontAwesome>{Icons.playCircle}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Triggers</Text>
                                 </TouchableOpacity>
                             </View>
+
+
                             <View style={{flex:4}}>
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
@@ -166,23 +179,30 @@ export default class SideMenu extends Component{
                                     this.props.navigator.push({name:'Resources',prevScreen:'Back'})
                                 }}
                                 >
+                                    <FontAwesome>{Icons.youtube}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Resources</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     style={styles.touchableStyles}
                                 onPress = {()=>{
                                      return(Linking.openURL(Constants.storeLink))
                                 }}
-                            >
-                                <Text style={styles.touchableContentStyles}>Review</Text>
-                            </TouchableOpacity>
+                                >
+                                    <FontAwesome>{Icons.pencil}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>Review</Text>
+                                </TouchableOpacity>
+
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=> this.validateToken()}
                             >
+                                <FontAwesome>{Icons.user}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Account</Text>
                             </TouchableOpacity>
+
                             <TouchableOpacity style={styles.touchableStyles} onPress={()=>this.closeSideMenu()}>
+                                <FontAwesome>{Icons.close}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Close</Text>
                             </TouchableOpacity>
                         </View>
