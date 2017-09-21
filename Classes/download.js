@@ -144,7 +144,6 @@ export default class Download extends Component{
                         <Text 
                             style={{textDecorationLine:'underline',fontWeight:'300',fontSize:18}} 
                             onPress={() => {
-                            debugger;
                                  if(DataBase.getInstance().totalProductsInDataBase > 0){
                                        this.downloadButton = 'Resume'
                                  }else {    
@@ -214,7 +213,9 @@ export default class Download extends Component{
                                         console.log('Start time ' + startTime + "======" + ISOdate);
                                         LocalStorageSettingsApi.setDownloadStartTime(startTime)
                                         //ElasticSearch.getESDataSize(1)
-                                        ElasticSearch.ReadBinaryFile();
+                                        //ElasticSearch.ReadBinaryFile();
+                                        ElasticSearch.DownloadJsonZipFile();
+                                        //ElasticSearch.EncodeJsonFile();
                                         this.setState({downloadButtonText:'Pause'})
                                     }
                                 }
@@ -227,7 +228,8 @@ export default class Download extends Component{
                                 activeOpacity={0.7}
                                 style={styles.downloadActionTouchableStyles}
                                 onPress = {()=>{
-                                    this.props.navigator.pop()
+                                    //this.props.navigator.pop()
+                                    ElasticSearch.EncodeJsonFile();
                                     //this.setState({showModal:true})
                                 }}
                             >
