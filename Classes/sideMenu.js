@@ -98,100 +98,88 @@ export default class SideMenu extends Component{
                         style={{height:70}}
                         onPress={()=>this.closeSideMenu()}
                     />
-                    <View style={{flex:1,flexDirection:'row'}}>
-                        <View style={styles.sideMenuStyles}>
-                            <View style={{flex:3}}>
-
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
-                                        this.closeSideMenu()
-                                        this.props.navigator.push({name:'Download',prevScreen:'Back'})
-                                    }}>
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.download}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Download</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
-                                        this.closeSideMenu()
-                                        this.props.navigator.push({name:'Payments',prevScreen:'Back'})
-                                    }}>
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.paypal}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Payments</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
-                                        this.closeSideMenu()
-                                        this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
-                                    }}
-                                >
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.wrench}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Operating Mode</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
-                                        this.props.navigator.push({name:'Settings',prevScreen:'Back'})
-                                        this.closeSideMenu()
-                                    }}
-                                >
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.gears}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Settings</Text>
-                                </TouchableOpacity>
-                            </View>
-
-
-                            <View style={{flex:2}}>
-
-                                <TouchableOpacity
-                                    onPress={()=>{
-                                        this.props.navigator.push({name:'Category',prevScreen:'Back'})
-                                        this.closeSideMenu()
-                                    }}
-                                    style={styles.touchableStyles}>
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.lineChart}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
-                                        this.props.navigator.push({name:'Buy Triggers',prevScreen:'Back'})
-                                        this.closeSideMenu()
-                                    }}
-                                >
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.playCircle}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Triggers</Text>
-                                </TouchableOpacity>
-                            </View>
-
-
-                            <View style={{flex:4}}>
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                    onPress={()=>{
+                    <View style={{flex:1,flexDirection:'column',backgroundColor:'#007eaf', justifyContent:'center', align:'center', padding:10}}>
+                            
+                        <View style={{flex:1, flexDirection: 'row'}}>
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
                                     this.closeSideMenu()
-                                    this.props.navigator.push({name:'Resources',prevScreen:'Back'})
-                                }}
-                                >
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.youtube}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Resources</Text>
-                                </TouchableOpacity>
+                                    this.props.navigator.push({name:'Download',prevScreen:'Back'})
+                                }}>
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.download}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Download</Text>
+                            </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    style={styles.touchableStyles}
-                                onPress = {()=>{
-                                     return(Linking.openURL(Constants.storeLink))
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
+                                    this.closeSideMenu()
+                                    this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
                                 }}
-                                >
-                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.pencil}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>Review</Text>
-                                </TouchableOpacity>
+                            >
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.wrench}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Operating Mode</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{flexDirection:'row', flex:1}}>
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
+                                    this.props.navigator.push({name:'Settings',prevScreen:'Back'})
+                                    this.closeSideMenu()
+                                }}
+                            >
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.gears}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Settings</Text>
+                            </TouchableOpacity>
+                        
+                            <TouchableOpacity
+                                onPress={()=>{
+                                    this.props.navigator.push({name:'Category',prevScreen:'Back'})
+                                    this.closeSideMenu()
+                                }}
+                                style={styles.touchableStyles}>
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.lineChart}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{flexDirection: 'row', flex:1}}>
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
+                                    this.props.navigator.push({name:'Buy Triggers',prevScreen:'Back'})
+                                    this.closeSideMenu()
+                                }}
+                            >
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.playCircle}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Triggers</Text>
+                            </TouchableOpacity>
+                        
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
+                                this.closeSideMenu()
+                                this.props.navigator.push({name:'Resources',prevScreen:'Back'})
+                            }}
+                            >
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.youtube}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Resources</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{flexDirection: 'row', flex:1}}>
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                            onPress = {()=>{
+                                 return(Linking.openURL(Constants.storeLink))
+                            }}
+                            >
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.pencil}</FontAwesome>
+                                <Text style={styles.touchableContentStyles}>Review</Text>
+                            </TouchableOpacity>
 
                             <TouchableOpacity
                                 style={styles.touchableStyles}
@@ -200,17 +188,8 @@ export default class SideMenu extends Component{
                                 <FontAwesome style={styles.fontAwesomeStyles}>{Icons.user}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Account</Text>
                             </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.touchableStyles} onPress={()=>this.closeSideMenu()}>
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.close}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Close</Text>
-                            </TouchableOpacity>
                         </View>
-                    </View>
-                    <TouchableOpacity
-                        style={{flex:1}}
-                        onPress={()=>this.closeSideMenu()}
-                    />
+    
                     </View>
                 </Animated.View>
             </Modal>
@@ -219,14 +198,14 @@ export default class SideMenu extends Component{
 }
 
 var styles=StyleSheet.create({
-    sideMenuStyles:{
-        flex:2,
-        backgroundColor:'rgb(0,163,238)'
-    },
     touchableStyles:{
-        flex:1,
+        flex:0.5,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        backgroundColor: '#0092cc',
+        borderRadius:10,
+        //marginTop: 15,
+        margin:10
     },
     touchableContentStyles:{
         color:'white',
@@ -234,6 +213,7 @@ var styles=StyleSheet.create({
         fontSize:Utility.getFontSize()*0.6
     },
     fontAwesomeStyles:{
-        color:'white'
+        color:'white',
+        fontSize:Utility.getFontSize()*1.5
     },
 });
