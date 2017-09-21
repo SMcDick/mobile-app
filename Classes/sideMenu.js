@@ -108,7 +108,7 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                         this.props.navigator.push({name:'Download',prevScreen:'Back'})
                                     }}>
-                                    <FontAwesome>{Icons.download}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.download}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Download</Text>
                                 </TouchableOpacity>
 
@@ -118,7 +118,7 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                         this.props.navigator.push({name:'Payments',prevScreen:'Back'})
                                     }}>
-                                    <FontAwesome>{Icons.paypal}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.paypal}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Payments</Text>
                                 </TouchableOpacity>
 
@@ -129,7 +129,7 @@ export default class SideMenu extends Component{
                                         this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
                                     }}
                                 >
-                                    <FontAwesome>{Icons.wrench}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.wrench}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Operating Mode</Text>
                                 </TouchableOpacity>
 
@@ -140,7 +140,7 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                     }}
                                 >
-                                    <FontAwesome>{Icons.gears}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.gears}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Settings</Text>
                                 </TouchableOpacity>
                             </View>
@@ -154,7 +154,7 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                     }}
                                     style={styles.touchableStyles}>
-                                    <FontAwesome>{Icons.lineChart}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.lineChart}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
                                 </TouchableOpacity>
 
@@ -165,7 +165,7 @@ export default class SideMenu extends Component{
                                         this.closeSideMenu()
                                     }}
                                 >
-                                    <FontAwesome>{Icons.playCircle}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.playCircle}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Triggers</Text>
                                 </TouchableOpacity>
                             </View>
@@ -179,7 +179,7 @@ export default class SideMenu extends Component{
                                     this.props.navigator.push({name:'Resources',prevScreen:'Back'})
                                 }}
                                 >
-                                    <FontAwesome>{Icons.youtube}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.youtube}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Resources</Text>
                                 </TouchableOpacity>
 
@@ -189,7 +189,7 @@ export default class SideMenu extends Component{
                                      return(Linking.openURL(Constants.storeLink))
                                 }}
                                 >
-                                    <FontAwesome>{Icons.pencil}</FontAwesome>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.pencil}</FontAwesome>
                                     <Text style={styles.touchableContentStyles}>Review</Text>
                                 </TouchableOpacity>
 
@@ -197,12 +197,12 @@ export default class SideMenu extends Component{
                                 style={styles.touchableStyles}
                                 onPress={()=> this.validateToken()}
                             >
-                                <FontAwesome>{Icons.user}</FontAwesome>
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.user}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Account</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.touchableStyles} onPress={()=>this.closeSideMenu()}>
-                                <FontAwesome>{Icons.close}</FontAwesome>
+                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.close}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Close</Text>
                             </TouchableOpacity>
                         </View>
@@ -232,5 +232,8 @@ var styles=StyleSheet.create({
         color:'white',
         fontWeight:'500',
         fontSize:Utility.getFontSize()*0.6
+    },
+    fontAwesomeStyles:{
+        color:'white'
     },
 });
