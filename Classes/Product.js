@@ -132,7 +132,7 @@ export default class Product{
 
         //var obj=null;
 
-        fetch(this.GetFbaXRayUrl(FBAXRayThreshold))
+        /*fetch(this.GetFbaXRayUrl(FBAXRayThreshold))
         .then(response =>response.text())
         .then((response) => {
             var obj = JSON.parse(response);
@@ -148,7 +148,7 @@ export default class Product{
         })
         .catch((error) => {
             console.error(error);
-        });
+        });*/
 
             //return obj["results"]["new"];
         return '--';

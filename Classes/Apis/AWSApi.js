@@ -107,7 +107,8 @@ export default class ProductApi{
         var signature = ProductApi.sha256(signingKey,Constants.kAWSSecretKey);
         signature = encodeURIComponent(signature);
         var amazonUrl =  "http://webservices.amazon.com/onca/xml?" + paramString + "&Signature=" + signature;
-        console.log(amazonUrl)
+        debugger;
+        console.log('amazonUrl: '+amazonUrl)
         return amazonUrl;
 
 

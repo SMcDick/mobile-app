@@ -199,6 +199,82 @@ export default class ElasticSearch{
 
     }
 
+    /*
+     *  DownloadJsonZipFile(): Function downloads a zip file from server and unzips it
+     *                         The zip file contains a json file
+     */
+    static DownloadJsonZipFile()
+    {
+        let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful'; //url to download from
+        ElasticSearch.downLoadPath = RNFS.DocumentDirectoryPath + '/books_useful.zip';              //path for the zip file
+        const targetPath = `${DocumentDirectoryPath}/FbaScanner`;                                   //path to the folder to put the unzipped file
+        const unzippedFilePath = targetPath+'/test_data.json';                                      //path to the unzipped file
+
+        console.log('Download path=' + ElasticSearch.downLoadPath);
+
+        //download books_useful.zip from server
+        RNFS.downloadFile({fromUrl:downloadUrl, toFile:ElasticSearch.downLoadPath})
+        .promise.then(res => {
+           console.log('in DownloadZipFile(): File books_useful.zip was downloaded to'+ElasticSearch.downloadPath);
+
+           console.log('starting unzip');
+           //unzip books_useful.zip into targetPath
+           unzip(ElasticSearch.downLoadPath, targetPath)
+           .then((path) => {
+                alert('Books data file was downloaded and unzipped')
+           })
+        })
+        .catch((error)=>{
+            console.log('in DownloadJsonZipFile() error: '+ error)
+        });
+
+    }
+
+
+    /*
+     *  EncodeJsonFile(): Function reads a json file, encodes it to binary, writes the data to binary file
+     *                    Then it reads the data from the binary file, decodes it and display the text in it
+     */
+    static EncodeJsonFile()
+    {
+        const jsonFilePath = `${DocumentDirectoryPath}/FbaScanner/test_data.json`;  //path to the json file to encode
+        const binaryFilePath = RNFS.DocumentDirectoryPath + '/test.bin';            //path to put the encoded binary file
+
+        var base64 = require('base-64');
+
+        console.log('starting reading json file');
+
+        //Read json file
+        RNFS.read(jsonFilePath, 16384, 0, 'utf8')
+       .then((contents) => {
+             // log the file contents
+             console.log("json file contents"+contents);
+
+             //encode the contents of the json file to binary data
+             var encodedData = base64.encode(contents);
+
+             //log the encodded data
+             console.log("encoded data"+encodedData);
+
+             //write the binary data to file at binaryFilePath
+             RNFS.writeFile(binaryFilePath, encodedData, 'base64')
+             .then((success) => {
+                //read the binary data from file
+                RNFS.read(binaryFilePath, 1024, 0, 'base64')
+                .then((contents) => {
+                    //decode the binary data and display
+                    var decodedData = base64.decode(contents);
+                    alert("decoded data"+decodedData);
+                });
+            });
+
+       })
+        .catch((error)=>{
+            console.log('in EncodeJsonFile() error: '+ error)
+        });
+
+    }
+
     static ReadBinaryFile()
         {
             let downloadUrl = 'http://ec2-34-213-116-128.us-west-2.compute.amazonaws.com/books/useful/binary'; //url to download from
