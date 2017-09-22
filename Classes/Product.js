@@ -87,7 +87,7 @@ export default class Product{
         this.numberOfUsedOffers = response['used_count']?response['used_count']:null
         this.productAmazonURL = response['']?response['']:null
         this.image = response['']?response['']:null
-        this.category = response['']? response['']: '-';
+        this.category = response['']? response['']: null;
         this.numberOfFBAOffers  = null;
         this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
     }
@@ -105,7 +105,7 @@ export default class Product{
         this.numberOfUsedOffers = response['used_count']?response['used_count']:null
         this.productAmazonURL = response['']?response['']:null
         this.image = response['']?response['']:null
-        this.category = response['']? response['']: '-';
+        this.category = response['']? response['']: null;
         this.numberOfFBAOffers  = null;
         this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
     }

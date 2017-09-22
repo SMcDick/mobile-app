@@ -149,5 +149,7 @@ import { Dimensions , Platform } from 'react-native';
 
      //ui constants
      static ZenBlue1 = 'rgb(68,146,225)'
+     //static ZenBlue1 = 'blue'
+     static ZenGreen = 'rgb(2,203,1)'
 
 }
