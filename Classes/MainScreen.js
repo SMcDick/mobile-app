@@ -75,7 +75,7 @@ export default class MainScreen extends Component{
 
 
         this.state = {
-         buyRejectColor:'rgb(0,224,137)',
+         buyRejectColor:'rgb(2,203,1)',//'rgb(0,224,137)',
          productCategory : '-',
          productTitle : '-',
          productFBAOffersPercent :null,
@@ -432,20 +432,7 @@ export default class MainScreen extends Component{
             activeOpacity={1}
             //onPress={()=>Keyboard.dismiss()}
         >
-            <TouchableOpacity
-                activeOpacity={0.9}
-                style={{flex:1,backgroundColor:"lightgray"}}
-                onPress={() => {
-                                this.refs.bluetoothMode.clear()
 
-                                this.setState({bluetoothMode:!this.state.bluetoothMode},() => {this.state.bluetoothMode?this.refs.bluetoothMode.focus():this.refs.bluetoothMode.blur()})
-                            }
-                        }
-            >
-                <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                    <Icons name="bluetooth" color={this.state.bluetoothMode ? 'rgb(0,133,248)':'rgb(255,255,255)'} size={20}/>
-                </View>
-            </TouchableOpacity>
             <View
                 style={{flex:7,alignItems:'center'}}
             >
@@ -464,52 +451,43 @@ export default class MainScreen extends Component{
             }
         >
         <View style={this.state.styleForProductDescriptionView}>
-            <View style={styles.itemInfoContainer}>
-                <TouchableOpacity style={styles.touchableImage} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
-                    <Image source={this.state.productImage} style={styles.image}/>
-                </TouchableOpacity>
-                <View style={styles.itemInfo}>
-                    <View style={{flex:2,justifyContent:'center'}}><Text style={styles.itemInfoCategory}>Category: {this.state.productCategory}</Text></View>
-                        <View style={{flex:3}}>
-                            <TouchableOpacity style={{flex:1}} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
-                                <Text style={styles.itemInfoTitle} ellipsizeMode="tail" numberOfLines={2}>Title: {this.state.productTitle}</Text>
-                            </TouchableOpacity>
+                <View style={styles.itemInfoContainer}>
+                     <TouchableOpacity style={styles.touchableImage} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                            <Image source={this.state.productImage} style={styles.image}/>
+                        </TouchableOpacity>
+                        <View style={styles.itemInfo}>
+                            <View style={{flex:2,justifyContent:'center'}}><Text style={styles.itemInfoCategory}>Category: {this.state.productCategory}</Text></View>
+                                <View style={{flex:3}}>
+                                    <TouchableOpacity style={{flex:1}} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                                        <Text style={styles.itemInfoTitle} ellipsizeMode="tail" numberOfLines={2}>Title: {this.state.productTitle}</Text>
+                                    </TouchableOpacity>
+                                </View>
                         </View>
                 </View>
-                <View style={{flex:2,padding:10}}>
-                    <View style={styles.percentFBA}>
+            <View style={styles.itemInfoContainer}>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >{this.state.productBuyBox}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Trade</Text>
+                    </View>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} ></Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Buy Box</Text>
+                    </View>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
                         <Text style={[styles.productSearchIndicators,styles.fontColors]} >{this.state.productFBAOffersPercent}</Text>
-                      <Text style={[styles.productSearchIndicators,styles.fontColors]}> FBA </Text>
+                      <Text style={[styles.productSearchIndicators,styles.fontColors]}> X-Ray </Text>
                     </View>
                 </View>
 
             </View>
-            <View style={styles.styleForProfitRow}>
-                <View style={{flex:2,padding:5}}>
-                    <TouchableOpacity style={{flex:1}} onPress={this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
-                    <View style={styles.productPriceProfit}>
-                        <Text style={[styles.productSearchIndicators,{fontSize:Utility.getFontSize() * 0.7}]} >{this.state.productAmazonPrice}</Text>
-                        <Text style={styles.productSearchIndicators} >Amazon</Text>
-                    </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex:5,padding:5}}>
-                    <View style={styles.productPriceProfit}>
-                        <Text style={[styles.productSearchIndicators,{fontSize:Utility.getFontSize() * 0.7}]} >{this.state.productNetProfit}</Text>
-                        <Text style={styles.productSearchIndicators} >Net Profit</Text>
-                    </View>
-                </View>
-                <View style={{flex:2,padding:5}}>
-                    <View style={styles.productPriceProfit}>
-                        <Text style={styles.productSearchIndicators} >{this.state.productBuyBox}</Text>
-                        <Text style={styles.productSearchIndicators} >Trade In</Text>
-                    </View>
-                </View>
-
-            </View>
-            <View style={styles.styleForRankRow}>
+            <View style={styles.itemInfoContainer}>
                 <View style={[{flex:2,padding:5}]}>
-                    <View style={styles.productRankings}>
+                    <View style={styles.dataField}>
                         <Text style={[styles.productSearchIndicators,styles.fontColors]}
                               adjustsFontSizeToFit={Utility.getFontSize() == 23}
                         >
@@ -520,18 +498,43 @@ export default class MainScreen extends Component{
                             style={[styles.productSearchIndicators,styles.fontColors]} >Rank</Text>
                     </View>
                 </View>
-                <View style={{flex:5,padding:5,justifyContent:'center'}}>
-                    <View style={styles.productRankings}>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
                         <Text style={[styles.productSearchIndicators,styles.fontColors,{fontSize:Utility.getFontSize() * 0.7}]} >{this.state.productAmazonRank}</Text>
                         <Text style={[styles.productSearchIndicators,styles.fontColors]} >Average Rank</Text>
                     </View>
                 </View>
                 <View style={{flex:2,padding:5}}>
-                    <View style={styles.productRankings}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Top</Text>
+                    <View style={styles.dataField}>
                         <Text style={[styles.productSearchIndicators,styles.fontColors]} >{this.state.productTopPercent}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Rank %</Text>
                     </View>
                 </View>
+
+            </View>
+            <View style={styles.itemInfoContainer}>
+                <View style={{flex:2,padding:5}}>
+                    <TouchableOpacity style={{flex:1}} onPress={this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,{fontSize:Utility.getFontSize() * 0.7},styles.fontColors]} >{this.state.productAmazonPrice}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Amazon</Text>
+                    </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,{fontSize:Utility.getFontSize() * 0.7},styles.fontColors]} >{this.state.productNetProfit}</Text>
+                        <Text style={[styles.productSearchIndicators, styles.fontColors]} >Net Profit</Text>
+                    </View>
+                </View>
+
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,{fontSize:Utility.getFontSize() * 0.7},styles.fontColors]} ></Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColors]} >Price %</Text>
+                    </View>
+                </View>
+
             </View>
             </View>
     </TouchableOpacity>);
@@ -752,14 +755,18 @@ export default class MainScreen extends Component{
 
     let mainView = (
         <View style={styles.mainViewContainer}>
+            <View style={{alignItems:'center'}}>
+                <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+            </View>
 
           {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
-          {navigationBar}
+
           {buyRejectBar}
           {productDescriptionComponent}
           {fbaOffersComponent}
           {averagePriceComponent}
           {otherSitesIconComponent}
+          {navigationBar}
 
         </View>
     );
@@ -1676,7 +1683,7 @@ const styles = StyleSheet.create({
       width:screenWidth,
       height:70,
       flexDirection:'row',
-      backgroundColor:'rgb(0,163,238)',
+      backgroundColor:Constants.ZenBlue1,//'rgb(0,163,238)',
       alignItems:'center'
   },
 
@@ -1748,7 +1755,7 @@ const styles = StyleSheet.create({
     justifyContent:'space-around'
   },
   itemInfoCategory:{
-    color:'skyblue',
+    color:Constants.ZenBlue1,//'skyblue',
     fontWeight:'700',
     fontSize:Utility.getFontSize()*0.7
   },
@@ -1764,7 +1771,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   fontColors:{
-    color:'white'
+    color:Constants.ZenBlue1//'rgb(68,146,225)'
   },
   productPriceProfit:{
     backgroundColor:'rgb(241,241,241)',
@@ -1784,12 +1791,22 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'rgb(194,194,194)'
   },
+  dataField:{
+      //backgroundColor:'rgb(68,146,225)',
+      flex:1,
+      justifyContent:'center',
+      alignItems:'center',
+      borderRadius:5,
+      borderWidth:1,
+      //borderColor:'rgb(194,194,194)'
+      borderColor:'rgb(68,146,225)'
+ },
   amazonOfferLinksConatiner:{
     flex:1,
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'lightgray'
+    backgroundColor:Constants.ZenBlue1//'lightgray'
   },
   productSearchIndicators:{
     fontWeight:'400',
@@ -1806,7 +1823,8 @@ const styles = StyleSheet.create({
   amazonOfferLinks:{
     fontWeight:'bold',
     fontSize:Utility.getFontSize()*0.6,
-    textDecorationLine:'underline'
+    //textDecorationLine:'underline',
+    color:'white'
   },
   productRows:{
     flex:1,
@@ -1834,7 +1852,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'rgb(0,146,187)'
+    backgroundColor:Constants.ZenBlue1//'rgb(0,146,187)'
   },
   averagePriceRowContent:{
     fontSize:Utility.getFontSize()*0.6,
@@ -1877,5 +1895,9 @@ const styles = StyleSheet.create({
     width:Utility.getFontSize()==23?50:138,
     height:Utility.getFontSize()==23?15:30,
 
+  },
+  ZenLogoStyle:{
+      width:350,
+      height:50,
   }
 });

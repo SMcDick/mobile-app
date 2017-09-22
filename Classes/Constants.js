@@ -147,4 +147,7 @@ import { Dimensions , Platform } from 'react-native';
      //Store link
      static storeLink =   Platform.OS === 'ios' ? 'https://itunes.apple.com/us/app/foggy-scratch-guess-the-logo/id1143414321?ls=1&mt=8' : 'https://play.google.com/store/apps/details?id=com.appsroyale.foggyscratch'
 
+     //ui constants
+     static ZenBlue1 = 'rgb(68,146,225)'
+
 }
