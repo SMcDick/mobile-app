@@ -160,7 +160,7 @@ export default class Product{
         });
 
             //return obj["results"]["new"];
-        return '--';
+        return ' ';
 
     }
 
@@ -194,6 +194,9 @@ export default class Product{
 
     calculateBuyBoxPrice(){
        return this.tradeIn
+    }
+    calculatePricePercent(){
+        return (this.tradeIn?' ':null);
     }
 
     /*calculateAmazonRank(isbn){
