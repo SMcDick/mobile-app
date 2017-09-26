@@ -152,5 +152,7 @@ import { Dimensions , Platform } from 'react-native';
      //static ZenBlue1 = 'blue'
      static ZenGreen = 'rgb(2,203,1)'
      static DataFieldColor = 'oldlace'
+     static ZenSwitchesColor = 'rgb(0,147,133)'
+     static ZenSwitchesBackColor = 'rgb(178,178,178)'
 
 }

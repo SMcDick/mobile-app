@@ -1,3 +1,4 @@
+
 /**
  * Created by chicmic on 21/02/17.
  */
@@ -14,6 +15,8 @@ import {
     AsyncStorage,
     InteractionManager,
     Platform,
+    Image,
+    TouchableOpacity,
 Alert
 } from 'react-native';
 import NavigationBar from './scenesNavBar'
@@ -22,6 +25,9 @@ import Constants from './Constants'
 import LocalStorageSettingsResponse from './LocalStorageSettingsResponse'
 import Utility from './Utility'
 import NetworkConnectivity from './NetworkConnectivity'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
+import RadioButton from 'radio-button-react-native';
+import RadioForm from 'radio-button-react-native';
 const screenWidth=Dimensions.get('window').width;
 export default class Settings extends Component{
     constructor(){
@@ -35,6 +41,10 @@ export default class Settings extends Component{
             tradeValue : LocalStorageSettingsApi.DisplayTradeValueInColumn,
             enableTriggers : LocalStorageSettingsApi.EnableTriggers,
             alertIfRestricted : LocalStorageSettingsApi.ShowAlertIfRestricted,
+            scanningModeValue: 0,
+            dataLevelValue: 0,
+            displayValue:0,
+
 
             //automaticFBAPage : LocalStorageSettingsApi.showFBAAutomatically,
             //landedPriceWithShipping  :false,
@@ -136,6 +146,21 @@ export default class Settings extends Component{
         }
     }
 
+    handleScanningModeOnPress(value){
+        this.setState({scanningModeValue:value})
+        //alert('value:'+this.state.scanningModeValue);
+    }
+
+    handleDataLevelOnPress(value){
+        this.setState({dataLevelValue:value})
+        //alert('data level value:'+this.state.dataLevelValue);
+    }
+    handleDisplayOnPress(value){
+        this.setState({displayValue:value})
+        //alert('display value:'+this.state.displayValue);
+    }
+
+
     /*changeState(result,key){
         switch (key){
             case Constants.kKeyForFBAOffersPageAutomatically:{
@@ -228,16 +253,39 @@ export default class Settings extends Component{
     render(){
         return(
             <View style={{flex:1}}>
-                <View style={{height:Platform.OS=='ios'?75:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route}/></View>
+                <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                </View>
+
+                <View style={[styles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                    <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
+                    <View style={{flex:1}}>
+                        <TouchableOpacity
+                            onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Settings"})}}
+                            activeOpacity={0.8}
+                            style={styles.registerTouchableStyle}
+                        >
+                            <FontAwesome style={styles.fontAwesomeStyles}>{Icons.chevronLeft}</FontAwesome>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flex:2}}>
+                        <Text style={styles.HeaderBarTextStyle}> Settings</Text>
+                    </View>
+                    </View>
+                </View>
+
                 <View style={styles.scrollviewContainer}>
                     <ScrollView>
-                        <View style={styles.grayCellstyles}/>
+                        <View style={styles.grayCellstyles}>
+                            <Text style={styles.SubheaderTextStyle}>Preferences</Text>
+                        </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
                                 <Text style={styles.cellTextStyle}>Autoshow FBA Mode</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <Switch
+                                    tintColor={Constants.ZenGreen}
                                     onValueChange={(value)=> {
                                     this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForFBAOffersPageAutomatically)
                                      //this.changeState(value,Constants.kKeyForFBAOffersPageAutomatically)
@@ -257,6 +305,7 @@ export default class Settings extends Component{
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <Switch
+                                    tintColor={Constants.ZenGreen}
                                     onValueChange={(value)=> {
                                         this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForAllAmazonOffersPage)
                                         //this.changeState(value,Constants.kKeyForAllAmazonOffersPage)
@@ -277,6 +326,7 @@ export default class Settings extends Component{
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <Switch
+                                    tintColor={Constants.ZenGreen}
                                     onValueChange={(value)=> {
                                     this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForRestricted)
                                     //this.changeState(value,Constants.kKeyForRestricted)
@@ -299,6 +349,7 @@ export default class Settings extends Component{
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <Switch
+                                    tintColor={Constants.ZenGreen}
                                     onValueChange={(value)=> {
                                     this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForEnableTriggers)
                                     //this.changeState(value,Constants.kKeyForEnableTriggers)
@@ -314,6 +365,7 @@ export default class Settings extends Component{
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <Switch
+                                    tintColor={Constants.ZenGreen}
                                     onValueChange={(value)=> {
                                     this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForDisplayCondition)
                                     //this.changeState(value,Constants.kKeyForDisplayCondition)
@@ -322,7 +374,82 @@ export default class Settings extends Component{
                                 />
                             </View>
                         </View>
-                        
+                            <View style={styles.grayCellstyles}>
+                                <Text style={styles.SubheaderTextStyle}>Scanning mode</Text>
+                            </View>
+                            <View style={styles.cellStyles}>
+                                <View style={styles.cellInnerLeftViewStyle}>
+                                    <Text style={styles.cellTextStyle}>Download</Text>
+                                </View>
+                                <View style={styles.switchViewStyle}>
+                                    <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.scanningModeValue} value={0} onPress={this.handleScanningModeOnPress.bind(this)}/>
+                                </View>
+                            </View>
+                            <View style={styles.cellStyles}>
+                                <View style={styles.cellInnerLeftViewStyle}>
+                                    <Text style={styles.cellTextStyle}>Live</Text>
+                                </View>
+                                <View style={styles.switchViewStyle}>
+                                    <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.scanningModeValue} value={1} onPress={this.handleScanningModeOnPress.bind(this)}/>
+                                </View>
+                            </View>
+                            <View style={styles.cellStyles}>
+                                <View style={styles.cellInnerLeftViewStyle}>
+                                    <Text style={styles.cellTextStyle}>Download+Live</Text>
+                                </View>
+                                <View style={styles.switchViewStyle}>
+                                    <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.scanningModeValue} value={2} onPress={this.handleScanningModeOnPress.bind(this)}/>
+                                </View>
+                            </View>
+
+                        <View style={styles.grayCellstyles}>
+                            <Text style={styles.SubheaderTextStyle}>Data Level</Text>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Full Data</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={0} onPress={this.handleDataLevelOnPress.bind(this)}/>
+                            </View>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Stream Line (essential only)</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={1} onPress={this.handleDataLevelOnPress.bind(this)}/>
+                            </View>
+                        </View>
+                        <View style={styles.grayCellstyles}>
+                            <Text style={styles.SubheaderTextStyle}>Display</Text>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Data Display</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={0} onPress={this.handleDisplayOnPress.bind(this)}/>
+                            </View>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Visual Display</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={1} onPress={this.handleDisplayOnPress.bind(this)}/>
+                            </View>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Trade In Only</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={2} onPress={this.handleDisplayOnPress.bind(this)}/>
+                            </View>
+                        </View>
+
+
                     </ScrollView>
                 </View>
             </View>
@@ -338,6 +465,27 @@ const styles=StyleSheet.create({
     scrollviewContainer:{
         flex:1,
         backgroundColor:'rgb(233,234,238)'
+    },
+    ZenLogoStyle:{
+        width:250,
+        height:30,
+    },
+    HeaderBarStyle:{
+        height:70,
+        backgroundColor:Constants.ZenBlue1,
+        width:screenWidth,
+        alignItems:'center',
+        //flexDirection:'row'
+    },
+    HeaderBarTextStyle:{
+        color:'white',//'skyblue',
+        fontWeight:'700',
+        fontSize:Utility.getFontSize()
+    },
+    SubheaderTextStyle:{
+        color:Constants.ZenGreen,
+        padding:10,
+        fontSize:Utility.getFontSize()*0.7
     },
     grayCellstyles:{
         height:50,
@@ -367,6 +515,10 @@ const styles=StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center'
-    }
+    },
+    fontAwesomeStyles:{
+        color:'white',
+        fontSize:Utility.getFontSize()*0.7
+    },
 });
 
