@@ -26,6 +26,7 @@ import Utility from './Utility'
 import Constants from './Constants'
 import ElasticSearch from './Apis/ElasticSearch'
 import FontAwesome, { Icons } from 'react-native-fontawesome'
+import AccoutDetails from './AccountDetails'
 
 
 const screenWidth=Dimensions.get('window').width;
@@ -77,7 +78,7 @@ export default class SideMenu extends Component{
                 if (response.status == 200) {
                     this.props.navigator.push({name: 'Agreement', prevScreen: 'Back'})
                 } else {
-                    this.props.navigator.push({name: 'Accounts', prevScreen: 'Back'})
+                    this.props.navigator.push({name: 'AccountDetails', prevScreen: 'Back'})
                 }
             //console.log("Login Response" + JSON.stringify(response))
         });
@@ -148,9 +149,11 @@ export default class SideMenu extends Component{
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={styles.touchableStyles}
-                                onPress={()=> this.validateToken()}
-                            >
+                                onPress={()=>{
+                                this.props.navigator.push({name:'AccountDetails',prevScreen:'Back'})
+                                this.closeSideMenu()
+                            }}
+                            style={styles.touchableStyles}>
                                 <FontAwesome style={styles.fontAwesomeStyles}>{Icons.user}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Account</Text>
                             </TouchableOpacity>
@@ -176,7 +179,7 @@ export default class SideMenu extends Component{
                             }}
                             >
                                     <FontAwesome style={styles.fontAwesomeStyles}>{Icons.bullseye}</FontAwesome>
-                                    <Text style={styles.touchableContentStyles}>     Source</Text>
+                                    <Text style={styles.touchableContentStyles}>   Source</Text>
                             </TouchableOpacity>
 
     

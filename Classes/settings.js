@@ -273,20 +273,6 @@ export default class Settings extends Component{
 
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Landed Price (Add Shipping)</Text>
-                            </View>
-                            <View style={styles.switchViewStyle}>
-                                <Switch
-                                    onValueChange={(value)=> {
-                                    this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForLandedPrice)
-                                    //this.changeState(value,Constants.kKeyForLandedPrice)
-                                    }}
-                                    value={this.state.landedPriceWithShipping}
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.cellStyles}>
-                            <View style={styles.cellInnerLeftViewStyle}>
                                 <Text style={styles.cellTextStyle}>Alert If Restricted</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
@@ -336,22 +322,7 @@ export default class Settings extends Component{
                                 />
                             </View>
                         </View>
-                        <View style={styles.cellStyles}>
-                            <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Display Item Quantity</Text>
-                            </View>
-                            <View style={styles.switchViewStyle}>
-                                <Switch
-                                    onValueChange={(value)=> {
-                                    this.onValueChangeCallback(JSON.stringify(value),Constants.kKeyForDisplayQuantity)
-                                   // this.changeState(value,Constants.kKeyForDisplayQuantity)
-                                    }}
-                                    value={this.state.productQuantity}
-                                />
-                            </View>
-                        </View>
-
-
+                        
                     </ScrollView>
                 </View>
             </View>
