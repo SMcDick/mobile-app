@@ -29,12 +29,13 @@ import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 
 const screenWidth=Dimensions.get('window').width;
+const screenHeight=Dimensions.get('window').height;
 export default class SideMenu extends Component{
     constructor(){
         super();
         this.state={
             modalVisible:false,
-            marginOfModal: new Animated.Value(-screenWidth)
+            marginOfModal: new Animated.Value((screenWidth))
         }
     }
     componentWillMount(){
@@ -51,7 +52,7 @@ export default class SideMenu extends Component{
         Animated.timing(
             this.state.marginOfModal,
             {
-                toValue:-screenWidth,
+                toValue:(screenWidth),
                 duration:300
             }
         ).start(()=>{
@@ -92,38 +93,28 @@ export default class SideMenu extends Component{
                 onRequestClose = {()=>{}}
             >
                 <Animated.View
-                    style={{flex:1,transform:[{translateX:this.state.marginOfModal}]}}
+                    style={[{transform:[{translateX:this.state.marginOfModal}]}, {flex:1}]}
                 >
+                    <View style={{flex:1, zIndex:1, height:screenHeight, width:screenWidth}}>
                     <TouchableOpacity
-                        style={{height:70}}
+
+                        style={{flex:1, zIndex:1, height:screenHeight, width:screenWidth}}
                         onPress={()=>this.closeSideMenu()}
                     />
-                    <View style={{flex:1,flexDirection:'column',backgroundColor:'#007eaf', justifyContent:'center', align:'center', padding:10}}>
+                    </View>
+                    <View style={{backgroundColor:'floralwhite', position:'absolute', zIndex:2, top:40, right:0, borderWidth:0, borderColor:'purple', justifyContent:'flex-start', padding:10}}>
                             
-                        <View style={{flex:1, flexDirection: 'row'}}>
+
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=>{
                                     this.closeSideMenu()
                                     this.props.navigator.push({name:'Download',prevScreen:'Back'})
                                 }}>
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.download}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Download</Text>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.download}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>Download</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={styles.touchableStyles}
-                                onPress={()=>{
-                                    this.closeSideMenu()
-                                    this.props.navigator.push({name:'Operating Mode',prevScreen:'Back'})
-                                }}
-                            >
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.wrench}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Operating Mode</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{flexDirection:'row', flex:1}}>
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=>{
@@ -131,22 +122,10 @@ export default class SideMenu extends Component{
                                     this.closeSideMenu()
                                 }}
                             >
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.gears}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Settings</Text>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.gears}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>Settings</Text>
                             </TouchableOpacity>
-                        
-                            <TouchableOpacity
-                                onPress={()=>{
-                                    this.props.navigator.push({name:'Category',prevScreen:'Back'})
-                                    this.closeSideMenu()
-                                }}
-                                style={styles.touchableStyles}>
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.lineChart}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
-                            </TouchableOpacity>
-                        </View>
 
-                        <View style={{flexDirection: 'row', flex:1}}>
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=>{
@@ -154,31 +133,18 @@ export default class SideMenu extends Component{
                                     this.closeSideMenu()
                                 }}
                             >
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.playCircle}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Triggers</Text>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.playCircle}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>Triggers</Text>
                             </TouchableOpacity>
-                        
-                            <TouchableOpacity
-                                style={styles.touchableStyles}
-                                onPress={()=>{
-                                this.closeSideMenu()
-                                this.props.navigator.push({name:'Resources',prevScreen:'Back'})
-                            }}
-                            >
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.youtube}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Resources</Text>
-                            </TouchableOpacity>
-                        </View>
 
-                        <View style={{flexDirection: 'row', flex:1}}>
                             <TouchableOpacity
-                                style={styles.touchableStyles}
-                            onPress = {()=>{
-                                 return(Linking.openURL(Constants.storeLink))
-                            }}
-                            >
-                                <FontAwesome style={styles.fontAwesomeStyles}>{Icons.pencil}</FontAwesome>
-                                <Text style={styles.touchableContentStyles}>Review</Text>
+                                onPress={()=>{
+                                    this.props.navigator.push({name:'Category',prevScreen:'Back'})
+                                    this.closeSideMenu()
+                                }}
+                                style={styles.touchableStyles}>
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.lineChart}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>FBA X-Ray</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -188,32 +154,64 @@ export default class SideMenu extends Component{
                                 <FontAwesome style={styles.fontAwesomeStyles}>{Icons.user}</FontAwesome>
                                 <Text style={styles.touchableContentStyles}>Account</Text>
                             </TouchableOpacity>
-                        </View>
+
+
+                            <TouchableOpacity
+                                style={styles.touchableStyles}
+                                onPress={()=>{
+                                this.closeSideMenu()
+                                this.props.navigator.push({name:'Resources',prevScreen:'Back'})
+                            }}
+                            >
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.youtube}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>Resources</Text>
+                            </TouchableOpacity>
+
+
+
+                            <TouchableOpacity
+                                style={[styles.touchableStyles, {borderBottomWidth:1, borderBottomColor:Constants.ZenBlue1}]}
+                            onPress = {()=>{
+                                 return(Linking.openURL(Constants.storeLink))
+                            }}
+                            >
+                                    <FontAwesome style={styles.fontAwesomeStyles}>{Icons.bullseye}</FontAwesome>
+                                    <Text style={styles.touchableContentStyles}>     Source</Text>
+                            </TouchableOpacity>
+
     
                     </View>
                 </Animated.View>
             </Modal>
-        )
+       )
     }
 }
 
 var styles=StyleSheet.create({
     touchableStyles:{
-        flex:0.5,
-        justifyContent:'center',
+        //flex:1,
+        //justifyContent:'center',
+        //alignItems:'center',
+        flexDirection: 'row',
+        justifyContent:'flex-start',
+        justifyContent:'space-around',
         alignItems:'center',
-        backgroundColor: '#0092cc',
-        borderRadius:10,
+        backgroundColor: 'floralwhite',
+        padding:10,
+        width:screenWidth*0.6,
+        //borderRadius:10,
         //marginTop: 15,
-        margin:10
+        borderTopWidth:1,
+        borderTopColor:Constants.ZenBlue1,
+        //margin:10
     },
     touchableContentStyles:{
-        color:'white',
+        color:'darkorchid',
         fontWeight:'500',
         fontSize:Utility.getFontSize()*0.6
     },
     fontAwesomeStyles:{
-        color:'white',
+        color:'darkorchid',
         fontSize:Utility.getFontSize()*1.5
     },
 });

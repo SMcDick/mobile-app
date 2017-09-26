@@ -530,11 +530,11 @@ export default class MainScreen extends Component{
     </TouchableOpacity></View>);
 
     let otherSitesIconComponent = ( <View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center'}}>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyCamel)} ><Image source={require('../assets/camelLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
+        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyCamel)} ><Image source={require('../assets/camelLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
         <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyBookFinder)} ><Image source={require('../assets/BookFinder.png')} style={styles.siteIconStyles}/></TouchableOpacity>
         <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyKeepa)} ><Image source={require('../assets/keepaLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyBookScouter)} ><Image source={require('../assets/bookscouterLogo.jpg')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyEbay)} ><Image source={require('../assets/ebayLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
+        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyBookScouter)} ><Image source={require('../assets/bookscounterLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
+        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyEbay)} ><Image source={require('../assets/ebayLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
         <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)} ><Image source={require('../assets/amazonLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
 
 
@@ -769,7 +769,7 @@ export default class MainScreen extends Component{
                                 }
                             }
                         >
-                            <Icon name='menu' size={20} color={Constants.ZenGreen} style={{fontSize:20}}/>
+                            <Icon name='menu' size={20} color='darkorchid' style={{fontSize:20}}/>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -1755,8 +1755,8 @@ const styles = StyleSheet.create({
     height:70,
   },
   siteIconStyles:{
-    width:15,
-    height:15,
+    width:22,
+    height:22,
   },
   minimizeExpandIconStyles:{
       flex:1,
