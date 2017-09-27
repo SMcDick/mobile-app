@@ -49,6 +49,9 @@ import NetworkConnectivity from './NetworkConnectivity'
 import FontAwesome, { Icons } from 'react-native-fontawesome'
 //import Anyline from 'anyline-ocr-react-native-module';
 //import config from '../config';
+import ZenUIStyles from './ZenUIStyles'
+
+
 let asinMissing = false
 let productObject= null;
 let kTextNotFound = "Not Found";
@@ -759,7 +762,7 @@ export default class MainScreen extends Component{
         <View style={styles.mainViewContainer}>
             <View style={{alignItems:'center'}}>
                 <View style={[{flexDirection:'row'},{alignItems:'center'},{padding:5}]}>
-                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
 
                     <View>
                         <TouchableOpacity
@@ -1950,10 +1953,6 @@ const styles = StyleSheet.create({
     width:Utility.getFontSize()==23?50:138,
     height:Utility.getFontSize()==23?15:30,
 
-  },
-  ZenLogoStyle:{
-      width:250,
-      height:30,
   },
   circleFull:{
       width: 15,

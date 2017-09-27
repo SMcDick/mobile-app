@@ -28,7 +28,10 @@ import NetworkConnectivity from './NetworkConnectivity'
 import FontAwesome, { Icons } from 'react-native-fontawesome'
 import RadioButton from 'radio-button-react-native';
 import RadioForm from 'radio-button-react-native';
+import ZenUIStyles from './ZenUIStyles'
+
 const screenWidth=Dimensions.get('window').width;
+
 export default class Settings extends Component{
     constructor(){
         super()
@@ -254,10 +257,10 @@ export default class Settings extends Component{
         return(
             <View style={{flex:1}}>
                 <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
-                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
                 </View>
 
-                <View style={[styles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
                     <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
                     <View style={{flex:1}}>
                         <TouchableOpacity
@@ -269,7 +272,7 @@ export default class Settings extends Component{
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:2}}>
-                        <Text style={styles.HeaderBarTextStyle}> Settings</Text>
+                        <Text style={ZenUIStyles.HeaderBarTextStyle}> Settings</Text>
                     </View>
                     </View>
                 </View>
@@ -277,7 +280,7 @@ export default class Settings extends Component{
                 <View style={styles.scrollviewContainer}>
                     <ScrollView>
                         <View style={styles.grayCellstyles}>
-                            <Text style={styles.SubheaderTextStyle}>Preferences</Text>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Preferences</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
@@ -465,27 +468,6 @@ const styles=StyleSheet.create({
     scrollviewContainer:{
         flex:1,
         backgroundColor:'rgb(233,234,238)'
-    },
-    ZenLogoStyle:{
-        width:250,
-        height:30,
-    },
-    HeaderBarStyle:{
-        height:70,
-        backgroundColor:Constants.ZenBlue1,
-        width:screenWidth,
-        alignItems:'center',
-        //flexDirection:'row'
-    },
-    HeaderBarTextStyle:{
-        color:'white',//'skyblue',
-        fontWeight:'700',
-        fontSize:Utility.getFontSize()
-    },
-    SubheaderTextStyle:{
-        color:Constants.ZenGreen,
-        padding:10,
-        fontSize:Utility.getFontSize()*0.7
     },
     grayCellstyles:{
         height:50,

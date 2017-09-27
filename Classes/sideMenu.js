@@ -27,6 +27,7 @@ import Constants from './Constants'
 import ElasticSearch from './Apis/ElasticSearch'
 import FontAwesome, { Icons } from 'react-native-fontawesome'
 import AccoutDetails from './AccountDetails'
+import TriggersMainScreen from './TriggersMainScreen'
 
 
 const screenWidth=Dimensions.get('window').width;
@@ -130,7 +131,7 @@ export default class SideMenu extends Component{
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=>{
-                                    this.props.navigator.push({name:'Buy Triggers',prevScreen:'Back'})
+                                    this.props.navigator.push({name:'TriggersMainScreen',prevScreen:'Back'})
                                     this.closeSideMenu()
                                 }}
                             >
