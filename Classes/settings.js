@@ -406,7 +406,7 @@ export default class Settings extends Component{
                             </View>
 
                         <View style={styles.grayCellstyles}>
-                            <Text style={ZenUIStyles.SubheaderTextStyle}>Data Level</Text>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Display</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
@@ -423,9 +423,6 @@ export default class Settings extends Component{
                             <View style={styles.switchViewStyle}>
                                 <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={1} onPress={this.handleDataLevelOnPress.bind(this)}/>
                             </View>
-                        </View>
-                        <View style={styles.grayCellstyles}>
-                            <Text style={ZenUIStyles.SubheaderTextStyle}>Display</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>

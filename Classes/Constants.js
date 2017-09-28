@@ -59,7 +59,6 @@ import { Dimensions , Platform } from 'react-native';
      static screenWidth = Dimensions.get('window').width;
      static screenHeight = Dimensions.get('window').height;
 
-
  //links for product on other stores eg.ebay
  static klinkEbay = 'http://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313.TR0.TRC0.H0.X1501129740.TRS0&_nkw=1501129740&_sacat=0'
  static kLinkCamel = 'https://camelcamelcamel.com/End-Watch-Novel-Hodges-Trilogy/product/1501129740'
