@@ -25,6 +25,7 @@ import Utility from './Utility'
 import Account from './account'
 import NewUserRegistrationApi from './Apis/NewUserRegistrationApi'
 import NewUserRegistrationResponse from './Apis/NewUserRegistrationResponse'
+import ZenUIStyles from './ZenUIStyles'
 import Constants from './Constants'
 
 import LocalStorageApi from './LocalStorageSettingsApi'
@@ -66,7 +67,7 @@ export default class NewUserRegistration extends Component{
     }
     render(){
         return(
-            <View style={{flex:1,backgroundColor:"white"}}>
+            <View style={{flex:1}}>
                 <Modal
                     visible = {this.state.modalState}
                     transparent = {true}
@@ -80,8 +81,8 @@ export default class NewUserRegistration extends Component{
                         <ActivityIndicator size={"large"} color="black" />
                     </TouchableOpacity>
                 </Modal>
-                <View style={{alignItems:'center'}}>
-                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
                 </View>
                 <View style={{padding:10,alignItems:'center',backgroundColor:Constants.ZenBlue1}}>
                     <Text style={[{color:'white'}, styles.wordBoldStyle]}>Start your free trial</Text>

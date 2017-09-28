@@ -29,7 +29,7 @@ import PayPal from 'react-native-paypal-wrapper';
 import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import ZenUIStyles from './ZenUIStyles'
 import Constants from './Constants'
 
 
@@ -94,8 +94,8 @@ export default class Payments extends Component{
     render(){
         return(
             <View style={{flex:1, backgroundColor:'white'}}>
-                <View style={{alignItems:'center'}}>
-                    <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
+                <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
                 </View>
                 <ScrollView>
                     <View style={{padding:10,alignItems:'center',backgroundColor:Constants.ZenBlue1}}>
