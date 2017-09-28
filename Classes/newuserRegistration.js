@@ -25,6 +25,7 @@ import Utility from './Utility'
 import Account from './account'
 import NewUserRegistrationApi from './Apis/NewUserRegistrationApi'
 import NewUserRegistrationResponse from './Apis/NewUserRegistrationResponse'
+import Constants from './Constants'
 
 import LocalStorageApi from './LocalStorageSettingsApi'
 export default class NewUserRegistration extends Component{
@@ -55,10 +56,10 @@ export default class NewUserRegistration extends Component{
         } else if(!this.validateEmail(this.state.email)) {
             this.setState({modalState:false})
             alert("Please enter a valid email address")
-        } else if ( !this.validatePassword(this.state.password) ){
+        } /*else if ( !this.validatePassword(this.state.password) ){
             this.setState({modalState:false})
             alert("Password must contain at least one Uppercase, one lowercase, one numeric character, one special character and have minimum of 8 characters")
-        }else{
+        }*/else{
             //NewUserRegistrationApi.testCall(this.state.email,this.state.password)
             this.props.navigator.push({name:'Payments',prevScreen:'Back'})
         }
@@ -82,12 +83,12 @@ export default class NewUserRegistration extends Component{
                 <View style={{alignItems:'center'}}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
                 </View>
-                <View style={{padding:10,alignItems:'center',backgroundColor:'rgb(184,207,245)'}}>
-                    <Text style={styles.wordBoldStyle}>Start your free trial</Text>
-                    <Text style={{fontSize:16}}>{'\u2022 Get 30 days or 100 scans free'}</Text>
-                    <Text style={{fontSize:16}}>{'\u2022 You won\'t be charged until the end of your trial'}</Text>
+                <View style={{padding:10,alignItems:'center',backgroundColor:Constants.ZenBlue1}}>
+                    <Text style={[{color:'white'}, styles.wordBoldStyle]}>Start your free trial</Text>
+                    <Text style={{color:'white', fontSize:16}}>{'\u2022 Get 30 days or 100 scans free'}</Text>
+                    <Text style={{color:'white', fontSize:16}}>{'\u2022 You won\'t be charged until the end of your trial'}</Text>
                 </View>
-                <View style={{flex:1,padding:10,alignItems:'center'}}>
+                <View style={{flex:1,padding:50,alignItems:'center'}}>
                     <TextInput
                         autoCorrect={false}
                         autoCapitalize={"none"}
@@ -98,7 +99,7 @@ export default class NewUserRegistration extends Component{
                         onChangeText={(text) => this.setState({email:text})}
                         keyboardType={"email-address"}
                     />
-                    <TextInput
+                    {/*<TextInput
                         autocorrect={false}
                         autoCapitalize={"none"}
                         style={styles.textInputStyles}
@@ -107,7 +108,7 @@ export default class NewUserRegistration extends Component{
                         underlineColorAndroid={'white'}
                         returnKeyLabel = {"next"}
          onChangeText={(text) => this.setState({password:text})}
-                    />
+                    />*/}
                     <TouchableOpacity
                         activeOpacity={0.8}
                         style={styles.registerTouchableStyles}
@@ -159,11 +160,11 @@ const styles=StyleSheet.create({
     },
     registerTouchableStyles:{
         height:screenHeight/14,
-        width:screenWidth-20,
+        width:screenWidth*0.4,
         borderRadius:5,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'rgb(146,182,241)'
+        backgroundColor:Constants.ZenBlue1
     },
     registerTextStyle:{
         color:'white',

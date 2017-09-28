@@ -29,6 +29,10 @@ import PayPal from 'react-native-paypal-wrapper';
 import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import Constants from './Constants'
+
+
 const screenWidth=Dimensions.get('window').width;
 const screenHeight=Dimensions.get('window').height;
 
@@ -94,16 +98,16 @@ export default class Payments extends Component{
                     <Image source={require('../assets/ZenSourcelogo.png')} style={styles.ZenLogoStyle}/>
                 </View>
                 <ScrollView>
-                    <View style={{padding:10,alignItems:'center',backgroundColor:'rgb(184,207,245)'}}>
-                        <Text style={styles.wordBoldStyle}>{'Two steps and you\'re done'}</Text>
-                        <Text style={{fontSize:16}}>{'\u2022 Unlimited database downloads'}</Text>
-                        <Text style={{fontSize:16}}>{'\u2022 Unlimited scans'}</Text>
-                        <Text style={{fontSize:16}}>{'\u2022 Full access'}</Text>
+                    <View style={{padding:10,alignItems:'center',backgroundColor:Constants.ZenBlue1}}>
+                        <Text style={[{color:'white'},styles.wordBoldStyle]}>{'Two steps and you\'re done'}</Text>
+                        <Text style={{color:'white',fontSize:16}}>{'\u2022 Unlimited database downloads'}</Text>
+                        <Text style={{color:'white',fontSize:16}}>{'\u2022 Unlimited scans'}</Text>
+                        <Text style={{color:'white',fontSize:16}}>{'\u2022 Full access'}</Text>
                     </View>
                     <View style={{flexDirection: 'row', padding:20}}>
                         <View style={{borderWidth: 0.5,
-                                          borderColor: 'rgb(60,60,60)',width:50, height:50, borderRadius:50,backgroundColor:'rgb(184,207,245)',alignItems:'center'}}>
-                            <Text style={{fontSize:36}}>1</Text>
+                                          borderColor: 'rgb(60,60,60)',width:50, height:50, borderRadius:50,backgroundColor:Constants.ZenBlue1,alignItems:'center'}}>
+                            <Text style={{color:'white', fontSize:36}}>1</Text>
                         </View>
                         <View style={{flexDirection:'column', justifyContent:'flex-start',paddingHorizontal:10}}>
                             <Text style={styles.wordBoldStyle}>{'Activate your subscription'}</Text>
