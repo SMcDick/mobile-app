@@ -32,6 +32,7 @@ import Payments from './Payments'
 import AccountDetails from './AccountDetails'
 import TriggersMainScreen from './TriggersMainScreen'
 import IndividualTriggers from './IndividualTriggers'
+import HistoricalAnalytics from './HistoricalAnalytics'
 import StripePayment from "./stripePayment";
 import Resources from './Resources'
 import Video from './video'
@@ -116,8 +117,8 @@ export default class FBAscanner extends Component{
             if (this.state.isLoading== "false") {
                 if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
-                    initialRoute1 = "NewUserRegistration";
-                    //initialRoute1 = "MainScreen";
+                    //initialRoute1 = "NewUserRegistration";
+                    initialRoute1 = "HistoricalAnalytics";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
@@ -168,6 +169,8 @@ export default class FBAscanner extends Component{
                             return (<TriggersMainScreen navigator={navigator} route={route}/>)
                         if (route.name === 'IndividualTriggers')
                             return (<IndividualTriggers navigator={navigator} route={route}/>)
+                        if (route.name === 'HistoricalAnalytics')
+                            return (<HistoricalAnalytics navigator={navigator} route={route}/>)
                         if(route.name == "Card Payment")
                             return ( <StripePayment navigator={navigator} route={route}/> )
                         if(route.name == "Resources")

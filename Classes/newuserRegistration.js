@@ -178,10 +178,6 @@ const styles=StyleSheet.create({
         width:70,
         height:70,
     },
-    ZenLogoStyle:{
-        width:350,
-        height:50,
-    },
     wordBoldStyle:{
       fontWeight: 'bold',
       fontSize:20,

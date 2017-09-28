@@ -212,10 +212,6 @@ const styles=StyleSheet.create({
         flex:3.5,
         backgroundColor:'blue'
     },
-    ZenLogoStyle:{
-        width:350,
-        height:50,
-    },
     PayLogoStyle:{
         width:148,
         height:30,
