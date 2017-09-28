@@ -39,7 +39,7 @@ export default class Resources extends Component{
                     <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
                     <View style={{flex:1}}>
                         <TouchableOpacity
-                            onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Triggers"})}}
+                            onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Resources"})}}
                             activeOpacity={0.8}
                             
                         >
@@ -47,7 +47,7 @@ export default class Resources extends Component{
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:2}}>
-                        <Text style={ZenUIStyles.HeaderBarTextStyle}>FBA X-Ray</Text>
+                        <Text style={ZenUIStyles.HeaderBarTextStyle}>Resources</Text>
                     </View>
                     </View>
                 </View>

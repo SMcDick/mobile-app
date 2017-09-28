@@ -127,7 +127,7 @@ export default class Trigger extends Component{
                 <View style={styles.scrollviewContainer}>
                     <ScrollView>
                         <View style={styles.subHeadingContainerstyle}>
-                            <Text style={styles.subHeadingStyles}>FBA X-Ray: {this.props.route.category}</Text>
+                            <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>FBA X-Ray: {this.props.route.category}</Text>
                         </View>
                         <View >
                             <TouchableOpacity
@@ -136,7 +136,7 @@ export default class Trigger extends Component{
                                 activeOpacity={0.85}
                             >
                                 <View style={{flex:7}} >
-                                    <Text style={styles.sectionHeadingStyles}>Calculate the percentage of likelihood that there is an FBA offer<Text style={{color:'black',fontWeight:'400',textDecorationLine:'underline'}}> this amount above </Text>the lowest merchant fulfilled (non-FBA) offer</Text>
+                                    <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Calculate the percentage of likelihood that there is an FBA offer<Text style={[ZenUIStyles.SubheaderNoPaddingTextStyle, {fontWeight:'400',textDecorationLine:'underline'}]}> this amount above </Text>the lowest merchant fulfilled (non-FBA) offer</Text>
                                 </View>
                                 <View style={{flex:1}}>
                                     {this.state.expanded[0]?<FontAwesome>{Icons.chevronUp}</FontAwesome>:
@@ -180,7 +180,7 @@ export default class Trigger extends Component{
                             >
 
                                 <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>Do not calculate for sales rank worse than</Text>
+                                <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Do not calculate for sales rank worse than</Text>
 
                                 </View>
                                 <View style={{flex:1}}>
@@ -212,7 +212,7 @@ export default class Trigger extends Component{
                                 activeOpacity={0.85}
                             >
                                 <View style={{flex:7}} >
-                                    <Text style={styles.sectionHeadingStyles}>Condition</Text>
+                                    <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Condition</Text>
                                 </View>
                                 <View style={{flex:1}}>
                                     {this.state.expanded[2]?<FontAwesome>{Icons.chevronUp}</FontAwesome>:

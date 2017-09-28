@@ -476,21 +476,4 @@ const styles=StyleSheet.create({
       marginTop:10,
       alignItems:'center'
     },
-    modalButtonsStyles:{
-      height:Utility.getFontSize()==50?70:60,
-      flex:1,
-      backgroundColor:'rgb(233,234,238)',
-      marginRight:screenWidth/30,
-      marginLeft:screenWidth/30,
-      borderRadius:5,
-      justifyContent:'center',
-      alignItems:'center'
-    },
-    modalButtonsTextStyles:{
-      color:'rgb(0,133,248)',
-      alignSelf:'center',
-      fontWeight:'300',
-      fontSize:Utility.getFontSize()===50?50*0.4:23*0.6
-    }
-
 })

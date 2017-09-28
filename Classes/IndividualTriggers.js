@@ -322,11 +322,11 @@ export default class IndividualTriggers extends Component{
 
                     <View style={{height:100, backgroundColor:'white'}}>
                         <View style={{flexDirection:'row',justifyContent:'space-around',paddingTop:20,backgroundColor:'white'}}>
-                          <TouchableOpacity style={styles.modalButtonsStyles} onPress={this.saveData.bind(this)}>
-                            <Text style={styles.modalButtonsTextStyles}>Save</Text>
+                          <TouchableOpacity style={ZenUIStyles.modalButtonsStyles} onPress={this.saveData.bind(this)}>
+                            <Text style={ZenUIStyles.modalButtonsTextStyles}>Save</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={styles.modalButtonsStyles} onPress={this.resetData.bind(this)}>
-                            <Text style={styles.modalButtonsTextStyles}>Reset</Text>
+                          <TouchableOpacity style={ZenUIStyles.modalButtonsStyles} onPress={this.resetData.bind(this)}>
+                            <Text style={ZenUIStyles.modalButtonsTextStyles}>Reset</Text>
                           </TouchableOpacity>
                         </View>
                     </View>
@@ -446,22 +446,6 @@ const styles=StyleSheet.create({
       justifyContent:'space-around',
       marginTop:10,
       alignItems:'center'
-    },
-    modalButtonsStyles:{
-      height:Utility.getFontSize()==50?70:60,
-      flex:1,
-      backgroundColor:Constants.ZenBlue1,
-      marginRight:screenWidth/30,
-      marginLeft:screenWidth/30,
-      borderRadius:5,
-      justifyContent:'center',
-      alignItems:'center'
-    },
-    modalButtonsTextStyles:{
-      color:'white',
-      alignSelf:'center',
-      fontWeight:'300',
-      fontSize:Utility.getFontSize()===50?50*0.4:23*0.6
     },
     pickerContainerStyle:{
         height:35,

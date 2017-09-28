@@ -181,32 +181,37 @@ export default class Download extends Component{
                     </View>
                 </View>
 
-                <View style={styles.scrollviewContainer}>
-                    <ScrollView>
-                        <View style={styles.grayCellStyles}>
-                            <Text style={styles.cellTextStyles}>Last Update: There is no data file</Text>
+                <ScrollView>
+                    <View style={styles.grayCellStyles}>
+                        <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Last Update: There is no data file</Text>
+                    </View>
+                    <View style={[styles.cellStyles,{height:70}]}>
+                        <View style={styles.cellInnerLeftViewStyles}>
+                            <Text style={[ZenUIStyles.SubheaderNoPaddingTextStyle,{fontWeight:"400"}]}>Books, media & toys</Text>
+                            <Text style={[ZenUIStyles.SubheaderNoPaddingTextStyle,{fontSize:13,fontStyle:'italic'}]}>Includes: CDs, cassettes, vinyl, VHS, DVDs, books, software, video games, and all media & toys.</Text>
                         </View>
-                        <View style={[styles.cellStyles,{height:70}]}>
-                            <View style={styles.cellInnerLeftViewStyles}>
-                                <Text style={[styles.cellTextStyles,{fontWeight:"400"}]}>Books, media & toys</Text>
-                                <Text style={[styles.cellTextStyles,{fontSize:13,fontStyle:'italic'}]}>Includes: CDs, cassettes, vinyl, VHS, DVDs, books, software, video games, and all media & toys.</Text>
-                            </View>
+                    </View>
+                    <View style={styles.grayCellStyles}/>
+                    <View style={styles.downloadCell}>
+                        <View style={styles.progressStyles}>
+
+                            {Platform.OS === 'ios'?<ProgressViewIOS progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} progressViewStyle={'default'}/>:<ProgressBarAndroid progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} indeterminate={false} styleAttr={'Horizontal'}/>}
+
                         </View>
-                        <View style={styles.grayCellStyles}/>
-                        <View style={styles.downloadCell}>
-                            <View style={styles.progressStyles}>
+                        <View style={styles.downloadInfoStyles}>
+                            <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Time Remaining: {this.state.remainingTime} </Text>
+                            <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>Speed: {Math.round(this.state.speed)} kBps</Text>
+                        </View>
+                    </View>
 
-                                {Platform.OS === 'ios'?<ProgressViewIOS progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} progressViewStyle={'default'}/>:<ProgressBarAndroid progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} indeterminate={false} styleAttr={'Horizontal'}/>}
 
-                            </View>
-                            <View style={styles.downloadInfoStyles}>
-                                <Text style={styles.cellTextStyles}>Time Remaining: {this.state.remainingTime} </Text>
-                                <Text style={styles.cellTextStyles}>Speed: {Math.round(this.state.speed)} kBps</Text>
-                            </View>
+
+
+                    <View style={{height:100, backgroundColor:'white'}}>
+                        <View style={{flexDirection:'row',justifyContent:'space-around',paddingTop:20,backgroundColor:'white'}}>
                             <View style={styles.downloadActionStyles}>
                                 <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    style={styles.downloadActionTouchableStyles}
+                                    style={ZenUIStyles.modalButtonsStyles}
                                     onPress = {()=>{
 
                                         if(NetworkConnectivity.getInstance().internetAvailable==false){
@@ -246,23 +251,23 @@ export default class Download extends Component{
                                     }
                                 >
 
-                                    <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>{this.state.downloadButtonText}</Text>
+                                    <Text style={ZenUIStyles.modalButtonsTextStyles}>{this.state.downloadButtonText}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    style={styles.downloadActionTouchableStyles}
+                                    
+                                    style={ZenUIStyles.modalButtonsStyles}
                                     onPress = {()=>{
                                         //this.props.navigator.pop()
                                         ElasticSearch.EncodeJsonFile();
                                         //this.setState({showModal:true})
                                     }}
                                 >
-                                    <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>Close</Text>
+                                    <Text style={ZenUIStyles.modalButtonsTextStyles}>Close</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </ScrollView>
-                </View>
+                    </View>
+                </ScrollView>
             </View>
         )
     }
@@ -507,5 +512,5 @@ const styles=StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center'
-    }
+    },
 });
