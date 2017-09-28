@@ -413,7 +413,7 @@ export default class Settings extends Component{
                                 <Text style={styles.cellTextStyle}>Full Data</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={0} onPress={this.handleDataLevelOnPress.bind(this)}/>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={0} onPress={this.handleDisplayOnPress.bind(this)}/>
                             </View>
                         </View>
                         <View style={styles.cellStyles}>
@@ -421,15 +421,7 @@ export default class Settings extends Component{
                                 <Text style={styles.cellTextStyle}>Stream Line (essential only)</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={1} onPress={this.handleDataLevelOnPress.bind(this)}/>
-                            </View>
-                        </View>
-                        <View style={styles.cellStyles}>
-                            <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Data Display</Text>
-                            </View>
-                            <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={0} onPress={this.handleDisplayOnPress.bind(this)}/>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={1} onPress={this.handleDisplayOnPress.bind(this)}/>
                             </View>
                         </View>
                         <View style={styles.cellStyles}>
@@ -437,7 +429,7 @@ export default class Settings extends Component{
                                 <Text style={styles.cellTextStyle}>Visual Display</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={1} onPress={this.handleDisplayOnPress.bind(this)}/>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={2} onPress={this.handleDisplayOnPress.bind(this)}/>
                             </View>
                         </View>
                         <View style={styles.cellStyles}>
@@ -445,7 +437,7 @@ export default class Settings extends Component{
                                 <Text style={styles.cellTextStyle}>Trade In Only</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={2} onPress={this.handleDisplayOnPress.bind(this)}/>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={3} onPress={this.handleDisplayOnPress.bind(this)}/>
                             </View>
                         </View>
 
