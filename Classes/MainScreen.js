@@ -266,7 +266,7 @@ export default class MainScreen extends Component{
           var url = 'https://keepa.com/#!product/1-' + this.state.productCode
 
       }
-              if(option){
+            if(option){
                   //alert(productObject.productCode)
                   //this.setState({webViewModal:true})
           this.setState({productOffersPageURL:null},()=>{
@@ -703,7 +703,7 @@ export default class MainScreen extends Component{
         </Animated.View>
     );
     let fbaOffersComponent = (<View style= {[{flex:10},{borderColor:Constants.ZenBlue1},{padding:10},{paddingBottom:-10}]}>
-    <View style={[ {borderWidth:1},{borderBottomWidth:1},{borderRadius:10},{borderColor:'black'},{height:screenHeight*0.33}]}>
+    <View style={[ ZenUIStyles.FramedBoxStyle,{height:screenHeight*0.33}]}>
 
         <View style={{height:40,flexDirection:'row'}}>
 
@@ -716,7 +716,7 @@ export default class MainScreen extends Component{
                                       }
                                        this.expandCollapseWebView(false,Constants.kOffersType.kUsedOffers)
                                    //}
-                              }} style={styles.amazonOfferLinksConatiner}><Text style={styles.amazonOfferLinks}>{this.state.productUsedOffers} USED</Text></TouchableOpacity>
+                              }} style={styles.amazonOfferLinksConatiner}><Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productUsedOffers} Used</Text></TouchableOpacity>
           <TouchableOpacity
                 onPress={()=>{
                                 // if(this.state.fbaOffersArray.length > 0){
@@ -730,7 +730,7 @@ export default class MainScreen extends Component{
                              }}
                 style={styles.amazonOfferLinksConatiner}
             >
-                <Text style={styles.amazonOfferLinks}>{this.state.productFBAOffers} FBA </Text>
+                <Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productFBAOffers} FBA </Text>
          </TouchableOpacity>
           <TouchableOpacity  onPress={()=>{
                                    //if(this.state.nonFbaNewArray.length > 0){
@@ -741,18 +741,18 @@ export default class MainScreen extends Component{
                                           }
                                        this.expandCollapseWebView(false,Constants.kOffersType.kNewOffers)
                                    //}
-                              }} style={styles.amazonOfferLinksConatiner}><Text style={styles.amazonOfferLinks}>{this.state.productNewOffers} NEW</Text></TouchableOpacity>
+                              }} style={styles.amazonOfferLinksConatiner}><Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productNewOffers} New</Text></TouchableOpacity>
 
 
             {/*<TouchableOpacity style={styles.tradeValueStyle}><Text style={styles.amazonOfferLinks}>TRADE IN</Text></TouchableOpacity>*/}
 
         </View>
         <ScrollView onScroll={()=>this.setState({bluetoothMode:false})}>
-        {scrollViewData}
+            {scrollViewData}
 
-      </ScrollView>
-      <View style={{height:30}}>
-        {averagePriceComponent}
+        </ScrollView>
+        <View style={{height:30}}>
+            {averagePriceComponent}
         </View>
       </View>
 

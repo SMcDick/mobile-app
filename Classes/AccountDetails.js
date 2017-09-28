@@ -26,6 +26,7 @@ import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
 import Constants from './Constants'
 import ZenUIStyles from './ZenUIStyles'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 const screenWidth=Dimensions.get('window').width;
 const screenHeight=Dimensions.get('window').height;
@@ -38,10 +39,24 @@ export default class AccountDetails extends Component{
                 <View style={[{flexDirection:'row'},{alignItems:'center'},{padding:5}]}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
                 </View>
-                <View style={{justifyContent:'space-around', alignItems:'center'}}>
-                    <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
-                        <Text style={ZenUIStyles.HeaderBarTextStyle}> Account</Text>
+                <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                    <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
+                        <View style={{flex:1}}>
+                            <TouchableOpacity
+                                onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Settings"})}}
+                                activeOpacity={0.8}
+                                style={ZenUIStyles.registerTouchableStyle}
+                            >
+                                <FontAwesome style={ZenUIStyles.backButtonStyle}>{Icons.chevronLeft}</FontAwesome>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{flex:2}}>
+                            <Text style={ZenUIStyles.HeaderBarTextStyle}> Account</Text>
+                        </View>
                     </View>
+                </View>
+
+                <View style={{justifyContent:'space-around', alignItems:'center'}}>
 
                     <View style={{flex:4, justifyContent:'center'}}>
                     <View style={[styles.UserDataRowStyle]}>
@@ -58,17 +73,17 @@ export default class AccountDetails extends Component{
                         </View>
                         <View style={{alignItems:'flex-start'}}>
                             <View style={{height:screenHeight*0.07}}>
-                                <View style={[styles.UserDataContainerStyle]}>
+                                <View style={[ZenUIStyles.TextBoxStyle]}>
                                     <Text style={styles.UserDataTextStyle}></Text>
                                 </View>
                             </View>
                             <View style={{height:screenHeight*0.07}}>
-                                <View style={[styles.UserDataContainerStyle]}>
+                                <View style={[ZenUIStyles.TextBoxStyle]}>
                                     <Text style={styles.UserDataTextStyle}></Text>
                                 </View>
                             </View>
                             <View style={{height:screenHeight*0.07}}>
-                                <View style={[styles.UserDataContainerStyle]}>
+                                <View style={[ZenUIStyles.TextBoxStyle]}>
                                     <Text style={styles.UserDataTextStyle}></Text>
                                 </View>
                             </View>
@@ -77,7 +92,7 @@ export default class AccountDetails extends Component{
                     </View>
 
                     <View style={{flex:4}}>
-                        <View style={{borderWidth:1, borderColor:Constants.ZenGreen, borderRadius:10,padding:10, justifyContent:'flex-start', alignItems:'flex-start'}}>
+                        <View style={ZenUIStyles.FramedBoxStyle}>
 
                                 <Text style={[ZenUIStyles.SubheaderTextStyle]}>MWS Info</Text>
 
@@ -93,12 +108,12 @@ export default class AccountDetails extends Component{
                                 </View>
                                 <View style={{justifyContent:'flex-start', justifyContent:'space-around', alignItems:'flex-start'}}>
                                     <View style={{height:screenHeight*0.07}}>
-                                        <View style={[styles.UserDataContainerStyle]}>
+                                        <View style={[ZenUIStyles.TextBoxStyle]}>
                                             <Text style={styles.UserDataTextStyle}></Text>
                                         </View>
                                     </View>
                                     <View style={{height:screenHeight*0.07}}>
-                                        <View style={[styles.UserDataContainerStyle]}>
+                                        <View style={[ZenUIStyles.TextBoxStyle]}>
                                             <Text style={styles.UserDataTextStyle}></Text>
                                         </View>
                                     </View>

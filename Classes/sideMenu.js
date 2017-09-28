@@ -104,7 +104,7 @@ export default class SideMenu extends Component{
                         onPress={()=>this.closeSideMenu()}
                     />
                     </View>
-                    <View style={{backgroundColor:'floralwhite', position:'absolute', zIndex:2, top:40, right:0, borderWidth:0, borderColor:'purple', justifyContent:'flex-start', padding:10}}>
+                    <View style={{backgroundColor:Constants.PressableItemColor, position:'absolute', zIndex:2, top:40, right:0, borderWidth:0, borderColor:'purple', justifyContent:'flex-start', padding:10}}>
                             
 
                             <TouchableOpacity
@@ -131,7 +131,7 @@ export default class SideMenu extends Component{
                             <TouchableOpacity
                                 style={styles.touchableStyles}
                                 onPress={()=>{
-                                    this.props.navigator.push({name:'TriggersMainScreen',prevScreen:'Back'})
+                                    this.props.navigator.push({name:'Category',prevScreen:'Back'})
                                     this.closeSideMenu()
                                 }}
                             >
@@ -141,7 +141,7 @@ export default class SideMenu extends Component{
 
                             <TouchableOpacity
                                 onPress={()=>{
-                                    this.props.navigator.push({name:'Category',prevScreen:'Back'})
+                                    this.props.navigator.push({name:'Triggers',prevScreen:'Back'})
                                     this.closeSideMenu()
                                 }}
                                 style={styles.touchableStyles}>

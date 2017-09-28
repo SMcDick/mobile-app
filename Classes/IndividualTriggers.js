@@ -26,13 +26,13 @@ import {
 
 import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
-import Icons from 'react-native-vector-icons/Entypo'
 import Icon from 'react-native-vector-icons/Ionicons'
 import LocalStorageSettingsApi from './LocalStorageSettingsApi'
 import CustomModal from './CustomModal'
 const screenWidth=Dimensions.get('window').width
 import ZenUIStyles from './ZenUIStyles'
-//import FontAwesome, { Icons } from 'react-native-fontawesome'
+import Constants from './Constants'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 let saveButtonPressed = true;
 
@@ -209,150 +209,58 @@ export default class IndividualTriggers extends Component{
 
                 <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
                     <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
-                    <View style={{flex:1}}>
-                        <TouchableOpacity
-                            onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Settings"})}}
-                            activeOpacity={0.8}
-                            style={ZenUIStyles.registerTouchableStyle}
-                        >
-                            <Icons name='chevron-left' style={ZenUIStyles.fontAwesomeStyles}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{flex:2}}>
-                        <Text style={ZenUIStyles.HeaderBarTextStyle}> Triggers</Text>
-                    </View>
+                        <View style={{flex:1}}>
+                            <TouchableOpacity
+                                onPress={()=>{this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"IndividualTriggers"})}}
+                                activeOpacity={0.8}
+                                style={ZenUIStyles.registerTouchableStyle}
+                            >
+                                <FontAwesome style={ZenUIStyles.backButtonStyle}>{Icons.chevronLeft}</FontAwesome>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{flex:2}}>
+                            <Text style={ZenUIStyles.HeaderBarTextStyle}>Define Trigger</Text>
+                        </View>
                     </View>
                 </View>
+
                 <ScrollView>
+                    <View style={styles.bottomLineStyle}>
 
-
-                    <View style={{height:50,flex:7,justifyContent:'center',paddingLeft:screenWidth/30}} >
-                        <Text style={[styles.sectionHeadingStyles, {fontSize:Utility.getFontSize()==50?50* 0.3:23*0.6,color:'gray'}]}>We will tell you when to buy an item and when to pass based on these settings</Text>
-                    </View>
-                    <View style={{flex:1}}>
-                        <TouchableOpacity
-                        style={styles.sectionHeadingContainerStyles}
-                        onPress={this.toggle.bind(this,0)}
-                        activeOpacity={0.85}
-                    >
-
-                        <View style={{height:50,flex:7,justifyContent:'center'}} >
-                            <Text style={styles.sectionHeadingStyles}>Cost of Book</Text>
+                        <View style={[ZenUIStyles.SubheaderTextStyle,{jusfifyContent:'center', height:60}]}>
+                            <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>When sales rank is this</Text>
+                            <Text style={[ZenUIStyles.SubheaderNoPaddingTextStyle, {fontSize:Utility.getFontSize()==50?50* 0.35:23*0.6}]}>(or average rank, when available)</Text>
                         </View>
 
-                        <View style={{flex:1}}>
-                            {this.state.expanded[0]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>:
-                                <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.8:23*1.2}/>}
+                        <View style={styles.pickerContainerStyle}>
+                            <Picker
+                                selectedValue={this.state.averageSalesRankValue}
+                                onValueChange={(value) => this.setState({averageSalesRankValue: value})}
+                            >
+                                <Picker.Item label="1,000" value="1000" />
+                                <Picker.Item label="5,000" value="5000" />
+                                <Picker.Item label="10,000" value="10000" />
+                                <Picker.Item label="50,000" value="50000" />
+                                <Picker.Item label="100,000" value="100000" />
+                                <Picker.Item label="250,000" value="250000" />
+                                <Picker.Item label="350,000" value="350000" />
+                                <Picker.Item label="500,000" value="500000" />
+                                <Picker.Item label="750,000" value="750000" />
+                                <Picker.Item label="1 million" value="1000000" />
+                                <Picker.Item label="1.5 million" value="1500000" />
+                                <Picker.Item label="2.5 million or better" value="2500000" />
+                                <Picker.Item label="No Rank" value="No Rank" />
 
+                            </Picker>
                         </View>
-                    </TouchableOpacity>
-                        <Animated.View style={{height:this.state.animation[0]}}>
-                            {this.state.expanded[0]?
-                                <Picker
-                                    selectedValue={this.state.costOfBook}
-                                    onValueChange={(value) => {
-                                        if(value == "free" && saveButtonPressed == false) {
-                                            saveButtonPressed = true;
-                                            return;
-                                        }
-                                        this.storePickerValues(value,0)}}
-                                    style={{backgroundColor:'rgb(255,255,255)'}}
-                                >
-                                  {this.state.pickerArrayOfCostOfBook.map((element)=>{
-                                    return(
-                                      <Picker.Item label={element} value={element} />
-                                    )})}
+                    </View>
 
-                                </Picker>
-                            :null}
-                        </Animated.View>
-                    </View>
-                    <View style={styles.checkBoxContainerCellStyles}>
-                        <View style={{flex:1, flexDirection:'row', height:30}}>
-                            <View>
-                                <Text style={styles.checkBoxTextStyles}> Ignore Acceptable</Text>
-                            </View>
-                            <View>
-                                <TouchableOpacity style={{height:40, width:95}} activeOpacity={1} onPress={this.changeCheckBoxState.bind(this)}>
-                                    {!this.state.checked ?
-                                        <Icon name='ios-checkmark-outline' size={40} color='rgb(219,219,224)' style={styles.checkBoxStyles}/>
-                                        :
-                                        <Icon name='ios-checkmark-outline' size={40} color='#007AFF' style={styles.checkBoxStyles}/>
-                                    }
-                                </TouchableOpacity>
-                            </View>
+                    <View style={styles.bottomLineStyle}>
+                        <View style={[ZenUIStyles.SubheaderTextStyle,{jusfifyContent:'center', height:60}]}>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Net profit must be this</Text>
                         </View>
-                        <View style={{flex:1, flexDirection:'row', height:30}}>
-                            <View>
-                                <Text style={styles.checkBoxTextStyles}> If no offers, assign this value</Text>
-                            </View>
-                            <View style={styles.underLineStyles}>
-                                <TextInput style={styles.sectionDataStyles}
-                                    //autoFocus={false}
-                                    placeholder="$100"
-                                    underlineColorAndroid={'white'}
-                                           keyboardType='numeric'
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.dividerCellStyles}/>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.sectionHeadingContainerStyles}
-                            onPress={this.toggle.bind(this,1)}
-                            activeOpacity={0.85}
-                        >
-                            <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>When rank is this</Text>
-                                <Text style={[styles.sectionHeadingStyles, {fontSize:Utility.getFontSize()==50?50* 0.35:23*0.6}]}>(or average rank when available)</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                {this.state.expanded[1]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>:
-                                    <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>}
-                            </View>
-                        </TouchableOpacity>
-                        <Animated.View style={{height:this.state.animation[1]}}>
-                            {this.state.expanded[1]?
-                                <Picker
-                                    selectedValue={this.state.averageSalesRankValue}
-                                    onValueChange={(value) => this.setState({averageSalesRankValue: value})}
-                                    style={{backgroundColor:'rgb(255,255,255)'}}
-                                >
-                                    <Picker.Item label="1,000" value="1000" />
-                                    <Picker.Item label="5,000" value="5000" />
-                                    <Picker.Item label="10,000" value="10000" />
-                                    <Picker.Item label="50,000" value="50000" />
-                                    <Picker.Item label="100,000" value="100000" />
-                                    <Picker.Item label="250,000" value="250000" />
-                                    <Picker.Item label="350,000" value="350000" />
-                                    <Picker.Item label="500,000" value="500000" />
-                                    <Picker.Item label="750,000" value="750000" />
-                                    <Picker.Item label="1 million" value="1000000" />
-                                    <Picker.Item label="1.5 million" value="1500000" />
-                                    <Picker.Item label="2.5 million or better" value="2500000" />
-                                    <Picker.Item label="No Rank" value="No Rank" />
-                                </Picker>
-                            : null}
-                        </Animated.View>
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.sectionHeadingContainerStyles}
-                            onPress={this.toggle.bind(this,2)}
-                            activeOpacity={0.85}
-                        >
-                            <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>Net profit must be this</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                {this.state.expanded[2]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>:
-                                    <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>}
-                            </View>
-                        </TouchableOpacity>
-                        <Animated.View style={{height:this.state.animation[2]}}>
-                            {this.state.expanded[2]?
-                              <Picker
+                        <View style={styles.pickerContainerStyle}>
+                            <Picker
                                   selectedValue={this.state.netProfit}
                                   onValueChange={(value) =>
                                   {if(value == "1" && saveButtonPressed == false) {
@@ -360,38 +268,22 @@ export default class IndividualTriggers extends Component{
                                       return;
                                   }
                                   this.storePickerValues(value,2)}}
-                                  style={{backgroundColor:'rgb(255,255,255)'}}
                               >
                                 {this.state.pickerArrayOfNetProfit.map((element)=>{
                                   return(
                                     <Picker.Item label={element} value={element} />
                                   )})}
-                              </Picker>
-                            : null}
-                        </Animated.View>
+                            </Picker>
+                        </View>
                     </View>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.sectionHeadingContainerStyles}
-                            onPress={this.toggle.bind(this,3)}
-                            activeOpacity={0.85}
-                        >
-                            <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>Base profit on this</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                {this.state.expanded[3]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>:
-                                    <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>}
-                            </View>
-                        </TouchableOpacity>
-
-
-                        <Animated.View style={{height:this.state.animation[3]}}>
-                            {this.state.expanded[3]?
+                    <View style={styles.bottomLineStyle}>
+                        <View style={[ZenUIStyles.SubheaderTextStyle,{jusfifyContent:'center', height:60}]}>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Base profit on this</Text>
+                        </View>
+                            <View style={styles.pickerContainerStyle}>
                                 <Picker
                                     selectedValue={this.state.baseProfitValue}
                                     onValueChange={(value) => this.setState({baseProfitValue: value})}
-                                    style={{backgroundColor:'rgb(255,255,255)'}}
                                 >
                                     <Picker.Item label="Lowest of all" value="Lowest of all" />
                                     <Picker.Item label="2nd used" value="2nd used" />
@@ -405,42 +297,28 @@ export default class IndividualTriggers extends Component{
                                     <Picker.Item label="6 month average - new" value="6 month average - new" />
                                     <Picker.Item label="6 month average - used" value="6 month average - used" />
                                 </Picker>
-                                : null}
-                        </Animated.View>
+                            </View>
                     </View>
 
 
-                    <View>
-                        <TouchableOpacity
-                            style={styles.sectionHeadingContainerStyles}
-                            onPress={this.toggle.bind(this,4)}
-                            activeOpacity={0.85}
-                        >
-                            <View style={{height:50,flex:7,justifyContent:'center'}} >
-                                <Text style={styles.sectionHeadingStyles}>If no visible FBA, X-RAY percentage must be</Text>
-                            </View>
-                            <View style={{flex:1}}>
-                                {this.state.expanded[4]?<Icons name='chevron-small-up' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>:
-                                    <Icons name='chevron-small-down' color='rgb(199,199,204)' size={Utility.getFontSize()===50?50*0.85:23*1.2}/>}
-                            </View>
-                        </TouchableOpacity>
-                        <Animated.View style={{height:this.state.animation[4]}}>
-                            {this.state.expanded[4]?
+                    <View style={styles.bottomLineStyle}>
+                        <View style={[ZenUIStyles.SubheaderTextStyle,{jusfifyContent:'center', height:60}]}>
+                            <Text style={ZenUIStyles.SubheaderNoPaddingTextStyle}>If no FBA visible, prompt to review if</Text>
+                            <Text style={[ZenUIStyles.SubheaderNoPaddingTextStyle, {fontSize:Utility.getFontSize()==50?50* 0.35:23*0.6}]}>(books only)</Text>
+                        </View>
+                            <View style={styles.pickerContainerStyle}>
                                 <Picker
                                     selectedValue={this.state.xRayPercentageValue}
                                     onValueChange={(value) => this.setState({xRayPercentageValue: value})}
-                                    style={{backgroundColor:'rgb(255,255,255)'}}
                                 >
                                     <Picker.Item label="90% or better" value="90% or better" />
                                     <Picker.Item label="75%" value="75%" />
                                     <Picker.Item label="50%" value="50%" />
 
                                 </Picker>
-                                : null}
-                        </Animated.View>
+                            </View>
                     </View>
 
-                    <View style={styles.dividerCellStyles}/>
 
                     <View style={{height:100, backgroundColor:'white'}}>
                         <View style={{flexDirection:'row',justifyContent:'space-around',paddingTop:20,backgroundColor:'white'}}>
@@ -572,7 +450,7 @@ const styles=StyleSheet.create({
     modalButtonsStyles:{
       height:Utility.getFontSize()==50?70:60,
       flex:1,
-      backgroundColor:'rgb(233,234,238)',
+      backgroundColor:Constants.ZenBlue1,
       marginRight:screenWidth/30,
       marginLeft:screenWidth/30,
       borderRadius:5,
@@ -580,10 +458,28 @@ const styles=StyleSheet.create({
       alignItems:'center'
     },
     modalButtonsTextStyles:{
-      color:'rgb(0,133,248)',
+      color:'white',
       alignSelf:'center',
       fontWeight:'300',
       fontSize:Utility.getFontSize()===50?50*0.4:23*0.6
+    },
+    pickerContainerStyle:{
+        height:35,
+        borderWidth:1,
+        alignSelf:'center',
+        justifyContent:'center',
+        //alignItems:'center',
+        padding:5,
+        width:screenWidth*0.5,
+        //borderRadius:10,
+        borderColor:'lightgray',
+        backgroundColor:Constants.PressableItemColor
+    },
+    bottomLineStyle:{
+        borderBottomWidth:0.8,
+        borderBottomColor:'lightgray',
+        paddingBottom:10,
+        height:110
     }
 
 })

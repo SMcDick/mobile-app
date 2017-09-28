@@ -268,7 +268,7 @@ export default class Settings extends Component{
                             activeOpacity={0.8}
                             style={styles.registerTouchableStyle}
                         >
-                            <FontAwesome style={styles.fontAwesomeStyles}>{Icons.chevronLeft}</FontAwesome>
+                            <FontAwesome style={ZenUIStyles.backButtonStyle}>{Icons.chevronLeft}</FontAwesome>
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:2}}>
@@ -378,7 +378,7 @@ export default class Settings extends Component{
                             </View>
                         </View>
                             <View style={styles.grayCellstyles}>
-                                <Text style={styles.SubheaderTextStyle}>Scanning mode</Text>
+                                <Text style={ZenUIStyles.SubheaderTextStyle}>Scanning mode</Text>
                             </View>
                             <View style={styles.cellStyles}>
                                 <View style={styles.cellInnerLeftViewStyle}>
@@ -406,7 +406,7 @@ export default class Settings extends Component{
                             </View>
 
                         <View style={styles.grayCellstyles}>
-                            <Text style={styles.SubheaderTextStyle}>Data Level</Text>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Data Level</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
@@ -425,7 +425,7 @@ export default class Settings extends Component{
                             </View>
                         </View>
                         <View style={styles.grayCellstyles}>
-                            <Text style={styles.SubheaderTextStyle}>Display</Text>
+                            <Text style={ZenUIStyles.SubheaderTextStyle}>Display</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
@@ -498,9 +498,6 @@ const styles=StyleSheet.create({
         justifyContent:'center',
         alignItems:'center'
     },
-    fontAwesomeStyles:{
-        color:'white',
-        fontSize:Utility.getFontSize()*0.7
-    },
+
 });
 

@@ -24,18 +24,42 @@ import {
 
 import NavigationBar from './scenesNavBar'
 import Utility from './Utility'
+import ZenUIStyles from './ZenUIStyles'
+import Constants from './Constants'
+
+import FontAwesome, { Icons } from 'react-native-fontawesome'
+
 
 const screenWidth=Dimensions.get('window').width;
 
 export default class Category extends Component{
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
-                <View style={{height:Platform.OS=='ios'?75:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route}/></View>
+            <View style={{flex:1}}>
+                <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
+                </View>
+
+                <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                    <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
+                        <View style={{flex:1}}>
+                            <TouchableOpacity
+                                onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Settings"})}}
+                                activeOpacity={0.8}
+                                style={ZenUIStyles.registerTouchableStyle}
+                            >
+                                <FontAwesome style={ZenUIStyles.backButtonStyle}>{Icons.chevronLeft}</FontAwesome>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{flex:2}}>
+                            <Text style={ZenUIStyles.HeaderBarTextStyle}>    Category</Text>
+                        </View>
+                    </View>
+                </View>
                 <ScrollView>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category",category:'Books', key:0 })}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category",category:'Books', key:0 })}
                         style={styles.touchableStyles}>
                         <View style={styles.touchableViewStyles}>
                             <Text style={styles.touchableContentStyles}>Books</Text>
@@ -43,7 +67,7 @@ export default class Category extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category", category:'Textbooks', key:1})}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category", category:'Textbooks', key:1})}
                         style={styles.touchableStyles}>
                         <View style={styles.touchableViewStyles}>
                             <Text style={styles.touchableContentStyles}>Textbooks</Text>
@@ -51,7 +75,7 @@ export default class Category extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category",  category:'DVD/VHS',key:2})}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category",  category:'DVD/VHS',key:2})}
                         style={styles.touchableStyles}
                     >
                         <View style={styles.touchableViewStyles}>
@@ -60,7 +84,7 @@ export default class Category extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category", category:'Music', key:3})}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category", category:'Music', key:3})}
                         style={styles.touchableStyles}>
                         <View style={styles.touchableViewStyles}>
                             <Text style={styles.touchableContentStyles}>Music</Text>
@@ -68,7 +92,7 @@ export default class Category extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category",category:'Video Games',  key:4})}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category",category:'Video Games',  key:4})}
                         style={styles.touchableStyles}>
                         <View style={styles.touchableViewStyles}>
                             <Text style={styles.touchableContentStyles}>Video Games</Text>
@@ -76,7 +100,7 @@ export default class Category extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.85}
-                        onPress={()=>this.props.navigator.push({name:"Triggers",prevScreen:"Category", category:'Software', key:5})}
+                        onPress={()=>this.props.navigator.push({name:"TriggersMainScreen",prevScreen:"Category", category:'Software', key:5})}
                         style={styles.touchableStyles}>
                         <View style={styles.touchableViewStyles}>
                             <Text style={styles.touchableContentStyles}>Software</Text>
@@ -93,18 +117,18 @@ const styles=StyleSheet.create({
         padding:screenWidth/30
     },
     touchableViewStyles:{
-        backgroundColor:'rgb(35,150,221)',
+        backgroundColor:Constants.PressableItemColor,
         flex:1,
         borderRadius:5,
         alignItems:'center',
         justifyContent:'center',
         borderWidth:1,
-        borderColor:'rgb(194,194,194)',
+        borderColor:Constants.ZenGreen,
         padding:screenWidth/30
     },
     touchableContentStyles:{
         fontWeight:'300',
         fontSize:Utility.getFontSize() * 0.7,
-        color:'white'
+        color:Constants.ZenGreen
     }
 })

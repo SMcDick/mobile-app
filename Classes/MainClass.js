@@ -31,6 +31,7 @@ import Agreement from './Agreement'
 import Payments from './Payments'
 import AccountDetails from './AccountDetails'
 import TriggersMainScreen from './TriggersMainScreen'
+import IndividualTriggers from './IndividualTriggers'
 import StripePayment from "./stripePayment";
 import Resources from './Resources'
 import Video from './video'
@@ -165,6 +166,8 @@ export default class FBAscanner extends Component{
                             return (<AccountDetails navigator={navigator} route={route}/>)
                         if (route.name === 'TriggersMainScreen')
                             return (<TriggersMainScreen navigator={navigator} route={route}/>)
+                        if (route.name === 'IndividualTriggers')
+                            return (<IndividualTriggers navigator={navigator} route={route}/>)
                         if(route.name == "Card Payment")
                             return ( <StripePayment navigator={navigator} route={route}/> )
                         if(route.name == "Resources")
