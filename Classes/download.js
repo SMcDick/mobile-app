@@ -44,6 +44,8 @@ import DatabaseLocalResponse from './Apis/DatabaseLocalResponse'
 import ElasticSearch from './Apis/ElasticSearch'
 import ElasticSearchResponse from './Apis/ElasticSearchResponse'
 import DatabaseLocalApi from './Apis/DatabaseLocalApi'
+import ZenUIStyles from './ZenUIStyles'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 let x= 0;
 
@@ -157,87 +159,110 @@ export default class Download extends Component{
                         </Text>
                     </View>
                 </Modal> : null }
-                <View style={{height:Platform.OS=='ios'?70:60}}><NavigationBar navigator={this.props.navigator} route={this.props.route} popScreenFunction={this.popScene.bind(this)}/></View>
-                <ScrollView>
-                    <View style={styles.grayCellStyles}>
-                        <Text style={styles.cellTextStyles}>Last Update: There is no data file</Text>
+
+                <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                    <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
+                </View>
+
+                <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                    <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
+                    <View style={{flex:1}}>
+                        <TouchableOpacity
+                            onPress={()=>{this.props.navigator.push({name:"MainScreen",prevScreen:"Download"})}}
+                            activeOpacity={0.8}
+                            style={styles.registerTouchableStyle}
+                        >
+                            <FontAwesome style={ZenUIStyles.backButtonStyle}>{Icons.chevronLeft}</FontAwesome>
+                        </TouchableOpacity>
                     </View>
-                    <View style={[styles.cellStyles,{height:70}]}>
-                        <View style={styles.cellInnerLeftViewStyles}>
-                            <Text style={[styles.cellTextStyles,{fontWeight:"400"}]}>Books, media & toys</Text>
-                            <Text style={[styles.cellTextStyles,{fontSize:13,fontStyle:'italic'}]}>Includes: CDs, cassettes, vinyl, VHS, DVDs, books, software, video games, and all media & toys.</Text>
-                        </View>
+                    <View style={{flex:2}}>
+                        <Text style={ZenUIStyles.HeaderBarTextStyle}>Download</Text>
                     </View>
-                    <View style={styles.grayCellStyles}/>
-                    <View style={styles.downloadCell}>
-                        <View style={styles.progressStyles}>
+                    </View>
+                </View>
 
-                            {Platform.OS === 'ios'?<ProgressViewIOS progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} progressViewStyle={'default'}/>:<ProgressBarAndroid progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} indeterminate={false} styleAttr={'Horizontal'}/>}
-
+                <View style={styles.scrollviewContainer}>
+                    <ScrollView>
+                        <View style={styles.grayCellStyles}>
+                            <Text style={styles.cellTextStyles}>Last Update: There is no data file</Text>
                         </View>
-                        <View style={styles.downloadInfoStyles}>
-                            <Text style={styles.cellTextStyles}>Time Remaining: {this.state.remainingTime} </Text>
-                            <Text style={styles.cellTextStyles}>Speed: {Math.round(this.state.speed)} kBps</Text>
+                        <View style={[styles.cellStyles,{height:70}]}>
+                            <View style={styles.cellInnerLeftViewStyles}>
+                                <Text style={[styles.cellTextStyles,{fontWeight:"400"}]}>Books, media & toys</Text>
+                                <Text style={[styles.cellTextStyles,{fontSize:13,fontStyle:'italic'}]}>Includes: CDs, cassettes, vinyl, VHS, DVDs, books, software, video games, and all media & toys.</Text>
+                            </View>
                         </View>
-                        <View style={styles.downloadActionStyles}>
-                            <TouchableOpacity
-                                activeOpacity={0.7}
-                                style={styles.downloadActionTouchableStyles}
-                                onPress = {()=>{
+                        <View style={styles.grayCellStyles}/>
+                        <View style={styles.downloadCell}>
+                            <View style={styles.progressStyles}>
 
-                                    if(NetworkConnectivity.getInstance().internetAvailable==false){
-                                        alert("No Internet Connection")
-                                         return
-                                    }
+                                {Platform.OS === 'ios'?<ProgressViewIOS progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} progressViewStyle={'default'}/>:<ProgressBarAndroid progressTintColor='rgb(0,133,248)' progress={this.state.downloadPercentage} indeterminate={false} styleAttr={'Horizontal'}/>}
 
-                                    if(this.state.downloadButtonText === 'Pause'){
-                                        //alert('Pause condition called')
-                                        ElasticSearch.cancelDownload() // pause
-                                    }else if(this.state.downloadButtonText === 'Resume') {
-                                        //alert("free space in device:" + RNFS.getFSInfo().freeSpace)
-                                        this.changeModalState()
-                                        if(DataBase.getInstance().isPacketWritingInProcess == false){
-                                            ElasticSearch.getESDataSize(2);
-                                                  //ElasticSearch.resumeDownload()
-                                        }else{
-                                            //console.log("else condition of Resume")
-                                            //alert('still writing...')
-                                            ElasticSearch.downLoadState = Constants.DownloadState.kRunning
+                            </View>
+                            <View style={styles.downloadInfoStyles}>
+                                <Text style={styles.cellTextStyles}>Time Remaining: {this.state.remainingTime} </Text>
+                                <Text style={styles.cellTextStyles}>Speed: {Math.round(this.state.speed)} kBps</Text>
+                            </View>
+                            <View style={styles.downloadActionStyles}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    style={styles.downloadActionTouchableStyles}
+                                    onPress = {()=>{
+
+                                        if(NetworkConnectivity.getInstance().internetAvailable==false){
+                                            alert("No Internet Connection")
+                                            return
                                         }
-                                        this.setState({downloadButtonText:'Pause'})
-                                    }else if(this.state.downloadButtonText === 'Start'){
-                                        this.changeModalState()
-                                        let date=new Date();
-                                        let ISOdate=date.toISOString();
-                                        let  startTime=ISOdate.slice(0,-1)
-                                        console.log('Start time ' + startTime + "======" + ISOdate);
-                                        LocalStorageSettingsApi.setDownloadStartTime(startTime)
-                                        //ElasticSearch.getESDataSize(1)
-                                        //ElasticSearch.ReadBinaryFile();
-                                        ElasticSearch.DownloadJsonZipFile();
-                                        //ElasticSearch.EncodeJsonFile();
-                                        this.setState({downloadButtonText:'Pause'})
-                                    }
-                                }
-                                }
-                            >
 
-                                <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>{this.state.downloadButtonText}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                activeOpacity={0.7}
-                                style={styles.downloadActionTouchableStyles}
-                                onPress = {()=>{
-                                    //this.props.navigator.pop()
-                                    ElasticSearch.EncodeJsonFile();
-                                    //this.setState({showModal:true})
-                                }}
-                            >
-                                <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>Close</Text>
-                            </TouchableOpacity>
+                                        if(this.state.downloadButtonText === 'Pause'){
+                                            //alert('Pause condition called')
+                                            ElasticSearch.cancelDownload() // pause
+                                        }else if(this.state.downloadButtonText === 'Resume') {
+                                            //alert("free space in device:" + RNFS.getFSInfo().freeSpace)
+                                            this.changeModalState()
+                                            if(DataBase.getInstance().isPacketWritingInProcess == false){
+                                                ElasticSearch.getESDataSize(2);
+                                                    //ElasticSearch.resumeDownload()
+                                            }else{
+                                                //console.log("else condition of Resume")
+                                                //alert('still writing...')
+                                                ElasticSearch.downLoadState = Constants.DownloadState.kRunning
+                                            }
+                                            this.setState({downloadButtonText:'Pause'})
+                                        }else if(this.state.downloadButtonText === 'Start'){
+                                            this.changeModalState()
+                                            let date=new Date();
+                                            let ISOdate=date.toISOString();
+                                            let  startTime=ISOdate.slice(0,-1)
+                                            console.log('Start time ' + startTime + "======" + ISOdate);
+                                            LocalStorageSettingsApi.setDownloadStartTime(startTime)
+                                            //ElasticSearch.getESDataSize(1)
+                                            //ElasticSearch.ReadBinaryFile();
+                                            ElasticSearch.DownloadJsonZipFile();
+                                            //ElasticSearch.EncodeJsonFile();
+                                            this.setState({downloadButtonText:'Pause'})
+                                        }
+                                    }
+                                    }
+                                >
+
+                                    <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>{this.state.downloadButtonText}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    style={styles.downloadActionTouchableStyles}
+                                    onPress = {()=>{
+                                        //this.props.navigator.pop()
+                                        ElasticSearch.EncodeJsonFile();
+                                        //this.setState({showModal:true})
+                                    }}
+                                >
+                                    <Text style={[styles.cellTextStyles,{color:'rgb(0,133,248)'}]}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+                </View>
             </View>
         )
     }
