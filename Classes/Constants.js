@@ -149,8 +149,11 @@ import { Dimensions , Platform } from 'react-native';
 
      //ui constants
      static ZenBlue1 = 'rgb(68,146,225)'
+     static ZenBlue2 = 'rgb(98,164,230)'
      //static ZenBlue1 = 'blue'
      static ZenGreen = 'rgb(2,203,1)'
+     static ZenGreen2 = 'rgb(149,255,149)'
+     static ZenOrange = 'rgb(255,177,140)'
      static DataFieldColor = 'oldlace'
      static PressableItemColor = 'floralwhite' //for side menu and various buttons
      static ZenSwitchesColor = 'rgb(0,147,133)'
