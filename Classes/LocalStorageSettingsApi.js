@@ -45,7 +45,7 @@ export default class LocalStorageApi extends  Component {
     static numberOfScansInTrial = 0
     static accessToken = 'token_id'
     static userID = null;
-    static DisplayValue = '0';
+    static DisplayValue = 0;
 
     constructor() {
         super()
