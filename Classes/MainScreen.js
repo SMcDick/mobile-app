@@ -148,6 +148,7 @@ export default class MainScreen extends Component{
         LocalStorageSettingsApi.getDisplayProductCondition()
         LocalStorageSettingsApi.getDisplayProductQuantity()
         LocalStorageSettingsApi.getEnableTriggers()
+        LocalStorageSettingsApi.getDisplayValue()
         LocalStorageSettingsApi.getShowAlertIfRestricted()
         LocalStorageSettingsApi.getDisplayTradeValueInColumn()
         LocalStorageSettingsApi.getShowLandedPriceWithShipping()
