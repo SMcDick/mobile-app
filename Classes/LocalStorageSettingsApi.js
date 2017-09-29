@@ -45,6 +45,7 @@ export default class LocalStorageApi extends  Component {
     static numberOfScansInTrial = 0
     static accessToken = 'token_id'
     static userID = null;
+    static DisplayValue = '0';
 
     constructor() {
         super()
@@ -239,6 +240,45 @@ export default class LocalStorageApi extends  Component {
             })
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    // Set the Display value in settings
+    static async setDisplayValue(value) {
+        try {
+            AsyncStorage.setItem(Constants.kKeyForDisplayValue, value, ()=> {
+                LocalStorageApi.getDisplayValue()});
+            //alert('display value:'+value);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Retrieve the Display value
+    static async getDisplayValue() {
+        try {
+            await AsyncStorage.getItem(Constants.kKeyForDisplayValue, (error, result)=> {
+                if (result == null) {
+                    result = 0
+                }
+                if (result == '0') {
+                    result = 0
+                }
+                if (result == '1') {
+                    result = 1
+                }
+                if (result == '2') {
+                    result = 2
+                }
+                if (result == '3') {
+                    result = 3
+                }
+                LocalStorageApi.DisplayValue = result;
+                LocalStorageSettingsResponse.getInstance().localStorageSettingsResponseSuccessCallback(result, Constants.kKeyForDisplayValue);
+            })
+        } catch (error) {
+            console.log(error)
+            alert('error:'+error);
         }
     }
 

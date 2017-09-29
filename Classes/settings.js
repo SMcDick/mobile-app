@@ -45,8 +45,7 @@ export default class Settings extends Component{
             enableTriggers : LocalStorageSettingsApi.EnableTriggers,
             alertIfRestricted : LocalStorageSettingsApi.ShowAlertIfRestricted,
             scanningModeValue: 0,
-            dataLevelValue: 0,
-            displayValue:0,
+            displayValue: LocalStorageSettingsApi.DisplayValue,
 
 
             //automaticFBAPage : LocalStorageSettingsApi.showFBAAutomatically,
@@ -103,6 +102,10 @@ export default class Settings extends Component{
                 LocalStorageSettingsApi.setShowLandedPriceWithShipping(result)
                 break;
             }
+            case Constants.kKeyForDisplayValue:{
+                LocalStorageSettingsApi.setDisplayValue(result)
+                break;
+            }
             default:
                 break
 
@@ -143,6 +146,11 @@ export default class Settings extends Component{
                 break;
             }
 
+            case Constants.kKeyForDisplayValue:{
+                this.setState({displayValue:result})
+                break;
+            }
+
             default:
                 break
 
@@ -154,12 +162,10 @@ export default class Settings extends Component{
         //alert('value:'+this.state.scanningModeValue);
     }
 
-    handleDataLevelOnPress(value){
-        this.setState({dataLevelValue:value})
-        //alert('data level value:'+this.state.dataLevelValue);
-    }
     handleDisplayOnPress(value){
+        //LocalStorageSettingsApi.setDisplayValue(value)
         this.setState({displayValue:value})
+        this.onValueChangeCallback(JSON.stringify(value), Constants.kKeyForDisplayValue)
         //alert('display value:'+this.state.displayValue);
     }
 
