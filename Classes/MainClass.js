@@ -136,10 +136,10 @@ export default class FBAscanner extends Component{
                             initialRoute1 = "MainScreen";
                             break;
                         case 3:
-                            initialRoute1 = "MainScreen";
+                            initialRoute1 = "TradeInOnly";
                             break;
                         default:
-                            initialRoute1 = "TradeInOnly";
+                            initialRoute1 = "MainScreen";
                             break;
                     }
                     
