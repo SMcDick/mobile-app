@@ -148,7 +148,6 @@ export default class MainScreen extends Component{
         LocalStorageSettingsApi.getDisplayProductCondition()
         LocalStorageSettingsApi.getDisplayProductQuantity()
         LocalStorageSettingsApi.getEnableTriggers()
-        LocalStorageSettingsApi.getDisplayValue()
         LocalStorageSettingsApi.getShowAlertIfRestricted()
         LocalStorageSettingsApi.getDisplayTradeValueInColumn()
         LocalStorageSettingsApi.getShowLandedPriceWithShipping()
@@ -466,7 +465,7 @@ export default class MainScreen extends Component{
                 <View style={{flex:1,padding:5}}>
                     <View style={styles.dataFieldWithoutBorder}>
                         <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productBuyBox}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Trade</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Trade!</Text>
                     </View>
                 </View>
                 <View style={{flex:2,padding:5}}>

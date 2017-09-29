@@ -123,7 +123,27 @@ export default class FBAscanner extends Component{
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isPaid + "initialRoute = Account")
-                    initialRoute1 = "MainScreen";
+                    
+                    // Different DisplayValue values (set in settings) go to different screens
+                    // TODO: Fill these in with the appropriate screens as they are built
+                    switch (LocalStorageSettingsApi.DisplayValue) {
+                        case 0:
+                            initialRoute1 = "MainScreen";
+                            break;
+                        case 1:
+                            initialRoute1 = "MainScreen";
+                            break;
+                        case 2: 
+                            initialRoute1 = "MainScreen";
+                            break;
+                        case 3:
+                            initialRoute1 = "TradeInOnly";
+                            break;
+                        default:
+                            initialRoute1 = "MainScreen";
+                            break;
+                    }
+                    
                 }
             }
             else{
@@ -141,6 +161,8 @@ export default class FBAscanner extends Component{
                             return (<NewUserRegistration navigator={navigator} route={route}/>)
                         if (route.name === 'MainScreen')
                             return (<MainScreen navigator={navigator} route={route}/>)
+                        if (route.name === 'TradeInOnly')
+                            return (<TradeInOnly navigator={navigator} route={route}/>)
                         if (route.name === 'Settings')
                             return (<Settings navigator={navigator} route={route}/>)
                         if (route.name === 'Download')

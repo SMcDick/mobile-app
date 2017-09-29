@@ -45,8 +45,7 @@ export default class Settings extends Component{
             enableTriggers : LocalStorageSettingsApi.EnableTriggers,
             alertIfRestricted : LocalStorageSettingsApi.ShowAlertIfRestricted,
             scanningModeValue: 0,
-            dataLevelValue: 0,
-            displayValue:0,
+            displayValue: LocalStorageSettingsApi.DisplayValue,
 
 
             //automaticFBAPage : LocalStorageSettingsApi.showFBAAutomatically,
@@ -103,6 +102,10 @@ export default class Settings extends Component{
                 LocalStorageSettingsApi.setShowLandedPriceWithShipping(result)
                 break;
             }
+            case Constants.kKeyForDisplayValue:{
+                LocalStorageSettingsApi.setDisplayValue(result)
+                break;
+            }
             default:
                 break
 
@@ -143,6 +146,11 @@ export default class Settings extends Component{
                 break;
             }
 
+            case Constants.kKeyForDisplayValue:{
+                this.setState({displayValue:result})
+                break;
+            }
+
             default:
                 break
 
@@ -154,12 +162,10 @@ export default class Settings extends Component{
         //alert('value:'+this.state.scanningModeValue);
     }
 
-    handleDataLevelOnPress(value){
-        this.setState({dataLevelValue:value})
-        //alert('data level value:'+this.state.dataLevelValue);
-    }
     handleDisplayOnPress(value){
+        //LocalStorageSettingsApi.setDisplayValue(value)
         this.setState({displayValue:value})
+        this.onValueChangeCallback(JSON.stringify(value), Constants.kKeyForDisplayValue)
         //alert('display value:'+this.state.displayValue);
     }
 
@@ -406,30 +412,11 @@ export default class Settings extends Component{
                             </View>
 
                         <View style={styles.grayCellstyles}>
-                            <Text style={ZenUIStyles.SubheaderTextStyle}>Data Level</Text>
-                        </View>
-                        <View style={styles.cellStyles}>
-                            <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Full Data</Text>
-                            </View>
-                            <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={0} onPress={this.handleDataLevelOnPress.bind(this)}/>
-                            </View>
-                        </View>
-                        <View style={styles.cellStyles}>
-                            <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Stream Line (essential only)</Text>
-                            </View>
-                            <View style={styles.switchViewStyle}>
-                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.dataLevelValue} value={1} onPress={this.handleDataLevelOnPress.bind(this)}/>
-                            </View>
-                        </View>
-                        <View style={styles.grayCellstyles}>
                             <Text style={ZenUIStyles.SubheaderTextStyle}>Display</Text>
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Data Display</Text>
+                                <Text style={styles.cellTextStyle}>Full Data</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={0} onPress={this.handleDisplayOnPress.bind(this)}/>
@@ -437,7 +424,7 @@ export default class Settings extends Component{
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Visual Display</Text>
+                                <Text style={styles.cellTextStyle}>Stream Line (essential only)</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={1} onPress={this.handleDisplayOnPress.bind(this)}/>
@@ -445,10 +432,18 @@ export default class Settings extends Component{
                         </View>
                         <View style={styles.cellStyles}>
                             <View style={styles.cellInnerLeftViewStyle}>
-                                <Text style={styles.cellTextStyle}>Trade In Only</Text>
+                                <Text style={styles.cellTextStyle}>Visual Display</Text>
                             </View>
                             <View style={styles.switchViewStyle}>
                                 <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={2} onPress={this.handleDisplayOnPress.bind(this)}/>
+                            </View>
+                        </View>
+                        <View style={styles.cellStyles}>
+                            <View style={styles.cellInnerLeftViewStyle}>
+                                <Text style={styles.cellTextStyle}>Trade In Only</Text>
+                            </View>
+                            <View style={styles.switchViewStyle}>
+                                <RadioButton innerCircleColor={Constants.ZenSwitchesColor} outerCircleColor={Constants.ZenSwitchesBackColor} currentValue={this.state.displayValue} value={3} onPress={this.handleDisplayOnPress.bind(this)}/>
                             </View>
                         </View>
 
