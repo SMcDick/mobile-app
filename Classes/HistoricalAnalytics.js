@@ -22,7 +22,8 @@ import {
     ActivityIndicator,
     Alert,
     NativeModules,
-    ScrollView
+    ScrollView,
+    StatusBar
 } from 'react-native';
 
 import NavigationBar from './scenesNavBar'
@@ -31,6 +32,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import ZenUIStyles from './ZenUIStyles'
 import Constants from './Constants'
 //import PieChart from 'react-native-pie-chart';
+//import Pie from 'react-native-pie'
+import PercentageCircle from 'react-native-percentage-circle';
 
 
 const screenWidth=Dimensions.get('window').width;
@@ -55,8 +58,13 @@ export default class HistoricalAnalytics extends Component{
     }
 
     render(){
+        const chart_wh = 250
+        const series = [123, 321, 123, 789, 537]
+        const sliceColor = ['#F44336','#2196F3','#FFEB3B', '#4CAF50', '#FF9800']
         return(
+
             <View style={{flex:1, backgroundColor:'white'}}>
+
                 <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
                 </View>
@@ -77,15 +85,9 @@ export default class HistoricalAnalytics extends Component{
                     </View>
                 </View>
                 <ScrollView>
-                    <View style={styles.dataRow}>
-                        <View style={styles.CircleDataContainerStyle}>
-                        </View>
+                    <View style={[styles.dataRow, {justifyContent:'flex-end'}]}>
                         <View>
-                           <View style={styles.GraphContainerStyle}>
-                                <View>
-                                <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>12 months average</Text>
-                                </View>
-                           </View>
+                        <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>12 months average</Text>
                         </View>
                     </View>
 
@@ -93,14 +95,19 @@ export default class HistoricalAnalytics extends Component{
                         <View style={styles.CircleDataContainerStyle}>
                             <Text style={[ZenUIStyles.SubheaderTextStyle]}>Sales Rank</Text>
                             <View style={styles.dataCircleStyle}>
-                                <Text>1.2 million</Text>
+                                <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                    <Text>1.2</Text>
+                                     <Text>million</Text>
+                                </PercentageCircle>
+
                             </View>
+
                         </View>
                         <View>
 
                             <View style={styles.GraphContainerStyle}>
                                 <View>
-                                    <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                    <View style={{width:6, borderBottomWidth:2, paddingLeft:10}}/>
                                     <Text> </Text>
                                 </View>
                                 <View>
@@ -163,6 +170,12 @@ export default class HistoricalAnalytics extends Component{
                     <View style={styles.dataRow}>
                         <View style={styles.CircleDataContainerStyle}>
                             <Text style={[ZenUIStyles.SubheaderTextStyle]}>Used</Text>
+                            <View style={styles.dataCircleStyle}>
+                                <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                    <Text>$16</Text>
+                                </PercentageCircle>
+                            </View>
+
                         </View>
                         <View>
                             <View style={styles.GraphContainerStyle}>
@@ -230,6 +243,12 @@ export default class HistoricalAnalytics extends Component{
                     <View style={styles.dataRow}>
                         <View style={styles.CircleDataContainerStyle}>
                             <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>New</Text>
+                            <View style={styles.dataCircleStyle}>
+                                <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                    <Text>$35</Text>
+                                </PercentageCircle>
+                            </View>
+
                         </View>
                         <View>
 
@@ -298,6 +317,12 @@ export default class HistoricalAnalytics extends Component{
                     <View style={styles.dataRow}>
                         <View style={styles.CircleDataContainerStyle}>
                             <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>Trade In</Text>
+                            <View style={styles.dataCircleStyle}>
+                                <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                    <Text>$3</Text>
+                                </PercentageCircle>
+                            </View>
+
                         </View>
                         <View>
 
@@ -372,7 +397,11 @@ export default class HistoricalAnalytics extends Component{
 const styles=StyleSheet.create({
    dataRow:{
         flexDirection:'row',
-        padding:10
+        paddingLeft:10,
+        paddingRight:10,
+        borderBottomWidth:0.5,
+        borderBottomColor:'gray'
+
    },
    GraphContainerStyle:{
         flexDirection:'row',
@@ -388,5 +417,16 @@ const styles=StyleSheet.create({
    },
    CircleDataContainerStyle:{
         flex:1
-   }
+   },
+   container: {
+    flex: 1,
+    alignItems: 'center'
+   },
+    title: {
+        fontSize: 24,
+        margin: 10
+    },
+    dataCircleStyle:{
+        paddingBottom:5,
+    }
 })

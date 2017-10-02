@@ -10,8 +10,10 @@ import {
     StyleSheet,
     Text,
     View,
-    Navigator
+
 } from 'react-native';
+
+import NavigationExperimental from 'react-native-deprecated-custom-components'
 
 import MainScreen from './MainScreen'
 import LocalStorageSettingsApi from './LocalStorageSettingsApi'
@@ -36,6 +38,7 @@ import HistoricalAnalytics from './HistoricalAnalytics'
 import StripePayment from "./stripePayment";
 import Resources from './Resources'
 import Video from './video'
+import TradeInOnly from './TradeInOnly'
 
 export default class FBAscanner extends Component{
     constructor(props) {
@@ -118,7 +121,8 @@ export default class FBAscanner extends Component{
                 if (LocalStorageSettingsApi.isUserLoggined == "false") {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
                     //initialRoute1 = "NewUserRegistration";
-                    initialRoute1 = "HistoricalAnalytics";
+                    //initialRoute1 = "HistoricalAnalytics";
+                    initialRoute1 = "TradeInOnly";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
@@ -150,9 +154,8 @@ export default class FBAscanner extends Component{
                 //console.log("****************** delay in set state")
             }
 
-
             return (
-                <Navigator
+                <NavigationExperimental.Navigator
                     initialRoute={{name: initialRoute1}}
                     renderScene={(route, navigator) => {
                         if (route.name === 'Account')
@@ -200,7 +203,7 @@ export default class FBAscanner extends Component{
                         if( route.name == "Video" )
                             return( <Video navigator={navigator} route={route} />)
                     }}
-                    configureScene={(route, routeStack) => Navigator.SceneConfigs.FloatFromBottom}
+                    configureScene={(route, routeStack) => NavigationExperimental.Navigator.SceneConfigs.FloatFromBottom}
                 />
             )
         }

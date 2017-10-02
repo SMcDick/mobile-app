@@ -59,7 +59,7 @@ let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height*0.98;
 const data=[];
 let asin;
-export default class MainScreen extends Component{
+export default class TradeInOnly extends Component{
 
    constructor(props){
         super(props);
@@ -118,7 +118,7 @@ export default class MainScreen extends Component{
         showFBAFullScreen:false,
         expandFBAOffersValue: new Animated.Value(0),
         positionYOfFBAOffersPage:new Animated.Value(screenHeight),
-        heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.5),
+        heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.45),
         bluetoothMode:false,
         // openCamera:false,
         isConnected: null,
@@ -227,7 +227,7 @@ export default class MainScreen extends Component{
             showFBAFullScreen:false,
             expandFBAOffersValue: new Animated.Value(0),
             positionYOfFBAOffersPage:new Animated.Value(screenHeight),
-            heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.4),
+            heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.45),
             selectedOffer:"used",
             NewUrl:null,
             UsedUrl:null,
@@ -244,36 +244,16 @@ export default class MainScreen extends Component{
             return;
       }
 
-      if((option === Constants.kOffersType.kFBAOffers) & (company==false)){
-          var url = this.state.FBAUrl;
-      }else if((option === Constants.kOffersType.kNewOffers) & (company==false)){
-          var url = this.state.NewUrl;
-      }else if((option === Constants.kOffersType.kUsedOffers) & (company==false)){
-          var url = this.state.UsedUrl;
-      }else if((option === Constants.kOffersType.kAllOffers) & (company==false)){
-          var url = this.state.AllOffersUrl;
-      }else if(option === Constants.Company.KCompanyCamel){
-          var url = 'https://camelcamelcamel.com/product/'+ this.state.productCode
-      }else if(option ===  Constants.Company.KCompanyAmazon){
-          var url = "https://www.amazon.com/dp/" + this.state.productCode + "/ref=olp_product_details?_encoding=UTF8&me="
-      }else if( option === Constants.Company.KCompanyBookFinder){
-          var url =  'http://www.bookfinder.com/search/?author=&title=&lang=en&isbn='+ this.state.productCode+'&new=1&used=1&ebooks=1&destination=us&currency=USD&mode=basic&st=sr&ac=qr'
-      }else if( option === Constants.Company.KCompanyBookScouter){
-         var url = 'https://bookscouter.com/prices.php?isbn='+this.state.productCode+'&searchbutton=Sell'
-      }else if( option === Constants.Company.KCompanyEbay ){
-          var url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313.TR0.TRC0.H0.X'+ this.state.productCode+'.TRS0&_nkw='+this.state.productCode+'&_sacat=0'
-      }else if(option === Constants.Company.KCompanyKeepa){
-          var url = 'https://keepa.com/#!product/1-' + this.state.productCode
+      var url = 'https://bookscouter.com/prices.php?isbn='+this.state.productCode+'&searchbutton=Sell'
 
-      }
-            if(option){
-                  //alert(productObject.productCode)
-                  //this.setState({webViewModal:true})
-          this.setState({productOffersPageURL:null},()=>{
-              setTimeout(()=>{
-                  this.setState({productOffersPageURL:{uri:url}})
-              },1)
-          })
+      if(option){
+              //alert(productObject.productCode)
+              //this.setState({webViewModal:true})
+      this.setState({productOffersPageURL:null},()=>{
+          setTimeout(()=>{
+              this.setState({productOffersPageURL:{uri:url}})
+          },1)
+      })
 
       }
 
@@ -302,7 +282,7 @@ export default class MainScreen extends Component{
           Animated.timing(
               this.state.positionYOfFBAOffersPage,
               {
-                  toValue:-screenHeight * 0.45,
+                  toValue:-screenHeight * 0.6,
                   duration:200
               }
           ).start(() => { ExCol == true ? this.setState({webViewModal:true}) : null });
@@ -414,25 +394,6 @@ export default class MainScreen extends Component{
 
 
     </View>);
-    let buyRejectBar = (
-        <TouchableOpacity
-            onPress={()=>{
-                      Keyboard.dismiss();
-                      this.setState({bluetoothMode:false},()=>{this.refs.bluetoothMode.blur()});
-                    }
-                  }
-            style={[styles.buyReject , {backgroundColor:this.state.buyRejectColor} ]}
-            activeOpacity={1}
-            //onPress={()=>Keyboard.dismiss()}
-        >
-
-            <View
-                style={{flex:7,alignItems:'center'}}
-            >
-                <Text style={styles.BRcontent}>{this.state.headingText}</Text>
-            </View>
-        </TouchableOpacity>
-    );
 
     let productDescriptionComponent = (
         <View style={{height:screenHeight*0.35}}>
@@ -461,87 +422,16 @@ export default class MainScreen extends Component{
                         </View>
                 </View>
             </View>
-            <View style={styles.itemInfoContainer}>
-                <View style={{flex:1,padding:5}}>
-                    <View style={styles.dataFieldWithoutBorder}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productBuyBox}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Trade!</Text>
-                    </View>
-                </View>
-                <View style={{flex:2,padding:5}}>
-                    <View style={[styles.dataField]}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productBuyBox}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Buy Box</Text>
-                    </View>
-                </View>
-                <View style={{flex:1,padding:5}}>
-                    <View style={styles.dataField}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productFBAOffersPercent}</Text>
-                      <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]}> X-Ray </Text>
-                    </View>
-                </View>
+            <View style={{padding:10, flex:10}}>
+                <View style={styles.amazonTradeInContainer}>
+                            <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >$98</Text>
+                            <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Amazon Trade In</Text>
 
+                </View>
             </View>
-            <View style={styles.itemInfoContainer}>
-                <View style={[{flex:1,padding:5}]}>
-                    <View style={styles.dataFieldWithoutBorder}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]}>
-                            {this.state.productSalesRank}
-                        </Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Rank</Text>
-                    </View>
-                </View>
-                <View style={{flex:2,padding:5}}>
-                    <View style={styles.dataField}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productAmazonRank}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Average Rank</Text>
-                    </View>
-                </View>
-                <View style={{flex:1,padding:5}}>
-                    <View style={styles.dataField}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productTopPercent}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Rank %</Text>
-                    </View>
-                </View>
-
-            </View>
-            <View style={styles.itemInfoContainer}>
-                <View style={{flex:1,padding:5}}>
-                    <TouchableOpacity style={{flex:1}} onPress={this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
-                    <View style={styles.dataFieldWithoutBorder}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productAmazonPrice}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Amazon</Text>
-                    </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex:2,padding:5}}>
-                    <View style={[styles.dataField]}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productNetProfit}</Text>
-                        <Text style={[styles.productSearchIndicators, styles.fontColorsBottom]} >Net Profit</Text>
-                    </View>
-                </View>
-
-                <View style={{flex:1,padding:5}}>
-                    <View style={styles.dataField}>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productPricePercent}</Text>
-                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Price %</Text>
-                    </View>
-                </View>
-
-            </View>
-            </View>
+        </View>
     </TouchableOpacity></View>);
 
-    let otherSitesIconComponent = ( <View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center'}}>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyCamel)} ><Image source={require('../assets/camelLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyBookFinder)} ><Image source={require('../assets/BookFinder.png')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyKeepa)} ><Image source={require('../assets/keepaLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyBookScouter)} ><Image source={require('../assets/bookscounterLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyEbay)} ><Image source={require('../assets/ebayLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
-        <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)} ><Image source={require('../assets/amazonLogo.png')} style={styles.siteIconStyles}/></TouchableOpacity>
-
-
-    </View>);
     let scrollViewData = (
         <View style= {{flex:1,flexDirection:'row'}}>
             <View style= {{flex:1}}>
@@ -666,23 +556,6 @@ export default class MainScreen extends Component{
 
             />
 
-            <View style={{flex:1, flexDirection:'row',height:40, width:70, marginTop:this.state.showFBAFullScreen? 44: 49 ,backgroundColor:'rgb(205,205,205)', marginLeft:Utility.getFontSize()==50?screenWidth-70:screenWidth-70, position:'absolute', borderRadius:10}}>
-            <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.minimizeExpandIconStyles}
-                onPress={this.expandCollapseWebView.bind(this,this.state.showFBAFullScreen?false:true,null,false,false)}
-            >
-                {this.state.showFBAFullScreen? <Icon_min name='window-minimize' size={Utility.getFontSize()==50?30:20} color='black'/>
-                    :<Icon_min name='window-maximize' size={Utility.getFontSize()==50?30:20} color='black'/> }
-            </TouchableOpacity>
-            <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.closeIconStyles}
-                onPress={()=>this.closeWebView()}
-            >
-                <Icon_min name='window-close' size={Utility.getFontSize()==50?30:20} color='black' backgroundColor='red'/>
-            </TouchableOpacity>
-                </View>
 
             <Modal
                 visible={this.state.webViewModal}
@@ -703,58 +576,7 @@ export default class MainScreen extends Component{
         </Animated.View>
     );
     let fbaOffersComponent = (<View style= {[{flex:10},{borderColor:Constants.ZenBlue1},{padding:10},{paddingBottom:-10}]}>
-    <View style={[ ZenUIStyles.FramedBoxStyle,{height:screenHeight*0.33}]}>
 
-        <View style={{height:40,flexDirection:'row'}}>
-
-          <TouchableOpacity  onPress={()=>{
-                                   //if(this.state.nonFbaUsedArray.length > 0){
-                                      if(this.state.productUsedOffers==null )
-                                      {
-                                          alert('Please do a live search to get ISBN');
-                                          return
-                                      }
-                                       this.expandCollapseWebView(false,Constants.kOffersType.kUsedOffers)
-                                   //}
-                              }} style={styles.amazonOfferLinksConatiner}><Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productUsedOffers} Used</Text></TouchableOpacity>
-          <TouchableOpacity
-                onPress={()=>{
-                                // if(this.state.fbaOffersArray.length > 0){
-                                        if(this.state.productTitle==null )
-                                        {
-                                            alert('Please do a live search to get ISBN');
-                                            return
-                                        }
-                                     this.expandCollapseWebView(false,Constants.kOffersType.kFBAOffers)
-                                // }
-                             }}
-                style={styles.amazonOfferLinksConatiner}
-            >
-                <Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productFBAOffers} FBA </Text>
-         </TouchableOpacity>
-          <TouchableOpacity  onPress={()=>{
-                                   //if(this.state.nonFbaNewArray.length > 0){
-                                          if(this.state.productNewOffers==null )
-                                          {
-                                              alert('Please do a live search to get ISBN');
-                                              return
-                                          }
-                                       this.expandCollapseWebView(false,Constants.kOffersType.kNewOffers)
-                                   //}
-                              }} style={styles.amazonOfferLinksConatiner}><Text style={ZenUIStyles.SubheaderTextStyle}>{this.state.productNewOffers} New</Text></TouchableOpacity>
-
-
-            {/*<TouchableOpacity style={styles.tradeValueStyle}><Text style={styles.amazonOfferLinks}>TRADE IN</Text></TouchableOpacity>*/}
-
-        </View>
-        <ScrollView onScroll={()=>this.setState({bluetoothMode:false})}>
-            {scrollViewData}
-
-        </ScrollView>
-        <View style={{height:30}}>
-            {averagePriceComponent}
-        </View>
-      </View>
 
     </View>);
 
@@ -780,11 +602,8 @@ export default class MainScreen extends Component{
 
           {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
 
-          {buyRejectBar}
           {productDescriptionComponent}
           {fbaOffersComponent}
-
-          {this.state.productTitle?otherSitesIconComponent:<View></View>}
           {navigationBar}
 
 
@@ -1813,11 +1632,13 @@ const styles = StyleSheet.create({
   },
   fontColorsTop:{
     color:'black',//'rgb(68,146,225)'
-    fontWeight:'bold'
+    fontWeight:'bold',
+    fontSize:20
   },
   fontColorsBottom:{
       color:Constants.ZenBlue1,//'rgb(93,93,93)',//'rgb(68,146,225)'
-      fontWeight:'bold'
+      fontWeight:'bold',
+      fontSize:Utility.getFontSize()*0.7
     },
   productPriceProfit:{
     backgroundColor:'rgb(241,241,241)',
@@ -1920,6 +1741,14 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     borderBottomColor: Constants.ZenBlue1,
     borderBottomWidth: 1
+  },
+  amazonTradeInContainer:{
+    borderColor: Constants.ZenGreen,
+    borderWidth: 1,
+    borderRadius:10,
+    justifyContent:'center',
+    alignItems:'center',
+    padding:10
   },
   styleForProfitRow:{
     flex:4,
