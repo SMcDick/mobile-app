@@ -39,6 +39,7 @@ import StripePayment from "./stripePayment";
 import Resources from './Resources'
 import Video from './video'
 import TradeInOnly from './TradeInOnly'
+import StreamlineScreen from './StreamlineScreen'
 import Swiper from 'react-native-swiper';
 
 
@@ -172,6 +173,9 @@ export default class FBAscanner extends Component{
                                         </View>
                                         <View style={styles.slideStyle}>
                                           <HistoricalAnalytics navigator={navigator} route={route}/>
+                                        </View>
+                                        <View style={styles.slideStyle}>
+                                          <StreamlineScreen navigator={navigator} route={route}/>
                                         </View>
 
                                     </Swiper>
