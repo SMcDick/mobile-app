@@ -790,20 +790,6 @@ export default class MainScreen extends Component{
 
 
           <View style={[{alignItems:'center'},{height:35},{padding:1}]}>
-              <View style={[{flexDirection:'row'},{alignItems:'center'}]}>
-                  <View style={[{padding:4}]}>
-                      <View style={[styles.circleEmpty]}>
-                      </View>
-                  </View>
-                  <View style={[{padding:4}]}>
-                      <View style={styles.circleFull}>
-                      </View>
-                  </View>
-                      <View style={[{padding:4}]}>
-                      <View style={styles.circleEmpty}>
-                  </View>
-                  </View>
-              </View>
           </View>
         </View>
     );

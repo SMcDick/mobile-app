@@ -39,6 +39,8 @@ import StripePayment from "./stripePayment";
 import Resources from './Resources'
 import Video from './video'
 import TradeInOnly from './TradeInOnly'
+import Swiper from 'react-native-swiper';
+
 
 export default class FBAscanner extends Component{
     constructor(props) {
@@ -122,7 +124,8 @@ export default class FBAscanner extends Component{
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn + "initialRoute = Account")
                     //initialRoute1 = "NewUserRegistration";
                     //initialRoute1 = "HistoricalAnalytics";
-                    initialRoute1 = "TradeInOnly";
+                    //initialRoute1 = "TradeInOnly";
+                    initialRoute1 = "MainScreen";
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
@@ -163,7 +166,16 @@ export default class FBAscanner extends Component{
                         if (route.name === 'NewUserRegistration')
                             return (<NewUserRegistration navigator={navigator} route={route}/>)
                         if (route.name === 'MainScreen')
-                            return (<MainScreen navigator={navigator} route={route}/>)
+                            return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                        <View style={styles.slideStyle}>
+                                          <MainScreen navigator={navigator} route={route}/>
+                                        </View>
+                                        <View style={styles.slideStyle}>
+                                          <HistoricalAnalytics navigator={navigator} route={route}/>
+                                        </View>
+
+                                    </Swiper>
+                                          )
                         if (route.name === 'TradeInOnly')
                             return (<TradeInOnly navigator={navigator} route={route}/>)
                         if (route.name === 'Settings')
@@ -209,3 +221,13 @@ export default class FBAscanner extends Component{
         }
     }
 }
+
+var styles = StyleSheet.create({
+  wrapper: {
+  },
+  slideStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -58,12 +58,9 @@ export default class HistoricalAnalytics extends Component{
     }
 
     render(){
-        const chart_wh = 250
-        const series = [123, 321, 123, 789, 537]
-        const sliceColor = ['#F44336','#2196F3','#FFEB3B', '#4CAF50', '#FF9800']
         return(
 
-            <View style={{flex:1, backgroundColor:'white'}}>
+            <View style={{flex:1}}>
 
                 <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>

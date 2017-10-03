@@ -52,6 +52,7 @@ import FontAwesome, { Icons } from 'react-native-fontawesome'
 import ZenUIStyles from './ZenUIStyles'
 
 
+
 let asinMissing = false
 let productObject= null;
 let kTextNotFound = "Not Found";
@@ -601,6 +602,7 @@ export default class TradeInOnly extends Component{
             </View>
 
           {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
+
 
           {productDescriptionComponent}
           {fbaOffersComponent}
@@ -1800,4 +1802,5 @@ const styles = StyleSheet.create({
       color:Constants.ZenBlue1,
       fontSize:Utility.getFontSize()
   },
+
 });
