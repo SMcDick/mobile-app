@@ -204,10 +204,10 @@ export default class FBAscanner extends Component{
                                                   <MainScreen navigator={navigator} route={route}/>
                                                 </View>
                                                 <View style={styles.slideStyle}>
-                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                  <MainScreen navigator={navigator} route={route}/>
                                                 </View>
                                                 <View style={styles.slideStyle}>
-                                                  <MainScreen navigator={navigator} route={route}/>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
                                                 </View>
 
                                             </Swiper>
@@ -218,10 +218,10 @@ export default class FBAscanner extends Component{
                                                   <StreamlineScreen navigator={navigator} route={route}/>
                                                 </View>
                                                 <View style={styles.slideStyle}>
-                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                  <MainScreen navigator={navigator} route={route}/>
                                                 </View>
                                                 <View style={styles.slideStyle}>
-                                                  <MainScreen navigator={navigator} route={route}/>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
                                                 </View>
 
                                             </Swiper>
@@ -234,9 +234,6 @@ export default class FBAscanner extends Component{
                                                 </View>
                                                 <View style={styles.slideStyle}>
                                                   <HistoricalAnalytics navigator={navigator} route={route}/>
-                                                </View>
-                                                <View style={styles.slideStyle}>
-                                                  <MainScreen navigator={navigator} route={route}/>
                                                 </View>
 
                                             </Swiper>
