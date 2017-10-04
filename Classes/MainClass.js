@@ -46,6 +46,12 @@ import Swiper from 'react-native-swiper';
 export default class FBAscanner extends Component{
     constructor(props) {
         super(props)
+        this.state={
+            isLoading:"true",
+            isLoggedIn:"false",
+            isPaid:"false",
+            displayMode:null,
+        }
         this.currentTime = Date.now()
         LocalStorageSettingsResponse.getInstance().setReceiver(this);
        //LoginResponse.getInstance().setReceiver(this);
@@ -54,11 +60,8 @@ export default class FBAscanner extends Component{
         LocalStorageSettingsApi.getIsUserPaid();
         LocalStorageSettingsApi.getIsTrialPeriod();
         LocalStorageSettingsApi.getTotalScansDoneInTrial();
-        this.state={
-            isLoading:"true",
-            isLoggedIn:"false",
-            isPaid:"false"
-        }
+        LocalStorageSettingsApi.getDisplayValue();
+
     }
 
     localStorageSettingsResponseSuccessCallback(result, key) {
@@ -80,10 +83,10 @@ export default class FBAscanner extends Component{
             {
                 if (JSON.stringify(result) == Constants.kTrue) {
                     //console.log("############################################ yes loggined")
-                    this.setState({isLoggedIn: "true", isLoading: "false"});
+                    this.setState({isLoggedIn: "true", isLoading:"true"});
                 } else {
                     //console.log("###########################################  not loggined")
-                    this.setState({isLoading: "false"});
+                    this.setState({isLoggedIn: "false", isLoading:"true"});
                 }
                 break;
             }
@@ -91,10 +94,10 @@ export default class FBAscanner extends Component{
              {
                  if (JSON.stringify(result) == Constants.kTrue) {
                      //console.log("############################################ yes loggined")
-                     this.setState({isPaid: "true", isLoading: "false"});
+                     this.setState({isPaid: "true", isLoading:"true"});
                  } else {
                      //console.log("###########################################  not loggined")
-                     this.setState({isLoading: "false"});
+                     this.setState({isPaid: "false", isLoading:"true"});
                  }
                  break;
              }
@@ -110,15 +113,38 @@ export default class FBAscanner extends Component{
                         }
                     }
             }
+            case Constants.kKeyForDisplayValue:
+             {
+                //alert("display"+JSON.stringify(result));
+                switch (result)
+                {
+                     case Constants.DisplayMode.kFullDataDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kFullDataDisplay, isLoading: "false"});
+                          break;
+                     case Constants.DisplayMode.kStreamLineDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kStreamLineDisplay, isLoading: "false"});
+                          break;
+                    case Constants.DisplayMode.kVisualDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kVisualDisplay, isLoading: "false"});
+                          break;
+                    case Constants.DisplayMode.kTradeInDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kTradeInDisplay, isLoading: "false"});
+                          break;
+                    default:
+                          this.setState({isLoading: "true"});
+                          break;
+                }
+             }
         }
     }
 
     render() {
-        if(this.state.isLoading=="true")
+        if(this.state.isLoading=="true" || this.state.displayMode===null)
             return  (<View><Text style={{padding:100}}></Text></View>)
 
         else{
             var initialRoute1 = "";
+            var mainScreen = "MainScreen";
             //console.log("****************************render " + LocalStorageSettingsApi.isUserLoggined)
             if (this.state.isLoading== "false") {
                 if (LocalStorageSettingsApi.isUserLoggined == "false") {
@@ -127,28 +153,32 @@ export default class FBAscanner extends Component{
                     //initialRoute1 = "HistoricalAnalytics";
                     //initialRoute1 = "TradeInOnly";
                     initialRoute1 = "MainScreen";
+
                 }
                 else {
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isLoggedIn+ "initialRoute = MainScreen")
                     //console.log("************************" + this.state.isLoading + "**********************" + this.state.isPaid + "initialRoute = Account")
                     
                     // Different DisplayValue values (set in settings) go to different screens
-                    // TODO: Fill these in with the appropriate screens as they are built
-                    switch (LocalStorageSettingsApi.DisplayValue) {
-                        case 0:
-                            initialRoute1 = "MainScreen";
+                    initialRoute1 = "MainScreen"
+                    switch (this.state.displayMode) {
+                        case Constants.DisplayMode.kFullDataDisplay:
+                        alert("main screen");
+                            mainScreen = "MainScreen";
                             break;
-                        case 1:
-                            initialRoute1 = "MainScreen";
+                        case Constants.DisplayMode.kStreamLineDisplay:
+                        alert("streamline");
+                            mainScreen = "StreamlineScreen";
                             break;
-                        case 2: 
-                            initialRoute1 = "MainScreen";
+                        case Constants.DisplayMode.kVisualDisplay:
+                            mainScreen = "VisualScreen";
                             break;
-                        case 3:
-                            initialRoute1 = "TradeInOnly";
+                        case Constants.DisplayMode.kTradeInDisplay:
+                        alert("streamline");
+                            mainScreen = "TradeInOnly";
                             break;
                         default:
-                            initialRoute1 = "MainScreen";
+                            mainScreen = "MainScreen";
                             break;
                     }
                     
@@ -166,20 +196,72 @@ export default class FBAscanner extends Component{
                             return (<Account navigator={navigator} route={route}/>)
                         if (route.name === 'NewUserRegistration')
                             return (<NewUserRegistration navigator={navigator} route={route}/>)
-                        if (route.name === 'MainScreen')
-                            return (<Swiper style={styles.wrapper} showsButtons={false}>
-                                        <View style={styles.slideStyle}>
-                                          <MainScreen navigator={navigator} route={route}/>
-                                        </View>
-                                        <View style={styles.slideStyle}>
-                                          <HistoricalAnalytics navigator={navigator} route={route}/>
-                                        </View>
-                                        <View style={styles.slideStyle}>
-                                          <StreamlineScreen navigator={navigator} route={route}/>
-                                        </View>
+                        if (route.name === 'MainScreen'){
+                            switch (this.state.displayMode) {
+                                case Constants.DisplayMode.kFullDataDisplay:
+                                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                                <View style={styles.slideStyle}>
+                                                  <MainScreen navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <MainScreen navigator={navigator} route={route}/>
+                                                </View>
 
-                                    </Swiper>
-                                          )
+                                            </Swiper>
+                                            );
+                                case Constants.DisplayMode.kStreamLineDisplay:
+                                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                                <View style={styles.slideStyle}>
+                                                  <StreamlineScreen navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <MainScreen navigator={navigator} route={route}/>
+                                                </View>
+
+                                            </Swiper>
+                                            );
+
+                                case Constants.DisplayMode.kVisualDisplay:
+                                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                                <View style={styles.slideStyle}>
+                                                  <VisualScreen navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <MainScreen navigator={navigator} route={route}/>
+                                                </View>
+
+                                            </Swiper>
+                                            );
+                                case Constants.DisplayMode.kTradeInDisplay:
+                                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                                <View style={styles.slideStyle}>
+                                                  <TradeInOnly navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <MainScreen navigator={navigator} route={route}/>
+                                                </View>
+                                                <View style={styles.slideStyle}>
+                                                  <HistoricalAnalytics navigator={navigator} route={route}/>
+                                                </View>
+
+                                            </Swiper>
+                                                  );
+
+                                default:
+                                alert("default");
+                                    return (<View><Text style={{padding:100}}></Text></View>);
+                            }
+
+                        }
                         if (route.name === 'TradeInOnly')
                             return (<TradeInOnly navigator={navigator} route={route}/>)
                         if (route.name === 'Settings')

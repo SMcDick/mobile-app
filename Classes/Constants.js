@@ -123,6 +123,13 @@ import { Dimensions , Platform } from 'react-native';
         // kCompleted : 5,
      };
 
+     static DisplayMode = {
+        kFullDataDisplay: 0,
+        kStreamLineDisplay: 1,
+        kVisualDisplay:2,
+        kTradeInDisplay:3,
+     };
+
 
     // DataBase server apis
 
