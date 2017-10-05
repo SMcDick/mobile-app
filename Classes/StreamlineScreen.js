@@ -50,6 +50,9 @@ import FontAwesome, { Icons } from 'react-native-fontawesome'
 //import Anyline from 'anyline-ocr-react-native-module';
 //import config from '../config';
 import ZenUIStyles from './ZenUIStyles'
+import {CustomTextInput} from 'react-native-custom-keyboard';
+import MyKeyboard from './ISBNKeyboard'
+
 
 
 let asinMissing = false
@@ -382,12 +385,11 @@ export default class StreanlineScreen extends Component{
                 </TouchableOpacity>
            </View>
             <View style= {{justifyContent:'center',flexGrow:20}}>
-
-                <TextInput
+                <CustomTextInput
                     ref="bluetoothMode"
                     keyboardAppearance="dark"
                     clearButtonMode="while-editing"
-                    keyboardType="numeric"
+                    customKeyboardType="hello"
                     style={styles.navBarTxtInput}
                     returnKeyType ="search"
                     returnKeyLabel="Search"
@@ -399,6 +401,10 @@ export default class StreanlineScreen extends Component{
                     value= {this.state.codeEnteredByUser}
                     onChangeText = {(codeEnteredByUser)=>{
                         this.setState({codeEnteredByUser})
+                        if(codeEnteredByUser.endsWith('\n'))
+                        {
+                            this.searchProduct(this.state.codeEnteredByUser.substring(0,this.state.codeEnteredByUser.length));
+                        }
                         if(codeEnteredByUser == '' && (this.state.productCode == null)){
                             this.updateMainScreenToInitialState();
                         }
@@ -785,6 +791,7 @@ export default class StreanlineScreen extends Component{
       }*/
       //console.log("****123number of csnas" + LocalStorageSettingsApi.numberOfScansInTrial)
 
+        alert("productCode"+productCode);
        productObject= new Product();
 
       if (!productCode && !this.state.bluetoothMode) {

@@ -65,6 +65,7 @@
 		F685F0E8AA91905FBB86B8EC /* libPods-BarCodeScanner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA98499CFFF9AA94E55F6882 /* libPods-BarCodeScanner.a */; };
 		FF78A120FAD7476D8AD67EFC /* libLFQRCode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C39FEF5F9444A28826177FA /* libLFQRCode.a */; };
 		66B0ED2BEFD24A3E8FD4F2FE /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3ACF9753E32468BBF306806 /* libRNZipArchive.a */; };
+		D60517D2F33C4942A49B677D /* libRNCustomKeyboard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A240E607227145789B7741B1 /* libRNCustomKeyboard.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +382,8 @@
 		ECA65093E3DD40E6A495C979 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		E519B5B62DA24B7CA7D82F35 /* RNZipArchive.xcodeproj */ = {isa = PBXFileReference; name = "RNZipArchive.xcodeproj"; path = "../node_modules/react-native-zip-archive/ios/RNZipArchive.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		A3ACF9753E32468BBF306806 /* libRNZipArchive.a */ = {isa = PBXFileReference; name = "libRNZipArchive.a"; path = "libRNZipArchive.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		8F3350E2ECB641829F90C10B /* RNCustomKeyboard.xcodeproj */ = {isa = PBXFileReference; name = "RNCustomKeyboard.xcodeproj"; path = "../node_modules/react-native-custom-keyboard/ios/RNCustomKeyboard.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		A240E607227145789B7741B1 /* libRNCustomKeyboard.a */ = {isa = PBXFileReference; name = "libRNCustomKeyboard.a"; path = "libRNCustomKeyboard.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -426,6 +429,7 @@
 				6382ED947E5147BB85FC49D3 /* libRCTYouTube.a in Frameworks */,
 				E05D58648E5C490C9162C948 /* libLFAztecCode.a in Frameworks */,
 				66B0ED2BEFD24A3E8FD4F2FE /* libRNZipArchive.a in Frameworks */,
+				D60517D2F33C4942A49B677D /* libRNCustomKeyboard.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +622,7 @@
 				BD1830B9B3324ED2B698B512 /* RCTYouTube.xcodeproj */,
 				7E32D31094DE461B8E181737 /* LFAztecCode.xcodeproj */,
 				E519B5B62DA24B7CA7D82F35 /* RNZipArchive.xcodeproj */,
+				8F3350E2ECB641829F90C10B /* RNCustomKeyboard.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1400,6 +1405,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1407,6 +1413,10 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BarCodeScanner.app/BarCodeScanner";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-custom-keyboard\ios",
+				);
 			};
 			name = Debug;
 		};
@@ -1430,6 +1440,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1437,6 +1448,10 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BarCodeScanner.app/BarCodeScanner";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-custom-keyboard\ios",
+				);
 			};
 			name = Release;
 		};
@@ -1520,6 +1535,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1530,6 +1546,10 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-custom-keyboard\ios",
+				);
 			};
 			name = Debug;
 		};
@@ -1558,6 +1578,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1568,6 +1589,10 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-custom-keyboard\ios",
+				);
 			};
 			name = Release;
 		};
@@ -1586,6 +1611,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1619,6 +1645,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

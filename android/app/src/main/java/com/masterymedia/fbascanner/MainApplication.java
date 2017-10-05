@@ -2,6 +2,7 @@ package com.masterymedia.fbascanner;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import cn.reactnative.customkeyboard.RNCustomKeyboardPackage;
 import com.rnziparchive.RNZipArchivePackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
 import com.anyline.reactnative.AnylinePackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNCustomKeyboardPackage(),
             new RNZipArchivePackage(),
             new ReactNativeYouTube(),
             new RNPaypalWrapperPackage(),

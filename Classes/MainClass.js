@@ -50,7 +50,7 @@ export default class FBAscanner extends Component{
             isLoading:"true",
             isLoggedIn:"false",
             isPaid:"false",
-            displayMode:null,
+            displayMode:0,
         }
         this.currentTime = Date.now()
         LocalStorageSettingsResponse.getInstance().setReceiver(this);

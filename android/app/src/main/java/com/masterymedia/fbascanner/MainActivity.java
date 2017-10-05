@@ -1,5 +1,11 @@
 package com.masterymedia.fbascanner;
 import com.facebook.react.ReactActivity;
+import cn.reactnative.customkeyboard.RNCustomKeyboardPackage;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.shell.MainReactPackage;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends ReactActivity {
@@ -12,4 +18,15 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "BarCodeScanner";
     }
+    /**
+   * A list of packages used by the app. If the app uses additional views
+   * or modules besides the default ones, add more packages here.
+   */
+    /*@Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+        //new MainReactPackage(),
+        new RNCustomKeyboardPackage()          // <------ add here
+      );
+    }*/
 }
