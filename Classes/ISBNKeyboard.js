@@ -7,26 +7,35 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import { register, insertText, backSpace,submit } from 'react-native-custom-keyboard';
+import { register, insertText, backSpace,submit, uninstall,install } from 'react-native-custom-keyboard';
 import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 let screenHeight = Dimensions.get('window').height*0.98;
 let screenWidth = Dimensions.get('window').width;
 
 class MyKeyboard extends Component {
+constructor(){
+    super();
 
+}
   onPress = (value) => {
     if(value=='bs'){
         backSpace(this.props.tag);
     }
     else if(value=='submit'){
         insertText(this.props.tag, '\n');
+        uninstall(this.props.tag);
+            install(this.props.tag,"hello");
     }
     else{
         insertText(this.props.tag, value);
     }
   };
+
   render() {
+    insertText(this.props.tag, '\r');
+
+   // backSpace(this.props.tag);
     return (
     <View style={{backgroundColor:'rgb(236,239,241)', height:screenHeight}}>
         <View style={{flexDirection:'row'}}>

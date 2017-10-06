@@ -50,7 +50,7 @@ import FontAwesome, { Icons } from 'react-native-fontawesome'
 //import Anyline from 'anyline-ocr-react-native-module';
 //import config from '../config';
 import ZenUIStyles from './ZenUIStyles'
-import {CustomTextInput} from 'react-native-custom-keyboard';
+import {CustomTextInput, install} from 'react-native-custom-keyboard';
 import MyKeyboard from './ISBNKeyboard'
 
 
@@ -62,7 +62,7 @@ let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height*0.98;
 const data=[];
 let asin;
-export default class StreanlineScreen extends Component{
+export default class StreamlineScreen extends Component{
 
    constructor(props){
         super(props);
@@ -129,7 +129,8 @@ export default class StreanlineScreen extends Component{
         selectedOffer:"used",
         webViewModal:false,
         esResult:false,
-            productCondition:null
+        productCondition:null,
+        bottomHeight:screenHeight*0.27
       };
 
 
@@ -368,6 +369,8 @@ export default class StreanlineScreen extends Component{
              )
              })})}
 
+
+
  }
 
 
@@ -397,13 +400,20 @@ export default class StreanlineScreen extends Component{
                     underlineColorAndroid={'white'}
                     enablesReturnKeyAutomatically = {true}
                     autoCorrect={false}
+                    onFocus ={this.installKeyboard.bind(this, this.props.tag)}
                     onSubmitEditing={()=>this.searchProduct(this.state.codeEnteredByUser)}
                     value= {this.state.codeEnteredByUser}
+
                     onChangeText = {(codeEnteredByUser)=>{
                         this.setState({codeEnteredByUser})
                         if(codeEnteredByUser.endsWith('\n'))
                         {
                             this.searchProduct(this.state.codeEnteredByUser.substring(0,this.state.codeEnteredByUser.length));
+                        }
+                        else if(codeEnteredByUser.endsWith('\r'))
+                        {
+                            this.setState({bottomHeight:screenHeight*0.27});
+                            this.scrolldown()
                         }
                         if(codeEnteredByUser == '' && (this.state.productCode == null)){
                             this.updateMainScreenToInitialState();
@@ -722,6 +732,7 @@ export default class StreanlineScreen extends Component{
 
     let mainView = (
         <View style={styles.mainViewContainer}>
+            <ScrollView ref='scroll'>
             <View style={{alignItems:'center'}}>
                 <View style={[{flexDirection:'row'},{alignItems:'center'},{padding:5}]}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
@@ -752,6 +763,10 @@ export default class StreanlineScreen extends Component{
 
           <View style={[{alignItems:'center'},{height:35},{padding:1}]}>
           </View>
+          <View style={[{alignItems:'center'},{height:this.state.bottomHeight},{padding:1}]}>
+                    </View>
+
+          </ScrollView>
         </View>
     );
 
@@ -781,6 +796,22 @@ export default class StreanlineScreen extends Component{
       AWSResponse.getInstance().removeReceiver(this);
   }
 
+   scrolldown(){
+
+     this.refs.scroll.scrollTo(screenHeight*0.27);
+   }
+
+   scrollup(){
+
+        //this.refs.scroll.scrollTo(0);
+   }
+
+   installKeyboard(tag){
+   alert("tag"+tag)
+   alert("this.props.tag"+this.props.tag)
+    install(tag,"hello");
+   }
+
    searchProduct(productCode) {
       //this.refs.bluetoothMode.focus()
       //this.setState({bluetoothMode:false});
@@ -790,8 +821,8 @@ export default class StreanlineScreen extends Component{
           return;
       }*/
       //console.log("****123number of csnas" + LocalStorageSettingsApi.numberOfScansInTrial)
+        this.scrollup();
 
-        alert("productCode"+productCode);
        productObject= new Product();
 
       if (!productCode && !this.state.bluetoothMode) {
