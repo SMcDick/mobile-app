@@ -33,7 +33,7 @@ constructor(){
   };
 
   render() {
-    insertText(this.props.tag, '\r');
+
 
    // backSpace(this.props.tag);
     return (

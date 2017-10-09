@@ -152,7 +152,7 @@ export default class FBAscanner extends Component{
                     //initialRoute1 = "NewUserRegistration";
                     //initialRoute1 = "HistoricalAnalytics";
                     //initialRoute1 = "TradeInOnly";
-                    initialRoute1 = "MainScreen";
+                    initialRoute1 = "StreamlineScreen";
 
                 }
                 else {
@@ -196,6 +196,8 @@ export default class FBAscanner extends Component{
                             return (<Account navigator={navigator} route={route}/>)
                         if (route.name === 'NewUserRegistration')
                             return (<NewUserRegistration navigator={navigator} route={route}/>)
+                        if (route.name === 'StreamlineScreen')
+                            return (<StreamlineScreen navigator={navigator} route={route}/>)
                         if (route.name === 'MainScreen'){
                             switch (this.state.displayMode) {
                                 case Constants.DisplayMode.kFullDataDisplay:

@@ -22,6 +22,7 @@ import {
   ActivityIndicator,
   Modal,
   PermissionsAndroid,
+  StatusBar
 } from 'react-native';
 
 import AWSApi from './Apis/AWSApi'
@@ -52,6 +53,8 @@ import FontAwesome, { Icons } from 'react-native-fontawesome'
 import ZenUIStyles from './ZenUIStyles'
 import {CustomTextInput, install} from 'react-native-custom-keyboard';
 import MyKeyboard from './ISBNKeyboard'
+import Swiper from 'react-native-swiper';
+import PercentageCircle from 'react-native-percentage-circle';
 
 
 
@@ -109,7 +112,8 @@ export default class StreamlineScreen extends Component{
          showSideMenu:false,
          styleForProductDescriptionView :{
          opacity:1,
-         flex:40
+         flex:40,
+         displayMode:0
           },
         displayProductCondition:false,
         displayProductQuantity:false,
@@ -121,7 +125,7 @@ export default class StreamlineScreen extends Component{
         showFBAFullScreen:false,
         expandFBAOffersValue: new Animated.Value(0),
         positionYOfFBAOffersPage:new Animated.Value(screenHeight),
-        heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.5),
+        heightOfFBaOffersPage:new Animated.Value(0),//new Animated.Value(screenHeight * 0.5),
         bluetoothMode:false,
         // openCamera:false,
         isConnected: null,
@@ -173,6 +177,7 @@ export default class StreamlineScreen extends Component{
         LocalStorageSettingsApi.getSelectedPickerValueForXrayPercentage()
         LocalStorageSettingsApi.getAccessToken()
         LocalStorageSettingsApi.getUserID()
+        LocalStorageSettingsApi.getDisplayValue()
     }
 
   setShowSideMenuState(){
@@ -244,6 +249,7 @@ export default class StreamlineScreen extends Component{
 
 
    expandCollapseWebView(webViewIsFullScreen,option,company=false,ExCol=true){
+      tradeinExpandCollapseWebView(webViewIsFullScreen,option,company,ExCol);
       if(NetworkConnectivity.getInstance().internetAvailable == false) {
           alert("No Internet Connection")
             return;
@@ -324,6 +330,67 @@ export default class StreamlineScreen extends Component{
       }
   }
 
+  tradeinExpandCollapseWebView(webViewIsFullScreen,option,company=false,ExCol=true){
+        if(NetworkConnectivity.getInstance().internetAvailable == false) {
+            alert("No Internet Connection")
+              return;
+        }
+
+        var url = 'https://bookscouter.com/prices.php?isbn='+this.state.productCode+'&searchbutton=Sell'
+
+        if(option){
+                //alert(productObject.productCode)
+                //this.setState({webViewModal:true})
+        this.setState({productOffersPageURL:null},()=>{
+            setTimeout(()=>{
+                this.setState({productOffersPageURL:{uri:url}})
+            },1)
+        })
+
+        }
+
+        if(webViewIsFullScreen){
+            Animated.timing(
+                this.state.positionYOfFBAOffersPage,
+                {
+                    toValue:-screenHeight,
+                    duration:200
+                }
+
+            ).start();
+
+            /*Animated.timing(
+                this.state.heightOfFBaOffersPage,
+                {
+                    toValue:screenHeight,
+                    duration:200
+                }
+            ).start();*/
+
+            this.setState({showFBAFullScreen:webViewIsFullScreen})
+
+
+        }else{
+            Animated.timing(
+                this.state.positionYOfFBAOffersPage,
+                {
+                    toValue:-screenHeight * 0.6,
+                    duration:200
+                }
+            ).start(() => { ExCol == true ? this.setState({webViewModal:true}) : null });
+
+            /*Animated.timing(
+                this.state.heightOfFBaOffersPage,
+                {
+                    toValue:screenHeight * 0.7,
+                    duration:200
+                }
+            ).start();*/
+
+            this.setState({showFBAFullScreen:webViewIsFullScreen})
+        }
+    }
+
     cameraAlert(){
         Alert.alert(
             'Camera Scanning Options',
@@ -375,6 +442,78 @@ export default class StreamlineScreen extends Component{
 
 
   render(){
+  let tradeinProductDescriptionComponent = (
+              <View style={{height:screenHeight*0.35}}>
+              <TouchableOpacity
+                  style={[{flex:7}]}
+                  activeOpacity={1}
+                  onPress={()=>{
+                      Keyboard.dismiss();
+                      this.setState({bluetoothMode:false},()=>{this.refs.bluetoothMode.blur()});
+                  }
+                  }
+              >
+              <View style={[this.state.styleForProductDescriptionView,{height:screenHeight*0.8}]}>
+                  <View style={{flex:15}}>
+                      <View style={[styles.itemInfoContainer, {backgroundColor:Constants.ZenBlue1}]}>
+                           <TouchableOpacity style={this.state.productImage?styles.touchableImage:null} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                                  {this.state.productImage?<Image source={this.state.productImage?this.state.productImage:null} style={this.state.productImage?styles.image:null}/>:null}
+                              </TouchableOpacity>
+                              <View style={styles.itemInfo}>
+                                  <View style={{flex:2,justifyContent:'center'}}><Text style={styles.itemInfoCategory}>{this.state.productCategory!=null?('Category:'+this.state.productCategory):null}</Text></View>
+                                      <View style={{flex:3}}>
+                                          <TouchableOpacity style={{flex:1}} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                                              <Text style={styles.itemInfoTitle} ellipsizeMode="tail" numberOfLines={2}>{this.state.productTitle!=null?('Title:'+this.state.productTitle):null}</Text>
+                                          </TouchableOpacity>
+                                      </View>
+                              </View>
+                      </View>
+                  </View>
+                  <View style={{padding:10, flex:10}}>
+                      <View style={styles.amazonTradeInContainer}>
+                                  <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >$98</Text>
+                                  <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Amazon Trade In</Text>
+
+                      </View>
+                  </View>
+              </View>
+          </TouchableOpacity></View>);
+
+
+      let tradeinWebViewComponent = (
+              <Animated.View style= {{width:screenWidth,borderTopColor:"black",borderTopWidth:1,height:this.state.heightOfFBaOffersPage, transform:[{translateY:this.state.positionYOfFBAOffersPage}]}}>
+
+                  <View style={{backgroundColor:'rgb(36,46,58)', height:0.5}}/>
+                  <WebView
+                      automaticallyAdjustContentInsets={false}
+                      source={this.state.productOffersPageURL}
+                      scalesPageToFit={true}
+                      onLoad={()=>this.setState({webViewModal:false})}
+                      domStorageEnabled={true}
+
+                  />
+
+
+                  <Modal
+                      visible={this.state.webViewModal}
+                      transparent={true}
+                      style={{justifyContent:"center"}}
+                  >
+                      <TouchableOpacity
+                          style={{flex:1,paddingTop:screenHeight*0.6}}
+                          activeOpacity={1}
+                          onPress={() => this.setState({webViewModal:false})}
+                      >
+
+                          <ActivityIndicator color="rgb(0,0,0)" />
+
+                      </TouchableOpacity>
+
+                  </Modal>
+              </Animated.View>
+          );
+          let tradeinFbaOffersComponent = (<View style= {[{height:screenHeight*0.42},{borderColor:Constants.ZenBlue1},{padding:10},{paddingBottom:-20}]}></View>);
+
   let navigationBar =  (
         <View style={styles.navBar}>
             <View style= {{flexGrow:1}}>
@@ -451,7 +590,7 @@ export default class StreamlineScreen extends Component{
         </TouchableOpacity>
     );
 
-    let productDescriptionComponent = (
+    let mainViewProductDescriptionComponent = (
         <View style={{height:screenHeight*0.35}}>
         <TouchableOpacity
             style={[{flex:7}]}
@@ -462,6 +601,97 @@ export default class StreamlineScreen extends Component{
             }
             }
         >
+        <View style={[this.state.styleForProductDescriptionView,{height:screenHeight*0.8}]}>
+            <View style={{flex:15}}>
+                <View style={[styles.itemInfoContainer, {backgroundColor:Constants.ZenBlue1}]}>
+                     <TouchableOpacity style={this.state.productImage?styles.touchableImage:null} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                            {this.state.productImage?<Image source={this.state.productImage?this.state.productImage:null} style={this.state.productImage?styles.image:null}/>:null}
+                        </TouchableOpacity>
+                        <View style={styles.itemInfo}>
+                            <View style={{flex:2,justifyContent:'center'}}><Text style={styles.itemInfoCategory}>{this.state.productCategory!=null?('Category:'+this.state.productCategory):null}</Text></View>
+                                <View style={{flex:3}}>
+                                    <TouchableOpacity style={{flex:1}} onPress= {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                                        <Text style={styles.itemInfoTitle} ellipsizeMode="tail" numberOfLines={2}>{this.state.productTitle!=null?('Title:'+this.state.productTitle):null}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                        </View>
+                </View>
+            </View>
+            <View style={styles.itemInfoContainer}>
+                <View style={{flex:1,padding:5}}>
+                    <View style={styles.dataFieldWithoutBorder}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productBuyBox}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Trade</Text>
+                    </View>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={[styles.dataField]}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productBuyBox}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Buy Box</Text>
+                    </View>
+                </View>
+                <View style={{flex:1,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productFBAOffersPercent}</Text>
+                      <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]}> X-Ray </Text>
+                    </View>
+                </View>
+
+            </View>
+            <View style={styles.itemInfoContainer}>
+                <View style={[{flex:1,padding:5}]}>
+                    <View style={styles.dataFieldWithoutBorder}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]}>
+                            {this.state.productSalesRank}
+                        </Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Rank</Text>
+                    </View>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productAmazonRank}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Average Rank</Text>
+                    </View>
+                </View>
+                <View style={{flex:1,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productTopPercent}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Rank %</Text>
+                    </View>
+                </View>
+
+            </View>
+            <View style={styles.itemInfoContainer}>
+                <View style={{flex:1,padding:5}}>
+                    <TouchableOpacity style={{flex:1}} onPress={this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyAmazon)}>
+                    <View style={styles.dataFieldWithoutBorder}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productAmazonPrice}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Amazon</Text>
+                    </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex:2,padding:5}}>
+                    <View style={[styles.dataField]}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productNetProfit}</Text>
+                        <Text style={[styles.productSearchIndicators, styles.fontColorsBottom]} >Net Profit</Text>
+                    </View>
+                </View>
+
+                <View style={{flex:1,padding:5}}>
+                    <View style={styles.dataField}>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.productPricePercent}</Text>
+                        <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Price %</Text>
+                    </View>
+                </View>
+
+            </View>
+            </View>
+    </TouchableOpacity></View>);
+
+
+    let streamlineProductDescriptionComponent = (
+        <View style={{height:screenHeight*0.35}}>
+
         <View style={[this.state.styleForProductDescriptionView,{height:screenHeight*0.8}]}>
             <View style={{flex:15}}>
                 <View style={[styles.itemInfoContainer, {backgroundColor:Constants.ZenBlue1}]}>
@@ -511,7 +741,7 @@ export default class StreamlineScreen extends Component{
                 </View>
             </View>
             </View>
-    </TouchableOpacity></View>);
+    </View>);
 
     let otherSitesIconComponent = ( <View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center'}}>
         <TouchableOpacity onPress = {this.openProductLink.bind(this,this.state.productCode,Constants.Company.KCompanyCamel)} ><Image source={require('../assets/camelLogo.gif')} style={styles.siteIconStyles}/></TouchableOpacity>
@@ -730,9 +960,7 @@ export default class StreamlineScreen extends Component{
 
     </View>);
 
-    let mainView = (
-        <View style={styles.mainViewContainer}>
-            <ScrollView ref='scroll'>
+    let logoAndMenuComponent = (
             <View style={{alignItems:'center'}}>
                 <View style={[{flexDirection:'row'},{alignItems:'center'},{padding:5}]}>
                     <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
@@ -751,24 +979,395 @@ export default class StreamlineScreen extends Component{
                 </View>
             </View>
 
-          {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
 
+
+    );
+
+    let bottomComponent = (
+        <View>
+        <View style={[{alignItems:'center'},{height:35},{padding:1}]}>
+          </View>
+          <View style={[{alignItems:'center'},{height:this.state.bottomHeight},{padding:1}]}>
+        </View>
+        </View>
+    );
+
+    let mainView = (
+        <View style={styles.mainViewContainer}>
+          <ScrollView ref='scroll'>
+
+          {logoAndMenuComponent}
+          {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
           {buyRejectBar}
-          {productDescriptionComponent}
+          {mainViewProductDescriptionComponent }
           {fbaOffersComponent}
 
           {this.state.productTitle?otherSitesIconComponent:<View></View>}
           {navigationBar}
+          {bottomComponent}
+          </ScrollView>
+        </View>
+
+        );
+
+    let tradeinView = (
+        <View style={styles.mainViewContainer}>
+
+              {logoAndMenuComponent}
+              {navigationBar}
+              {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
 
 
-          <View style={[{alignItems:'center'},{height:35},{padding:1}]}>
-          </View>
-          <View style={[{alignItems:'center'},{height:this.state.bottomHeight},{padding:1}]}>
-                    </View>
+              {tradeinProductDescriptionComponent}
+              {tradeinFbaOffersComponent}
 
+
+
+        </View>
+
+    );
+
+
+    let StreamLineView = (
+        <View style={styles.mainViewContainer}>
+          <ScrollView ref='scroll'>
+
+          {logoAndMenuComponent}
+          {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
+          {buyRejectBar}
+          {streamlineProductDescriptionComponent }
+          {fbaOffersComponent}
+
+          {this.state.productTitle?otherSitesIconComponent:<View></View>}
+          {navigationBar}
+          {bottomComponent}
           </ScrollView>
         </View>
     );
+
+    let historicalView = (
+    <View style={{flex:1}}>
+            <View style={[{flexDirection:'row'},{justifyContent:'center'},{alignItems:'center'},{padding:5}]}>
+                <Image source={require('../assets/ZenSourcelogo.png')} style={ZenUIStyles.ZenLogoStyle}/>
+            </View>
+            <View style={[ZenUIStyles.HeaderBarStyle,{alignItems:'center', justifyContent:'center'}]}>
+                <View style={{flexDirection:'row', justifyContent:'flex-start', alignItems:'center', padding:10}}>
+
+                    <View style={{flex:2, alignItems:'center'}}>
+                        <Text style={ZenUIStyles.HeaderBarTextStyle}>Historical Analytics</Text>
+                    </View>
+                </View>
+            </View>
+            <ScrollView>
+                <View style={[styles.dataRow, {justifyContent:'flex-end'}]}>
+                    <View>
+                    <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>12 months average</Text>
+                    </View>
+                </View>
+
+                <View style={styles.dataRow}>
+                    <View style={styles.CircleDataContainerStyle}>
+                        <Text style={[ZenUIStyles.SubheaderTextStyle]}>Sales Rank</Text>
+                        <View style={styles.dataCircleStyle}>
+                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>1.2</Text>
+                                 <Text>million</Text>
+                            </PercentageCircle>
+
+                        </View>
+
+                    </View>
+                    <View>
+
+                        <View style={styles.GraphContainerStyle}>
+                            <View>
+                                <View style={{width:6, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text> </Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>1</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>2</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
+                                <Text>3</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
+                                <Text>4</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                                <Text>5</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
+                                <Text>6</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>7</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>8</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
+                                <Text>9</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
+                                <Text>10</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>11</Text>
+                            </View>
+                            <View>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                               <Text>12</Text>
+                           </View>
+                           <View>
+                               <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                               <Text> </Text>
+                           </View>
+                        </View>
+
+                    </View>
+
+                </View>
+                <View style={styles.dataRow}>
+                    <View style={styles.CircleDataContainerStyle}>
+                        <Text style={[ZenUIStyles.SubheaderTextStyle]}>Used</Text>
+                        <View style={styles.dataCircleStyle}>
+                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>$16</Text>
+                            </PercentageCircle>
+                        </View>
+
+                    </View>
+                    <View>
+                        <View style={styles.GraphContainerStyle}>
+                            <View>
+                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text> </Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>1</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>2</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
+                                <Text>3</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
+                                <Text>4</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                                <Text>5</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
+                                <Text>6</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>7</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>8</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
+                                <Text>9</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
+                                <Text>10</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>11</Text>
+                            </View>
+                            <View>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                               <Text>12</Text>
+                           </View>
+                           <View>
+                               <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                               <Text> </Text>
+                           </View>
+                        </View>
+
+                    </View>
+
+                </View>
+                <View style={styles.dataRow}>
+                    <View style={styles.CircleDataContainerStyle}>
+                        <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>New</Text>
+                        <View style={styles.dataCircleStyle}>
+                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>$35</Text>
+                            </PercentageCircle>
+                        </View>
+
+                    </View>
+                    <View>
+
+                        <View style={styles.GraphContainerStyle}>
+                            <View>
+                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text> </Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>1</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>2</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
+                                <Text>3</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
+                                <Text>4</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                                <Text>5</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
+                                <Text>6</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>7</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>8</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
+                                <Text>9</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
+                                <Text>10</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>11</Text>
+                            </View>
+                            <View>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                               <Text>12</Text>
+                           </View>
+                           <View>
+                               <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                               <Text> </Text>
+                           </View>
+                        </View>
+
+                    </View>
+
+                </View>
+                <View style={styles.dataRow}>
+                    <View style={styles.CircleDataContainerStyle}>
+                        <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>Trade In</Text>
+                        <View style={styles.dataCircleStyle}>
+                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>$3</Text>
+                            </PercentageCircle>
+                        </View>
+
+                    </View>
+                    <View>
+
+                        <View style={styles.GraphContainerStyle}>
+                            <View>
+                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text> </Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>1</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>2</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
+                                <Text>3</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
+                                <Text>4</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                                <Text>5</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
+                                <Text>6</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
+                                <Text>7</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>8</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
+                                <Text>9</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
+                                <Text>10</Text>
+                            </View>
+                            <View>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
+                                <Text>11</Text>
+                            </View>
+                            <View>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
+                               <Text>12</Text>
+                           </View>
+                           <View>
+                               <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
+                               <Text> </Text>
+                           </View>
+                        </View>
+
+                    </View>
+
+                </View>
+            </ScrollView>
+            </View>
+
+    );
+
+
 
       let barCodeComponent = null;
       if(this.state.openCamera){
@@ -777,13 +1376,120 @@ export default class StreamlineScreen extends Component{
           barCodeComponent = <BarCodeScanner mainScreenRef ={this} cameraVisible = {false}/>
       }
 
-    return(
-            <View style={{flex:1}}>
-                {mainView}
-                {webViewComponent}
-                {barCodeComponent}
-           </View>
-    )
+    //return(
+
+            switch (this.state.displayMode) {
+                case Constants.DisplayMode.kFullDataDisplay:
+                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                <View style={styles.slideStyle}>
+                                  <View>
+                                      {mainView}
+                                      {webViewComponent}
+                                      {barCodeComponent}
+                                  </View>
+
+                                </View>
+                                <View style={styles.slideStyle}>
+                                    <View>
+                                     {mainView}
+                                     {webViewComponent}
+                                     {barCodeComponent}
+                                    </View>
+
+                                </View>
+                                <View style={styles.slideStyle}>
+                                  {historicalView}
+                                </View>
+
+                            </Swiper>
+                            );
+                case Constants.DisplayMode.kStreamLineDisplay:
+                    return (<View style={{flex:1}}><Swiper style={styles.wrapper} showsButtons={false}>
+                                <View style={styles.slideStyle}>
+                                    <View>
+                                        {StreamLineView}
+                                        {webViewComponent}
+                                        {barCodeComponent}
+                                    </View>
+                                </View>
+                                <View style={styles.slideStyle}>
+                                    <View>
+                                        {mainView}
+                                        {webViewComponent}
+                                        {barCodeComponent}
+                                    </View>
+                                </View>
+                                <View style={styles.slideStyle}>
+                                  {historicalView}
+                                </View>
+
+                            </Swiper></View>
+                            );
+
+                case Constants.DisplayMode.kVisualDisplay:
+                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                <View style={styles.slideStyle}>
+                                  <View>
+                                      {tradeinView}
+                                      {tradeinWebViewComponent}
+                                      {barCodeComponent}
+                                  </View>
+                                </View>
+                                <View style={styles.slideStyle}>
+                                  {historicalView}
+                                </View>
+
+                            </Swiper>
+                            );
+                case Constants.DisplayMode.kTradeInDisplay:
+                    return (<Swiper style={styles.wrapper} showsButtons={false}>
+                                <View style={styles.slideStyle}>
+                                  <View style={{flex:1}}>
+                                    {tradeinView}
+                                    {tradeinWebViewComponent}
+                                    {barCodeComponent}
+                                  </View>
+
+                                </View>
+                                <View style={styles.slideStyle}>
+                                  <View>
+                                      {mainView}
+                                      {webViewComponent}
+                                      {barCodeComponent}
+                                  </View>
+
+                                </View>
+                                <View style={styles.slideStyle}>
+                                  {historicalView}
+                                </View>
+
+                            </Swiper>
+                            );
+
+                default:
+                    return (<View style={{flex:1}}></View>);
+            }
+
+
+            {/*<Swiper style={styles.wrapper} showsButtons={false}>
+                <View style={styles.slideStyle}>
+                    <View>
+                        {StreamLineView}
+                        {webViewComponent}
+                        {barCodeComponent}
+                    </View>
+                </View>
+                <View style={styles.slideStyle}>
+                        <View>
+                        {mainView}
+                        {webViewComponent}
+                        {barCodeComponent}
+                        </View>
+
+                </View>
+            </Swiper>*/}
+
+    //)
   }
 
   //Remove the response listners
@@ -1668,6 +2374,27 @@ console.log("*****************************callingupdateStateOnSuccess" )
             case Constants.kKeyForLandedPrice:{
                 break;
             }
+            case Constants.kKeyForDisplayValue:
+             {
+                //alert("display"+JSON.stringify(result));
+                switch (result)
+                {
+                     case Constants.DisplayMode.kFullDataDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kFullDataDisplay});
+                          break;
+                     case Constants.DisplayMode.kStreamLineDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kStreamLineDisplay});
+                          break;
+                    case Constants.DisplayMode.kVisualDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kVisualDisplay});
+                          break;
+                    case Constants.DisplayMode.kTradeInDisplay:
+                          this.setState({displayMode: Constants.DisplayMode.kTradeInDisplay});
+                          break;
+                    default:
+                          break;
+                }
+             }
             default:
                 break
         }
@@ -1690,7 +2417,7 @@ console.log("*****************************callingupdateStateOnSuccess" )
 
 const styles = StyleSheet.create({
   mainViewContainer:{
-    //flex:1
+    flex:1,
       backgroundColor:'white',
     width:screenWidth,
     height:screenHeight,
@@ -1951,4 +2678,55 @@ const styles = StyleSheet.create({
       color:Constants.ZenBlue1,
       fontSize:Utility.getFontSize()
   },
+  wrapper: {
+  },
+  slideStyle: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+  dataRow:{
+      flexDirection:'row',
+      paddingLeft:10,
+      paddingRight:10,
+      borderBottomWidth:0.5,
+      borderBottomColor:'gray'
+
+ },
+ GraphContainerStyle:{
+      flexDirection:'row',
+      alignItems:'flex-end',
+      flex:2,
+
+
+ },
+ GraphLineStyle:{
+      paddingLeft:10,
+      paddingRight:10,
+      borderBottomWidth:2
+ },
+ CircleDataContainerStyle:{
+      flex:1
+ },
+ container: {
+  flex: 1,
+  alignItems: 'center'
+ },
+  title: {
+      fontSize: 24,
+      margin: 10
+  },
+  dataCircleStyle:{
+      paddingBottom:5,
+  },
+
+
+    amazonTradeInContainer:{
+      borderColor: Constants.ZenGreen,
+      borderWidth: 1,
+      borderRadius:10,
+      justifyContent:'center',
+      alignItems:'center',
+      padding:10
+    },
 });
