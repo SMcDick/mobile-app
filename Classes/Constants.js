@@ -146,6 +146,12 @@ import { Dimensions , Platform } from 'react-native';
      static MarketplaceId = "ATVPDKIKX0DER"
 
 
+    //values for max range for historical display
+    static MaxSalesRankValue = 2000000
+    static MinSalesRankValue =1000000
+    static MaxUsedValue = 50
+    static MaxNewValue = 50
+    static MaxTradeInValue = 50
 
     //Testing details
     //static kAWSSecretKey = "+nBXCi+WoLXZbyUqbaCA6y9xdbnH0xaDXvfFTQKn";

@@ -82,6 +82,8 @@ export default class StreamlineScreen extends Component{
 
         console.disableYellowBox = true;
 
+        var today = new Date();
+        var month = today.getMonth();
 
         this.state = {
          buyRejectColor:Constants.ZenGreen,
@@ -134,8 +136,20 @@ export default class StreamlineScreen extends Component{
         webViewModal:false,
         esResult:false,
         productCondition:null,
-        bottomHeight:screenHeight*0.27
+        bottomHeight:screenHeight*0.27,
+        currentMonth:month,
+        UsedMonthlyValuesArray:[],      //"used" values for historical display
+        NewMonthlyValuesArray:[],       //"new" values for historical display
+        TradeInMonthlyValuesArray:[],   //"trade in"  values for historical display
+        SalesRankMonthlyValuesArray:[],
+        UsedHistoryAvg:0,
+        UsedHistoryAvgPercent:0,
+        NewHistoryAvg:0,
+        NewHistoryAvgPercent:0,
+        TradeInHistoryAvg:0,
+        TradeInHistoryAvgPercent:0,
       };
+
 
 
 
@@ -439,6 +453,195 @@ export default class StreamlineScreen extends Component{
 
 
  }
+
+
+/*
+* fetchHistoryColumns(): function fetches values from server for historical display
+* and sets them to proper column height values for display (in UsedMonthlyValuesArray, etc.) (according to possible value ranges)
+*
+*/
+  async fetchHistoryColumns()
+  {
+    //fetch "used", "new" and "trade in" values from the last 12 months
+    fetch("http://34.210.169.97/prices/monthly?asins="+this.state.codeEnteredByUser)
+    .then(response => response.text())
+      .then((response) => {
+        //alert("response"+response);
+
+        var obj = JSON.parse(response);
+
+        var newColumnHeight;
+
+        //set "used" values for historical display
+        let newUsedValues = this.state.UsedMonthlyValuesArray.slice() //copy the array
+        for(var i=0; i<12;i++){
+            if(obj["used"]&&obj["used"][""+((this.state.currentMonth+i)%12+1)])
+            {
+                newColumnHeight = (obj["used"][""+((this.state.currentMonth+i)%12+1)]/Constants.MaxUsedValue)
+                newUsedValues[i]=newColumnHeight<100?newColumnHeight:100;
+            }
+            else{
+                newUsedValues[i]=0;
+            }
+        }
+
+        this.setState({UsedMonthlyValuesArray: newUsedValues});
+
+        //set "new" values for historical display
+        let newNewValues = this.state.NewMonthlyValuesArray.slice() //copy the array
+        for(var i=0; i<12;i++){
+            if(obj["new"]&&obj["new"][""+((this.state.currentMonth+i)%12+1)])
+            {
+                newColumnHeight=(obj["new"][""+((this.state.currentMonth+i)%12+1)]/Constants.MaxNewValue)
+                newNewValues[i]=newColumnHeight<100?newColumnHeight:100;
+            }
+            else{
+                newNewValues[i]=0;
+            }
+        }
+
+        this.setState({NewMonthlyValuesArray: newNewValues});
+
+        //set "Trade In" values for historical display
+        let newTradeInValues = this.state.TradeInMonthlyValuesArray.slice() //copy the array
+        for(var i=0; i<12;i++){
+            if(obj["trade_in"]&&obj["trade_in"][""+((this.state.currentMonth+i)%12+1)])
+            {
+                newColumnHeight = (obj["trade_in"][""+((this.state.currentMonth+i)%12+1)]/Constants.MaxTradeInValue)
+                newTradeInValues[i]=newColumnHeight<100?newColumnHeight:100;
+            }
+            else{
+                newTradeInValues[i]=0;
+            }
+        }
+
+        this.setState({TradeInMonthlyValuesArray: newTradeInValues});
+
+
+      }).catch((err)=>{
+            console.log("fetchHistoryColumns Error:" + JSON.stringify(err))
+         });
+
+  }
+
+  async fetchSalesRankHistoryColumns(){
+      //fetch "sales rank" values from the last 12 months
+      fetch("http://35.167.19.151/history/monthly?asins="+this.state.codeEnteredByUser)
+      .then(response => response.text())
+        .then((response) => {
+          //alert("response"+response);
+
+          var obj = JSON.parse(response);
+
+          var newColumnHeight;
+
+          //set "used" values for historical display
+          let newSalesRankValues = this.state.SalesRankMonthlyValuesArray.slice() //copy the array
+          for(var i=0; i<12;i++){
+
+              if(obj["sales_rank"]&&obj["sales_rank"][""+((this.state.currentMonth+i)%12+1)])
+              {
+                  if(obj["sales_rank"][""+((this.state.currentMonth+i)%12+1)]>Constants.MinSalesRankValue){
+                    newColumnHeight = (100*(1-(obj["sales_rank"][""+((this.state.currentMonth+i)%12+1)]-Constants.MinSalesRankValue)/(Constants.MaxSalesRankValue-Constants.MinSalesRankValue)));
+                  }
+                  else{
+                    newColumnHeight = 0;
+                  }
+                  newSalesRankValues[i]=newColumnHeight<100?newColumnHeight:100;
+              }
+              else{
+                  newSalesRankValues[i]=0;
+              }
+          }
+
+          this.setState({SalesRankMonthlyValuesArray: newSalesRankValues});
+      }).catch((err)=>{
+          console.log("fetchSalesRankHistoryColumns Error:" + JSON.stringify(err))
+        });
+
+  }
+
+  async fetchHistoryAvgs(){
+
+        //fetch "used" average of the last 12 months
+       fetch("http://34.210.169.97/prices/used/average?asins="+this.state.codeEnteredByUser)
+      .then(response => response.text())
+        .then((response) => {
+
+          var obj = JSON.parse(response);
+
+          var newPercentValue;
+
+          if(obj[""+this.state.codeEnteredByUser]){
+            //set "used" average value in the last 12 months
+            this.setState({UsedHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
+
+            //set "used average value percent of used value range for setting used average circle in historical display screen
+            newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxUsedValue)
+            newPercentValue=newPercentValue<100?newPercentValue:100;
+            this.setState({UsedHistoryAvgPercent: newPercentValue});
+          }
+          else{
+            this.setState({UsedHistoryAvg:0, UsedHistoryAvgPercent:0});
+          }
+
+      }).catch((err)=>{
+          console.log("fetchHistoryAvgs Error:" + JSON.stringify(err))
+        });
+
+        //fetch "new" average of the last 12 months
+       fetch("http://34.210.169.97/prices/new/average?asins="+this.state.codeEnteredByUser)
+      .then(response => response.text())
+        .then((response) => {
+
+          var obj = JSON.parse(response);
+
+          var newPercentValue;
+
+          if(obj[""+this.state.codeEnteredByUser]){
+            //set "used" average value in the last 12 months
+            this.setState({NewHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
+
+            //set "used average value percent of used value range for setting used average circle in historical display screen
+            newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxNewValue)
+            newPercentValue=newPercentValue<100?newPercentValue:100;
+            this.setState({NewHistoryAvgPercent: newPercentValue});
+          }
+          else{
+            this.setState({NewHistoryAvg:0, NewHistoryAvgPercent:0});
+          }
+
+      }).catch((err)=>{
+          console.log("fetchHistoryAvgs Error:" + JSON.stringify(err))
+        });
+
+        //fetch "trade in" average of the last 12 months
+           fetch("http://34.210.169.97/prices/trade-in/average?asins="+this.state.codeEnteredByUser)
+          .then(response => response.text())
+            .then((response) => {
+
+              var obj = JSON.parse(response);
+
+              var newPercentValue;
+
+              if(obj[""+this.state.codeEnteredByUser]){
+                //set "used" average value in the last 12 months
+                this.setState({TradeInHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
+
+                //set "used average value percent of used value range for setting used average circle in historical display screen
+                newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxTradeInValue)
+                newPercentValue=newPercentValue<100?newPercentValue:100;
+                this.setState({TradeInHistoryAvgPercent: newPercentValue});
+              }
+              else{
+                this.setState({TradeInHistoryAvg:0, TradeInHistoryAvgPercent:0});
+              }
+
+          }).catch((err)=>{
+              console.log("fetchHistoryAvgs Error:" + JSON.stringify(err))
+            });
+
+  }
 
 
   render(){
@@ -1085,52 +1288,52 @@ export default class StreamlineScreen extends Component{
                                 <Text> </Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
-                                <Text>1</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.SalesRankMonthlyValuesArray[0], padding:0, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>{((this.state.currentMonth)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>2</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.SalesRankMonthlyValuesArray[1], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+1)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
-                                <Text>3</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.SalesRankMonthlyValuesArray[2], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+2)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
-                                <Text>4</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.SalesRankMonthlyValuesArray[3], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+3)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                                <Text>5</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.SalesRankMonthlyValuesArray[4], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+4)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
-                                <Text>6</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.SalesRankMonthlyValuesArray[5], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+5)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>7</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.SalesRankMonthlyValuesArray[6], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+6)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>8</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.SalesRankMonthlyValuesArray[7], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+7)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
-                                <Text>9</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.SalesRankMonthlyValuesArray[8], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+8)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
-                                <Text>10</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.SalesRankMonthlyValuesArray[9], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+9)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>11</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.SalesRankMonthlyValuesArray[10], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+10)%12)+1}</Text>
                             </View>
                             <View>
-                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                               <Text>12</Text>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.SalesRankMonthlyValuesArray[11], padding:0, borderBottomWidth:2}}/>
+                               <Text>{((this.state.currentMonth+11)%12)+1}</Text>
                            </View>
                            <View>
                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
@@ -1145,8 +1348,8 @@ export default class StreamlineScreen extends Component{
                     <View style={styles.CircleDataContainerStyle}>
                         <Text style={[ZenUIStyles.SubheaderTextStyle]}>Used</Text>
                         <View style={styles.dataCircleStyle}>
-                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
-                                <Text>$16</Text>
+                            <PercentageCircle radius={40} percent={this.state.UsedHistoryAvgPercent} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>${this.state.UsedHistoryAvg}</Text>
                             </PercentageCircle>
                         </View>
 
@@ -1158,52 +1361,52 @@ export default class StreamlineScreen extends Component{
                                 <Text> </Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
-                                <Text>1</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.UsedMonthlyValuesArray[0], padding:0, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>{this.state.currentMonth%12+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>2</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.UsedMonthlyValuesArray[1], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+1)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
-                                <Text>3</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.UsedMonthlyValuesArray[2], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+2)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
-                                <Text>4</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.UsedMonthlyValuesArray[3], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+3)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                                <Text>5</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.UsedMonthlyValuesArray[4], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+4)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
-                                <Text>6</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.UsedMonthlyValuesArray[5], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+5)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>7</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.UsedMonthlyValuesArray[6], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+6)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>8</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.UsedMonthlyValuesArray[7], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+7)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
-                                <Text>9</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.UsedMonthlyValuesArray[8], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+8)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
-                                <Text>10</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.UsedMonthlyValuesArray[9], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+9)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>11</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.UsedMonthlyValuesArray[10], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+10)%12)+1}</Text>
                             </View>
                             <View>
-                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                               <Text>12</Text>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.UsedMonthlyValuesArray[11], padding:0, borderBottomWidth:2}}/>
+                               <Text>{((this.state.currentMonth+11)%12)+1}</Text>
                            </View>
                            <View>
                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
@@ -1218,8 +1421,8 @@ export default class StreamlineScreen extends Component{
                     <View style={styles.CircleDataContainerStyle}>
                         <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>New</Text>
                         <View style={styles.dataCircleStyle}>
-                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
-                                <Text>$35</Text>
+                            <PercentageCircle radius={40} percent={this.state.NewHistoryAvgPercent} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>${this.state.NewHistoryAvg}</Text>
                             </PercentageCircle>
                         </View>
 
@@ -1232,52 +1435,52 @@ export default class StreamlineScreen extends Component{
                                 <Text> </Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
-                                <Text>1</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.NewMonthlyValuesArray[0], padding:0, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>{((this.state.currentMonth)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>2</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.NewMonthlyValuesArray[1], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+1)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
-                                <Text>3</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.NewMonthlyValuesArray[2], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+2)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
-                                <Text>4</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.NewMonthlyValuesArray[3], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+3)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                                <Text>5</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.NewMonthlyValuesArray[4], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+4)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
-                                <Text>6</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.NewMonthlyValuesArray[5], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+5)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>7</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.NewMonthlyValuesArray[6], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+6)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>8</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.NewMonthlyValuesArray[7], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+7)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
-                                <Text>9</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.NewMonthlyValuesArray[8], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+8)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
-                                <Text>10</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.NewMonthlyValuesArray[9], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+9)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>11</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.NewMonthlyValuesArray[10], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+10)%12)+1}</Text>
                             </View>
                             <View>
-                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                               <Text>12</Text>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.NewMonthlyValuesArray[11], padding:0, borderBottomWidth:2}}/>
+                               <Text>{((this.state.currentMonth+11)%12)+1}</Text>
                            </View>
                            <View>
                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
@@ -1292,8 +1495,8 @@ export default class StreamlineScreen extends Component{
                     <View style={styles.CircleDataContainerStyle}>
                         <Text style={[{flex:1},ZenUIStyles.SubheaderTextStyle]}>Trade In</Text>
                         <View style={styles.dataCircleStyle}>
-                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
-                                <Text>$3</Text>
+                            <PercentageCircle radius={40} percent={this.state.TradeInHistoryAvgPercent} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>${this.state.TradeInHistoryAvg}</Text>
                             </PercentageCircle>
                         </View>
 
@@ -1306,52 +1509,52 @@ export default class StreamlineScreen extends Component{
                                 <Text> </Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:25, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
-                                <Text>1</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.TradeInMonthlyValuesArray[0], padding:0, borderBottomWidth:2, paddingLeft:10}}/>
+                                <Text>{((this.state.currentMonth)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>2</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.TradeInMonthlyValuesArray[1], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+1)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:10, padding:3, borderBottomWidth:2}}/>
-                                <Text>3</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.TradeInMonthlyValuesArray[2], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+2)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:40, padding:3, borderBottomWidth:2}}/>
-                                <Text>4</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.TradeInMonthlyValuesArray[3], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+3)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                                <Text>5</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.TradeInMonthlyValuesArray[4], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+4)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:32, padding:3, borderBottomWidth:2}}/>
-                                <Text>6</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.TradeInMonthlyValuesArray[5], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+5)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:60, padding:3, borderBottomWidth:2}}/>
-                                <Text>7</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.TradeInMonthlyValuesArray[6], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+6)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>8</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.TradeInMonthlyValuesArray[7], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+7)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:85, padding:3, borderBottomWidth:2}}/>
-                                <Text>9</Text>
+                                <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.TradeInMonthlyValuesArray[8], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+8)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:80, padding:3, borderBottomWidth:2}}/>
-                                <Text>10</Text>
+                                <View style={{backgroundColor:Constants.ZenBlue2, width:20, height:this.state.TradeInMonthlyValuesArray[9], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+9)%12)+1}</Text>
                             </View>
                             <View>
-                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:70, padding:3, borderBottomWidth:2}}/>
-                                <Text>11</Text>
+                                <View style={{backgroundColor:Constants.ZenGreen2, width:20, height:this.state.TradeInMonthlyValuesArray[10], padding:0, borderBottomWidth:2}}/>
+                                <Text>{((this.state.currentMonth+10)%12)+1}</Text>
                             </View>
                             <View>
-                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:50, padding:3, borderBottomWidth:2}}/>
-                               <Text>12</Text>
+                               <View style={{backgroundColor:Constants.ZenOrange, width:20, height:this.state.TradeInMonthlyValuesArray[11], padding:0, borderBottomWidth:2}}/>
+                               <Text>{((this.state.currentMonth+11)%12)+1}</Text>
                            </View>
                            <View>
                                <View style={{width:6, padding:3, borderBottomWidth:2, paddingLeft:10}}/>
@@ -1529,6 +1732,10 @@ export default class StreamlineScreen extends Component{
       //console.log("****123number of csnas" + LocalStorageSettingsApi.numberOfScansInTrial)
         this.scrollup();
 
+        this.fetchHistoryColumns();
+        this.fetchSalesRankHistoryColumns();
+        this.fetchHistoryAvgs();
+
        productObject= new Product();
 
       if (!productCode && !this.state.bluetoothMode) {
@@ -1578,7 +1785,11 @@ export default class StreamlineScreen extends Component{
           alert('Mode not available ' + LocalStorageSettingsApi.OperatingMode)
       }
 
+      //this.fetchHistoryColumns();
+
   }
+
+
 
 
     //AWS Response delegate method
@@ -1687,7 +1898,7 @@ export default class StreamlineScreen extends Component{
             productObject.AllOffersUrl = AllOffersUrl
             productObject.lowestNewPrice = LowestNewPrice
             productObject.lowestUsedPrice = LowestUsedPrice
-            alert('LowestNewPrice1='+LowestNewPrice);
+            //alert('LowestNewPrice1='+LowestNewPrice);
 
         }else {
             let len=itemArray.length
@@ -1972,7 +2183,7 @@ export default class StreamlineScreen extends Component{
                 if(JSON.stringify(response[isbn])!=null){
                 //productObject.averageRank = (JSON.stringify(response[isbn]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
                 productObject.averageRank = JSON.stringify(response[isbn]);//
-                alert('calculateAverageRank ()averageRank:'+JSON.stringify(response[isbn]));
+                //alert('calculateAverageRank ()averageRank:'+JSON.stringify(response[isbn]));
                 }
                 else{
                     productObject.averageRank='-'

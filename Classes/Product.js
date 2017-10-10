@@ -123,12 +123,12 @@ export default class Product{
         else
         {
             SalesRank = this.salesRank;
-            alert("this.SalesRank"+this.SalesRank);
+            //alert("this.SalesRank"+this.SalesRank);
         }
 
         var fbaXRayUrl = 'http://server.nickgermaine.com:8080/single?threshold='+FBAXRayThreshold+'&fbmnewprice='+this.lowestNewPrice+'&fbmusedprice='+this.lowestUsedPrice+'&OfferCountNew='+this.numberOfNewOffers+'&OfferCountUsed='+this.numberOfUsedOffers+'&SalesRank='+SalesRank;
 
-        alert('XRay url:'+fbaXRayUrl);
+        //alert('XRay url:'+fbaXRayUrl);
         return fbaXRayUrl;
     }
 
