@@ -148,6 +148,8 @@ export default class StreamlineScreen extends Component{
         NewHistoryAvgPercent:0,
         TradeInHistoryAvg:0,
         TradeInHistoryAvgPercent:0,
+        SalesRankHistoryAvg:0,
+        SalesRankHistoryAvgPercent:0,
       };
 
 
@@ -576,7 +578,7 @@ export default class StreamlineScreen extends Component{
             //set "used" average value in the last 12 months
             this.setState({UsedHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
 
-            //set "used average value percent of used value range for setting used average circle in historical display screen
+            //set "used" average value percent of used value range for setting used average circle in historical display screen
             newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxUsedValue)
             newPercentValue=newPercentValue<100?newPercentValue:100;
             this.setState({UsedHistoryAvgPercent: newPercentValue});
@@ -599,10 +601,10 @@ export default class StreamlineScreen extends Component{
           var newPercentValue;
 
           if(obj[""+this.state.codeEnteredByUser]){
-            //set "used" average value in the last 12 months
+            //set "new"" average value in the last 12 months
             this.setState({NewHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
 
-            //set "used average value percent of used value range for setting used average circle in historical display screen
+            //set "new" average value percent of used value range for setting used average circle in historical display screen
             newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxNewValue)
             newPercentValue=newPercentValue<100?newPercentValue:100;
             this.setState({NewHistoryAvgPercent: newPercentValue});
@@ -625,16 +627,42 @@ export default class StreamlineScreen extends Component{
               var newPercentValue;
 
               if(obj[""+this.state.codeEnteredByUser]){
-                //set "used" average value in the last 12 months
+                //set "trade in" average value in the last 12 months
                 this.setState({TradeInHistoryAvg:obj[""+this.state.codeEnteredByUser]/100})
 
-                //set "used average value percent of used value range for setting used average circle in historical display screen
+                //set "trade in" average value percent of used value range for setting used average circle in historical display screen
                 newPercentValue = (obj[""+this.state.codeEnteredByUser]/Constants.MaxTradeInValue)
                 newPercentValue=newPercentValue<100?newPercentValue:100;
                 this.setState({TradeInHistoryAvgPercent: newPercentValue});
               }
               else{
                 this.setState({TradeInHistoryAvg:0, TradeInHistoryAvgPercent:0});
+              }
+
+          }).catch((err)=>{
+              console.log("fetchHistoryAvgs Error:" + JSON.stringify(err))
+            });
+
+        //fetch "sales rank" average of the last 12 months
+           fetch("http://35.167.19.151/history/average?asins="+this.state.codeEnteredByUser)
+          .then(response => response.text())
+            .then((response) => {
+
+              var obj = JSON.parse(response);
+
+              var newPercentValue;
+
+              if(obj[""+this.state.codeEnteredByUser]){
+                //set "sales rank" average value in the last 12 months
+                this.setState({SalesRankHistoryAvg:obj[""+this.state.codeEnteredByUser]})
+
+                //set "sales rank" average value percent of used value range for setting used average circle in historical display screen
+                newPercentValue = (obj[""+this.state.codeEnteredByUser]*100/Constants.MaxSalesRankValue)
+                newPercentValue=newPercentValue<100?newPercentValue:100;
+                this.setState({SalesRankHistoryAvgPercent: newPercentValue});
+              }
+              else{
+                this.setState({SalesRankHistoryAvg:0, SalesRankHistoryAvgPercent:0});
               }
 
           }).catch((err)=>{
@@ -1272,8 +1300,8 @@ export default class StreamlineScreen extends Component{
                     <View style={styles.CircleDataContainerStyle}>
                         <Text style={[ZenUIStyles.SubheaderTextStyle]}>Sales Rank</Text>
                         <View style={styles.dataCircleStyle}>
-                            <PercentageCircle radius={40} percent={75} borderWidth={10} color={Constants.ZenGreen2}>
-                                <Text>1.2</Text>
+                            <PercentageCircle radius={40} percent={this.state.SalesRankHistoryAvgPercent} borderWidth={10} color={Constants.ZenGreen2}>
+                                <Text>{this.state.SalesRankHistoryAvg/1000000}</Text>
                                  <Text>million</Text>
                             </PercentageCircle>
 
