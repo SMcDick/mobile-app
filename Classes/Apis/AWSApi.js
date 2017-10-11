@@ -87,7 +87,7 @@ export default class ProductApi{
 
     static getAmazonItemInfo(barcode,productCodeType) {
 
-        var responseGroup = encodeURIComponent("Images,ItemAttributes,OfferFull,OfferListings,Offers,OfferSummary,SalesRank,VariationOffers")
+        var responseGroup = encodeURIComponent("Images,ItemAttributes,OfferFull,OfferListings,Offers,OfferSummary,SalesRank,VariationOffers,BrowseNodes")
 
         var parameters = [];
         parameters.push("AWSAccessKeyId=" + Constants.kAWSAccessKeyId);
@@ -107,7 +107,7 @@ export default class ProductApi{
         var signature = ProductApi.sha256(signingKey,Constants.kAWSSecretKey);
         signature = encodeURIComponent(signature);
         var amazonUrl =  "http://webservices.amazon.com/onca/xml?" + paramString + "&Signature=" + signature;
-        console.log('amazonUrl: '+amazonUrl)
+        //alert('amazonUrl: '+amazonUrl)
         return amazonUrl;
 
 

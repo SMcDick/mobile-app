@@ -44,6 +44,7 @@ export default class Product{
 
     }
     upadateProductDataOnResponse(response){
+        alert("upadateProductDataOnResponse");
         console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!upadateProductDataOnResponse")
         this.productAmazonURL = response["ItemLookupResponse"]["Items"]["Item"]["DetailPageURL"]
 
@@ -65,7 +66,7 @@ export default class Product{
         this.numberOfNewOffers  = itemArray["OfferSummary"]["TotalNew"];
         this.numberOfUsedOffers = itemArray["OfferSummary"]["TotalUsed"];
         this.numberOfFBAOffers  = null;
-        this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
+        this.tradeIn=response['trade_in_value']?response['trade_in_value']:null
         this.lowestNewPrice=itemArray["OfferSummary"]["TotalNew"]?itemArray["OfferSummary"]["TotalNew"]["LowestNewPrice"]["FormattedPrice"]: null
         this.lowestUsedPrice=itemArray["OfferSummary"]["TotalUsed"]?itemArray["OfferSummary"]["TotalNew"]["LowestUsedPrice"]["FormattedPrice"]: null
 
@@ -89,7 +90,7 @@ export default class Product{
         this.image = response['']?response['']:null
         this.category = response['']? response['']: null;
         this.numberOfFBAOffers  = null;
-        this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
+        this.tradeIn=response['trade_in_value']?response['trade_in_value']:null
     }
 
 
@@ -107,7 +108,7 @@ export default class Product{
         this.image = response['']?response['']:null
         this.category = response['']? response['']: null;
         this.numberOfFBAOffers  = null;
-        this.tradeIn=response['trade_in_value']?response['trade_in_value']:'NA'
+        this.tradeIn=response['trade_in_value']?response['trade_in_value']:null
     }
 
 
@@ -193,7 +194,7 @@ export default class Product{
     }
 
     calculateBuyBoxPrice(){
-       return this.tradeIn
+        return this.tradeIn
     }
     calculatePricePercent(){
         return (this.tradeIn?' ':null);

@@ -272,7 +272,7 @@ export default class MainScreen extends Component{
                   //this.setState({webViewModal:true})
           this.setState({productOffersPageURL:null},()=>{
               setTimeout(()=>{
-                  this.setState({productOffersPageURL:{uri:url}})
+                  this.setState({productOffersPageURL:{uri:url}, heightOfFBaOffersPage:new Animated.Value(screenHeight * 0.5)})
               },1)
           })
 

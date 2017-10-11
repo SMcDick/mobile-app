@@ -93,6 +93,7 @@ export default class StreamlineScreen extends Component{
          productAmazonPrice : null,
          productNetProfit : null,
          productBuyBox : null,
+         tradeInValue: null,
          productSalesRank :null,
          productAmazonRank :null,
          productTopPercent : null,
@@ -127,7 +128,7 @@ export default class StreamlineScreen extends Component{
         showFBAFullScreen:false,
         expandFBAOffersValue: new Animated.Value(0),
         positionYOfFBAOffersPage:new Animated.Value(screenHeight),
-        heightOfFBaOffersPage:new Animated.Value(0),//new Animated.Value(screenHeight * 0.5),
+        heightOfFBaOffersPage:0,//new Animated.Value(screenHeight * 0.5),
         bluetoothMode:false,
         // openCamera:false,
         isConnected: null,
@@ -227,6 +228,7 @@ export default class StreamlineScreen extends Component{
             productAmazonPrice : null,
             productNetProfit : null,
             productBuyBox : null,
+            tradeInValue: null,
             productSalesRank :null,
             productAmazonRank :null,
             productTopPercent : null,
@@ -263,9 +265,7 @@ export default class StreamlineScreen extends Component{
         })
     }
 
-
-   expandCollapseWebView(webViewIsFullScreen,option,company=false,ExCol=true){
-      tradeinExpandCollapseWebView(webViewIsFullScreen,option,company,ExCol);
+    expandCollapseWebView(webViewIsFullScreen,option,company=false,ExCol=true){
       if(NetworkConnectivity.getInstance().internetAvailable == false) {
           alert("No Internet Connection")
             return;
@@ -346,66 +346,7 @@ export default class StreamlineScreen extends Component{
       }
   }
 
-  tradeinExpandCollapseWebView(webViewIsFullScreen,option,company=false,ExCol=true){
-        if(NetworkConnectivity.getInstance().internetAvailable == false) {
-            alert("No Internet Connection")
-              return;
-        }
 
-        var url = 'https://bookscouter.com/prices.php?isbn='+this.state.productCode+'&searchbutton=Sell'
-
-        if(option){
-                //alert(productObject.productCode)
-                //this.setState({webViewModal:true})
-        this.setState({productOffersPageURL:null},()=>{
-            setTimeout(()=>{
-                this.setState({productOffersPageURL:{uri:url}})
-            },1)
-        })
-
-        }
-
-        if(webViewIsFullScreen){
-            Animated.timing(
-                this.state.positionYOfFBAOffersPage,
-                {
-                    toValue:-screenHeight,
-                    duration:200
-                }
-
-            ).start();
-
-            /*Animated.timing(
-                this.state.heightOfFBaOffersPage,
-                {
-                    toValue:screenHeight,
-                    duration:200
-                }
-            ).start();*/
-
-            this.setState({showFBAFullScreen:webViewIsFullScreen})
-
-
-        }else{
-            Animated.timing(
-                this.state.positionYOfFBAOffersPage,
-                {
-                    toValue:-screenHeight * 0.6,
-                    duration:200
-                }
-            ).start(() => { ExCol == true ? this.setState({webViewModal:true}) : null });
-
-            /*Animated.timing(
-                this.state.heightOfFBaOffersPage,
-                {
-                    toValue:screenHeight * 0.7,
-                    duration:200
-                }
-            ).start();*/
-
-            this.setState({showFBAFullScreen:webViewIsFullScreen})
-        }
-    }
 
     cameraAlert(){
         Alert.alert(
@@ -702,7 +643,7 @@ export default class StreamlineScreen extends Component{
                   </View>
                   <View style={{padding:10, flex:10}}>
                       <View style={styles.amazonTradeInContainer}>
-                                  <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >$98</Text>
+                                  <Text style={[styles.productSearchIndicators,styles.fontColorsTop]} >{this.state.tradeInValue}</Text>
                                   <Text style={[styles.productSearchIndicators,styles.fontColorsBottom]} >Amazon Trade In</Text>
 
                       </View>
@@ -712,36 +653,17 @@ export default class StreamlineScreen extends Component{
 
 
       let tradeinWebViewComponent = (
-              <Animated.View style= {{width:screenWidth,borderTopColor:"black",borderTopWidth:1,height:this.state.heightOfFBaOffersPage, transform:[{translateY:this.state.positionYOfFBAOffersPage}]}}>
+              <View style= {{width:screenWidth,borderTopColor:Constants.ZenBlue1,borderTopWidth:1,height:screenHeight*0.5}}>
 
-                  <View style={{backgroundColor:'rgb(36,46,58)', height:0.5}}/>
                   <WebView
                       automaticallyAdjustContentInsets={false}
-                      source={this.state.productOffersPageURL}
+                      source={{uri:this.state.productCode?'https://bookscouter.com/prices.php?isbn='+this.state.productCode+'&searchbutton=Sell':null}}
                       scalesPageToFit={true}
-                      onLoad={()=>this.setState({webViewModal:false})}
                       domStorageEnabled={true}
 
                   />
 
-
-                  <Modal
-                      visible={this.state.webViewModal}
-                      transparent={true}
-                      style={{justifyContent:"center"}}
-                  >
-                      <TouchableOpacity
-                          style={{flex:1,paddingTop:screenHeight*0.6}}
-                          activeOpacity={1}
-                          onPress={() => this.setState({webViewModal:false})}
-                      >
-
-                          <ActivityIndicator color="rgb(0,0,0)" />
-
-                      </TouchableOpacity>
-
-                  </Modal>
-              </Animated.View>
+              </View>
           );
           let tradeinFbaOffersComponent = (<View style= {[{height:screenHeight*0.42},{borderColor:Constants.ZenBlue1},{padding:10},{paddingBottom:-20}]}></View>);
 
@@ -759,18 +681,16 @@ export default class StreamlineScreen extends Component{
            </View>
             <View style= {{justifyContent:'center',flexGrow:20}}>
                 <CustomTextInput
-                    ref="bluetoothMode"
                     keyboardAppearance="dark"
                     clearButtonMode="while-editing"
                     customKeyboardType="hello"
                     style={styles.navBarTxtInput}
                     returnKeyType ="search"
                     returnKeyLabel="Search"
-                    placeholder={this.state.bluetoothMode ? 'Scan through bluetooth scanner' : 'Enter number'}
+                    placeholder={'Enter number'}
                     underlineColorAndroid={'white'}
                     enablesReturnKeyAutomatically = {true}
                     autoCorrect={false}
-                    onFocus ={this.installKeyboard.bind(this, this.props.tag)}
                     onSubmitEditing={()=>this.searchProduct(this.state.codeEnteredByUser)}
                     value= {this.state.codeEnteredByUser}
 
@@ -1743,11 +1663,7 @@ export default class StreamlineScreen extends Component{
         //this.refs.scroll.scrollTo(0);
    }
 
-   installKeyboard(tag){
-   alert("tag"+tag)
-   alert("this.props.tag"+this.props.tag)
-    install(tag,"hello");
-   }
+
 
    searchProduct(productCode) {
       //this.refs.bluetoothMode.focus()
@@ -1858,7 +1774,7 @@ export default class StreamlineScreen extends Component{
         var itemArray = response["ItemLookupResponse"]["Items"]["Item"];
         var catArray = response["ItemLookupResponse"]["Items"]
 
-
+            //alert("item array"+JSON.stringify(itemArray["ItemAttributes"]));
         if(itemArray.constructor.name != 'Array') {
 
             let NewAmazonPrice = itemArray["ItemAttributes"] ? itemArray["ItemAttributes"]["ListPrice"] ? itemArray["ItemAttributes"]["ListPrice"]["FormattedPrice"] : null : null
@@ -1948,7 +1864,7 @@ export default class StreamlineScreen extends Component{
             let NewUrl = itemArray[len-1]["ItemLinks"]["ItemLink"][(itemArray[len-1]["ItemLinks"]["ItemLink"].length - 1)]["URL"] + "/ref=olp_tab_used?ie=UTF8&condition=new"
             asin=itemArray[len-1]["ASIN"]?itemArray[len-1]["ASIN"]:null
             //let productCode = catArray["ItemLookupRequest"] ? catArray["ItemLookupRequest"]["ItemId"] ? catArray["ItemLookupRequest"]["ItemId"] : null : null
-
+            //alert("item array"+tradeInValue);
             if (NewAmazonPrice != null) {
                 let ParsedNewAmazonPrice = NewAmazonPrice.slice(1)
                 if (ParsedNewAmazonPrice > 1000) {
@@ -1988,6 +1904,7 @@ export default class StreamlineScreen extends Component{
             productObject.category = category;
             productObject.tradeIn = tradeInValue;
             productObject.title = title;
+            productObject.tradeIn = tradeInValue;
             productObject.numberOfNewOffers=TotalNew;
             productObject.numberOfUsedOffers=TotalUsed;
             //productObject.nonFBANewOffersArray=[LowestNewPrice];
@@ -2022,7 +1939,7 @@ export default class StreamlineScreen extends Component{
     }
 
     mwsResponseSucessCallBack(response, ItemCondition){
-        console.log("mwsResponseSucessCallBack" +JSON.stringify(response))
+        //alert("mwsResponseSucessCallBack" +JSON.stringify(response))
         var PriceArray=[]
         var FBAOffers=[]
         var UsedPricedArray=[]
@@ -2444,6 +2361,7 @@ console.log("*****************************callingupdateStateOnSuccess" )
               productAmazonPrice: productObject.amazonPrice,
               productNetProfit: productObject.calculateNetProfit(),
               productBuyBox: productObject.calculateBuyBoxPrice(),
+              tradeInValue: productObject.tradeIn,
               productPricePercent: productObject.calculatePricePercent(),
               productSalesRank: productObject.salesRank,
               productAmazonRank: productObject.averageRank,

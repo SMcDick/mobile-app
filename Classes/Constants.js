@@ -148,7 +148,7 @@ import { Dimensions , Platform } from 'react-native';
 
     //values for max range for historical display
     static MaxSalesRankValue = 2000000
-    static MinSalesRankValue =1000000
+    static MinSalesRankValue =0
     static MaxUsedValue = 50
     static MaxNewValue = 50
     static MaxTradeInValue = 50
