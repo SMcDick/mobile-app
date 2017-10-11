@@ -171,7 +171,7 @@ export default class Product{
             if(this.nonFBAUsedOffersArray[0] != null) {
                 console.log("nonFBAUsedOffersArray-calculateNetProfit" + this.nonFBAUsedOffersArray[0].Price)
                 var selectedFormattedValue = parseFloat(this.nonFBAUsedOffersArray[0].Price)
-
+                //alert("calculate net profit: "+"$" + Math.round(( selectedFormattedValue - (( 0.15 * selectedFormattedValue) + 1.80) - 3 - 0.19) * 100) / 100)
                 return "$" + Math.round(( selectedFormattedValue - (( 0.15 * selectedFormattedValue) + 1.80) - 3 - 0.19) * 100) / 100
 
                 //return Math.round(( 0- costPrice - ( 0.15 * 25 ) - 1.80 - 4 )*10) / 10
@@ -184,6 +184,8 @@ export default class Product{
             else{
 
             var formattedValue=parseFloat(value)
+
+            //alert("calculate net profit else: "+"$" + Math.round(( formattedValue  - (( 0.15 * formattedValue) + 1.80) - 3 - 0.19)*100)/100)
 
             return Math.round(( formattedValue  - (( 0.15 * formattedValue) + 1.80) - 3 - 0.19)*100)/100
 

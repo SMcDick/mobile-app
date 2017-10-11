@@ -1009,7 +1009,7 @@ export default class StreamlineScreen extends Component{
     </View>);
 
     let webViewComponent = (
-        <Animated.View style= {{width:screenWidth,borderTopColor:"black",borderTopWidth:1,height:this.state.heightOfFBaOffersPage, transform:[{translateY:this.state.positionYOfFBAOffersPage}]}}>
+        <Animated.View style= {{width:screenWidth,height:this.state.heightOfFBaOffersPage, transform:[{translateY:this.state.positionYOfFBAOffersPage}]}}>
 
             <View style={{backgroundColor:'rgb(36,46,58)', height:0.5}}/>
             <WebView
@@ -1185,12 +1185,12 @@ export default class StreamlineScreen extends Component{
 
           {logoAndMenuComponent}
           {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
+          {navigationBar}
           {buyRejectBar}
           {streamlineProductDescriptionComponent }
           {fbaOffersComponent}
 
           {this.state.productTitle?otherSitesIconComponent:<View></View>}
-          {navigationBar}
           {bottomComponent}
           </ScrollView>
         </View>
