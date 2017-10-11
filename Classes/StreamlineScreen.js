@@ -1166,9 +1166,6 @@ export default class StreamlineScreen extends Component{
 
               {logoAndMenuComponent}
               {navigationBar}
-              {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
-
-
               {tradeinProductDescriptionComponent}
               {tradeinFbaOffersComponent}
 
@@ -1184,7 +1181,6 @@ export default class StreamlineScreen extends Component{
           <ScrollView ref='scroll'>
 
           {logoAndMenuComponent}
-          {this.state.showSideMenu?<SideMenu navigator = {this.props.navigator}  setShowSideMenuState={this.setShowSideMenuState.bind(this)} />:null}
           {navigationBar}
           {buyRejectBar}
           {streamlineProductDescriptionComponent }
