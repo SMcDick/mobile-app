@@ -905,12 +905,13 @@ export default class StreamlineScreen extends Component{
 
     </View>);
     let scrollViewData = (
-        <View style= {{flex:1,flexDirection:'row'}}>
-            <View style= {{flex:1}}>
+        <View style= {{flex:1, flexDirection:'row'}}>
+            <View style={{width:screenWidth*0.3}}>
                 {this.state.fbaOffersArray.map((value,index)=>{
                        //for showing only five offers
                      if(index<5)
                      {
+                     alert("hi");
                     return  (
                         <View style={styles.scrollingTableRow} key={index}>
                             <TouchableOpacity
@@ -927,7 +928,11 @@ export default class StreamlineScreen extends Component{
                             </TouchableOpacity>
                         </View>
                     )
+
                      }
+                     else{
+                                             alert("hi");
+                                         }
                 })}
             </View>
             {/*<View style= {{flex:1}}>
@@ -950,7 +955,7 @@ export default class StreamlineScreen extends Component{
             })}
         </View>*/}
 
-      <View style= {{flex:1}}>
+      <View style= {{width:screenWidth*0.3}}>
         {this.state.nonFbaUsedArray.map((value,index)=>{
             console.log("nonFbaUsedArray" +this.state.nonFbaUsedArray)
              //for showing only five offers
@@ -974,7 +979,7 @@ export default class StreamlineScreen extends Component{
           }
         })}
       </View>
-      <View style= {{flex:1}}>
+      <View style= {{width:screenWidth*0.3}}>
         {this.state.nonFbaNewArray.map((value,index)=>{
             console.log("state array in mapping"+JSON.stringify(value))
             //for showing only five offers
@@ -1102,10 +1107,9 @@ export default class StreamlineScreen extends Component{
             {/*<TouchableOpacity style={styles.tradeValueStyle}><Text style={styles.amazonOfferLinks}>TRADE IN</Text></TouchableOpacity>*/}
 
         </View>
-        <ScrollView onScroll={()=>this.setState({bluetoothMode:false})}>
-            {scrollViewData}
-
-        </ScrollView>
+        <View style={{flex:1}}>
+        {scrollViewData}
+        </View>
 
       </View>
 
@@ -1936,6 +1940,7 @@ export default class StreamlineScreen extends Component{
 
     mwsResponseSucessCallBack(response, ItemCondition){
         //alert("mwsResponseSucessCallBack" +JSON.stringify(response))
+        //alert("fba offers response"+JSON.stringify(response));
         var PriceArray=[]
         var FBAOffers=[]
         var UsedPricedArray=[]
@@ -1945,7 +1950,8 @@ export default class StreamlineScreen extends Component{
         if(JSON.stringify(response["GetLowestOfferListingsForASINResponse"]["GetLowestOfferListingsForASINResult"]).substring(0,5)!='ERROR' && ListingArray!=undefined )
         {
         let ProductArray=ListingArray["LowestOfferListings"];
-
+        let myArray=ListingArray=response["GetLowestOfferListingsForASINResponse"]["GetLowestOfferListingsForASINResult"]["LowestOfferListings"];
+        //alert("fba offers"+JSON.stringify(ProductArray));
         if(ProductArray != ""){
             console.log("Product array is not null")
 
@@ -1994,6 +2000,9 @@ export default class StreamlineScreen extends Component{
                             if (ItemSubcondition== 'Acceptable'){
                                 Subcondition = '(A)'
                             }
+
+                            alert("FBAOffersPrice"+Itemprice)
+
                             UsedPricedArray.push({Price :Itemprice, Condition: Subcondition})
 
                             UsedPricedArray.sort(function (a, b) {
@@ -2004,6 +2013,7 @@ export default class StreamlineScreen extends Component{
                             console.log("**ItemSubcondition**" +Subcondition)
                         }
                         if (element["Qualifiers"]["ItemCondition"] == 'New') {
+                        alert("new"+element["Price"]["ListingPrice"]["Amount"])
                             PriceArray.push(element["Price"]["ListingPrice"]["Amount"])
                             PriceArray.sort(function (a, b) {
                                 return a - b
@@ -2017,6 +2027,7 @@ export default class StreamlineScreen extends Component{
 
             else {
                 console.log("object response")
+                alert("else")
                 if (OffersArray["Qualifiers"]["FulfillmentChannel"] == 'Amazon') {
                     console.log("amazon product ")
                     FBAOffersPrice=OffersArray["Price"]["ListingPrice"]["Amount"]
@@ -2750,7 +2761,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#f6f6f6'
   },
   scrollingTableRow:{
-    height:40,
+    height:30,
     justifyContent:'center',
     alignItems:'center'
   },
